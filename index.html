@@ -3,11 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#020308" />
+  <meta name="theme-color" content="#FBFBF8" />
   <title>Noa Tournoy — Développeur généraliste &amp; web créatif</title>
   <script>
-    /* Applique la langue avant le premier rendu : pas de flash de français
-       pour un visiteur anglophone. Sans JS, la page reste en français. */
+    /* Applique la langue avant le premier rendu. Sans JS, la page reste en français. */
     (function () {
       try {
         var l = localStorage.getItem("lang");
@@ -19,7 +18,7 @@
       } catch (e) { /* la page reste en français */ }
     })();
   </script>
-  <meta name="description" content="Noa Tournoy — développeur généraliste & web créatif. Éclosion : une expérience web 3D où le défilement est le temps. Contact, GitHub, LinkedIn." />
+  <meta name="description" content="Noa Tournoy — développeur généraliste & web créatif. Éclosion : une expérience web 3D où le défilement est le temps. Dossier technique, GitHub, contact." />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Noa Tournoy — Développeur généraliste & web créatif" />
   <meta property="og:description" content="Éclosion : une expérience web 3D, 100 % procédurale, où le défilement est le temps." />
@@ -27,274 +26,279 @@
   <meta property="og:image" content="https://noatournoy.dev/og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Une étoile dorée dans un ciel nocturne étoilé" />
+  <meta property="og:image:alt" content="Page de garde de listing : Noa Tournoy, développeur généraliste et web créatif" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="canonical" href="https://noatournoy.dev/" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 2 L60 40 L98 50 L60 60 L50 98 L40 60 L2 50 L40 40 Z' fill='%23ffe9c4'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23FBFBF8'/%3E%3Crect y='16' width='100' height='18' fill='%23F0F4EC'/%3E%3Crect y='50' width='100' height='18' fill='%23F0F4EC'/%3E%3Crect y='84' width='100' height='16' fill='%23F0F4EC'/%3E%3Ccircle cx='13' cy='13' r='6' fill='%231D6B45'/%3E%3C/svg%3E" />
   <style>
-    /* Page autonome par goût (v1 : un seul fichier) — pas une règle. */
+    /* Le Listing — voir DESIGN.md. Page autonome, zéro requête externe au runtime. */
+    @font-face {
+      font-family: "Bricolage Grotesque";
+      src: url("/fonts/bricolage-grotesque-latin.woff2") format("woff2");
+      font-weight: 200 800;
+      font-stretch: 75% 125%;
+      font-display: swap;
+    }
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --paper: #FBFBF8;
+      --band: #F0F4EC;
+      --ink: #17201B;
+      --ink2: #5A665E;
+      --green: #1D6B45;
+      --hair: rgba(23, 32, 27, 0.16);
+    }
     body {
       min-height: 100vh;
       min-height: 100svh;
-      background: radial-gradient(ellipse 120% 90% at 50% 110%, #0a1024 0%, #04060f 55%, #020308 100%);
-      background-attachment: fixed;
-      color: #e8e6df;
-      font-family: Georgia, "Times New Roman", serif;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      line-height: 1.6;
       display: grid;
       place-items: center;
     }
-    /* Bascule de langue : le français par défaut, l'anglais dès que <html lang> change. */
     :root[lang="en"] .l-fr { display: none; }
     :root:not([lang="en"]) .l-en { display: none; }
-    /* Un ciel : des étoiles en radial-gradients, dérive lente. */
-    .stars {
+    .mono {
+      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+      font-variant-numeric: tabular-nums;
+    }
+    /* Marges à picots : la signature des bords, grands écrans seulement. */
+    body::before, body::after {
+      content: "";
       position: fixed;
-      inset: -10%;
+      top: 0;
+      bottom: 0;
+      width: 2.2rem;
+      background-image: radial-gradient(circle 3.5px at 50% 50%, transparent 2.9px, var(--hair) 3px, var(--hair) 3.4px, transparent 3.5px);
+      background-size: 100% 3.4rem;
       pointer-events: none;
-      animation: drift 240s linear infinite alternate;
-      background:
-        radial-gradient(1px 1px at 12% 22%, #fff8 50%, transparent 51%),
-        radial-gradient(1px 1px at 78% 12%, #fff6 50%, transparent 51%),
-        radial-gradient(1.5px 1.5px at 33% 68%, #ffe9c455 50%, transparent 51%),
-        radial-gradient(1px 1px at 62% 41%, #fff7 50%, transparent 51%),
-        radial-gradient(1px 1px at 88% 74%, #fff5 50%, transparent 51%),
-        radial-gradient(1.5px 1.5px at 45% 15%, #cfe0ff66 50%, transparent 51%),
-        radial-gradient(1px 1px at 8% 85%, #fff6 50%, transparent 51%),
-        radial-gradient(1px 1px at 55% 88%, #fff4 50%, transparent 51%),
-        radial-gradient(1.2px 1.2px at 25% 42%, #fff5 50%, transparent 51%),
-        radial-gradient(1px 1px at 93% 33%, #ffe9c44d 50%, transparent 51%),
-        radial-gradient(1px 1px at 70% 60%, #fff5 50%, transparent 51%),
-        radial-gradient(1.4px 1.4px at 17% 55%, #cfe0ff59 50%, transparent 51%);
     }
-    @keyframes drift {
-      to { transform: translate3d(1.5%, -1%, 0); }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .stars { animation: none; }
-    }
-    main {
-      position: relative;
-      text-align: center;
-      padding: 2rem 1.4rem max(2rem, env(safe-area-inset-bottom));
+    body::before { left: 0; border-right: 1px solid var(--hair); }
+    body::after { right: 0; border-left: 1px solid var(--hair); }
+    @media (max-width: 900px) { body::before, body::after { display: none; } }
+
+    .sheet {
       width: 100%;
-      max-width: 36rem;
+      max-width: 46rem;
+      padding: 1.6rem 1.4rem max(2.4rem, env(safe-area-inset-bottom));
+      animation: feed 0.7s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    h1 {
-      font-weight: 400;
-      font-size: clamp(2.2rem, 7vw, 3.4rem);
+    @keyframes feed {
+      from { transform: translateY(1.6rem); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @media (prefers-reduced-motion: reduce) { .sheet { animation: none; } }
+
+    .jobline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      font-size: 0.72rem;
       letter-spacing: 0.14em;
-      text-shadow: 0 0 26px rgba(207, 224, 255, 0.28);
-    }
-    .role {
-      margin-top: 0.9rem;
-      font-size: 0.95rem;
-      letter-spacing: 0.22em;
       text-transform: uppercase;
-      color: #9aa3b8;
+      color: var(--ink2);
+      border-bottom: 1px solid var(--hair);
+      padding-bottom: 0.7rem;
+      margin-bottom: 3.4rem;
     }
-    .now {
-      margin-top: 0.6rem;
-      font-size: 0.9rem;
-      font-style: italic;
-      letter-spacing: 0.04em;
-      color: #8d96aa;
-    }
-    nav {
-      margin-top: 2.8rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.4rem;
-      align-items: center;
-    }
-    .destination {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    nav > .destination > a {
-      color: #e8e6df;
-      text-decoration: none;
-      font-size: 1.12rem;
-      letter-spacing: 0.06em;
-      padding: 0.55rem 1.5rem;
-      border: 1px solid rgba(232, 230, 223, 0.22);
-      border-radius: 999px;
-      transition: border-color 0.35s ease, text-shadow 0.35s ease, background 0.35s ease;
-    }
-    nav > .destination > a:hover, nav > .destination > a:focus-visible {
-      border-color: rgba(255, 233, 196, 0.65);
-      background: rgba(255, 233, 196, 0.05);
-      text-shadow: 0 0 18px rgba(255, 233, 196, 0.5);
-    }
-    a:focus-visible, button:focus-visible {
-      outline: 2px solid rgba(255, 233, 196, 0.6);
-      outline-offset: 3px;
-    }
-    a.eclosion { border-color: rgba(255, 233, 196, 0.38); }
-    .star { color: #ffe9c4; }
-    .hint {
-      font-size: 0.84rem;
-      letter-spacing: 0.04em;
-      line-height: 1.5;
-      color: #8d96aa;
-      max-width: min(26rem, 100%);
-    }
-    @media (max-width: 420px) {
-      nav > .destination > a { font-size: 1.02rem; padding-inline: 1.2rem; }
-    }
-    .projects {
-      list-style: none;
-      display: grid;
-      gap: 0.35rem;
-      font-size: 0.84rem;
-      letter-spacing: 0.04em;
-      line-height: 1.5;
-      color: #8d96aa;
-    }
-    .projects a, .hint a {
-      color: #b9c1d4;
-      text-decoration: none;
-      border-bottom: 1px solid rgba(185, 193, 212, 0.35);
-      padding-bottom: 0.08em;
-      transition: color 0.35s ease, border-color 0.35s ease;
-    }
-    .projects a:hover, .projects a:focus-visible,
-    .hint a:hover, .hint a:focus-visible {
-      color: #ffe9c4;
-      border-color: rgba(255, 233, 196, 0.65);
-    }
-    .hint .email { overflow-wrap: anywhere; }
-    /* Le span devient un bouton de copie quand JS est là. */
-    button.email {
+    .lang-switch { display: flex; gap: 0.15rem; }
+    .lang-switch button {
       font: inherit;
       letter-spacing: inherit;
+      color: var(--ink2);
       background: none;
-      border: 0;
-      border-bottom: 1px dashed rgba(185, 193, 212, 0.45);
-      color: #b9c1d4;
-      padding: 0 0 0.08em;
-      cursor: copy;
-      transition: color 0.35s ease, border-color 0.35s ease;
-    }
-    button.email:hover, button.email:focus-visible {
-      color: #ffe9c4;
-      border-color: rgba(255, 233, 196, 0.65);
-    }
-    .copied {
-      display: block;
-      min-height: 1.3em;
-      margin-top: 0.25rem;
-      color: #ffe9c4;
-      font-size: 0.8rem;
-      letter-spacing: 0.06em;
-    }
-    .sep { margin: 0 0.6em; color: #5c6478; }
-    .lang-switch {
-      position: fixed;
-      top: max(1.1rem, env(safe-area-inset-top));
-      right: max(1.3rem, env(safe-area-inset-right));
-      display: flex;
-      align-items: center;
-      gap: 0.1rem;
-      border: 1px solid rgba(232, 230, 223, 0.18);
-      border-radius: 999px;
-      padding: 0.18rem 0.3rem;
-    }
-    .lang-switch button {
-      font-family: inherit;
-      font-size: 0.78rem;
-      letter-spacing: 0.12em;
-      color: #9aa3b8;
-      background: none;
-      border: 0;
-      border-radius: 999px;
-      padding: 0.28rem 0.6rem;
+      border: 1px solid transparent;
+      padding: 0.15rem 0.5rem;
       cursor: pointer;
-      transition: color 0.35s ease, background 0.35s ease;
     }
     .lang-switch button[aria-pressed="true"] {
-      color: #ffe9c4;
-      background: rgba(255, 233, 196, 0.08);
+      color: var(--green);
+      border-color: var(--green);
       cursor: default;
     }
-    .lang-switch button:hover, .lang-switch button:focus-visible {
-      color: #ffe9c4;
-    }
-    /* Sans JavaScript, la bascule n'existe pas : la page reste en français. */
+    .lang-switch button:hover, .lang-switch button:focus-visible { color: var(--green); }
     .lang-switch[hidden] { display: none; }
-    /* Cibles tactiles plus généreuses au doigt. */
-    @media (pointer: coarse) {
-      nav > .destination > a { padding: 0.7rem 1.6rem; }
-      .lang-switch button { padding: 0.4rem 0.7rem; }
-      .projects { gap: 0.55rem; }
-      .hint a, .hint button { padding-bottom: 0.25em; }
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 3px;
     }
-    /* Paysage bas de plafond : resserrer le rythme vertical pour limiter le scroll. */
-    @media (max-height: 480px) {
-      main { padding: 1.2rem 2rem; }
-      nav { margin-top: 1.6rem; gap: 1rem; }
+
+    h1 {
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.6rem, 9vw, 4.6rem);
+      line-height: 1.02;
+      letter-spacing: -0.015em;
+    }
+    .role {
+      margin-top: 1rem;
+      font-size: 1.05rem;
+      color: var(--ink);
+    }
+    .now {
+      margin-top: 0.3rem;
+      font-size: 0.9rem;
+      color: var(--ink2);
+    }
+    .spec {
+      margin-top: 1.4rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.06em;
+      color: var(--ink2);
+    }
+    .spec .m { color: var(--green); }
+
+    nav { margin-top: 3.2rem; }
+    .job {
+      display: grid;
+      grid-template-columns: 3.2rem 1fr;
+      gap: 0.2rem 1.1rem;
+      padding: 1.15rem 0.9rem;
+      border-top: 1px solid var(--hair);
+      align-items: baseline;
+    }
+    .job:nth-child(odd) { background: var(--band); }
+    .job:last-child { border-bottom: 1px solid var(--hair); }
+    .job .idx {
+      grid-row: span 2;
+      font-size: 0.95rem;
+      color: var(--ink2);
+    }
+    .job a.main {
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      font-weight: 600;
+      font-size: 1.35rem;
+      color: var(--ink);
+      text-decoration: none;
+      width: fit-content;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+    .job a.main:hover, .job a.main:focus-visible { color: var(--green); border-color: var(--green); }
+    .job .desc {
+      font-size: 0.92rem;
+      color: var(--ink2);
+    }
+    .job .desc a {
+      color: var(--green);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(29, 107, 69, 0.35);
+      transition: border-color 0.2s ease;
+    }
+    .job .desc a:hover, .job .desc a:focus-visible { border-color: var(--green); }
+    .job .desc .sep { color: var(--ink2); margin: 0 0.4em; }
+    button.email {
+      font: inherit;
+      color: var(--green);
+      background: none;
+      border: 0;
+      border-bottom: 1px dashed rgba(29, 107, 69, 0.45);
+      padding: 0;
+      cursor: copy;
+      transition: border-color 0.2s ease;
+    }
+    button.email:hover, button.email:focus-visible { border-bottom-style: solid; }
+    .copied { margin-left: 0.6em; color: var(--green); font-size: 0.8rem; }
+
+    footer {
+      margin-top: 3.2rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink2);
+      border-top: 1px solid var(--hair);
+      padding-top: 0.7rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    footer .m { color: var(--green); text-transform: none; letter-spacing: 0.06em; }
+    .sr-live {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+    @media (pointer: coarse) {
+      .job { padding: 1.35rem 0.9rem; }
+      .lang-switch button { padding: 0.4rem 0.7rem; }
     }
   </style>
 </head>
 <body>
-  <div class="stars" aria-hidden="true"></div>
-  <div class="lang-switch" role="group" aria-label="Langue / Language" hidden>
-    <button type="button" data-lang="fr" aria-pressed="true">FR</button>
-    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  <div class="sheet">
+    <div class="jobline mono">
+      <span><span class="l-fr">noatournoy.dev · page de garde · feuille&nbsp;1/1</span><span class="l-en" lang="en">noatournoy.dev · cover page · sheet&nbsp;1/1</span></span>
+      <div class="lang-switch" role="group" aria-label="Langue / Language" hidden>
+        <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+
+    <main>
+      <h1>Noa Tournoy</h1>
+      <p class="role"><span class="l-fr">Développeur généraliste &amp; web créatif</span><span class="l-en" lang="en">Generalist &amp; creative web developer</span></p>
+      <p class="now"><span class="l-fr">Alternance cybersécurité chez ADEO — dès octobre 2026</span><span class="l-en" lang="en">Cybersecurity apprenticeship at ADEO — starting October 2026</span></p>
+      <p class="spec mono"><span class="m">1</span> <span class="l-fr">œuvre signature</span><span class="l-en" lang="en">signature work</span> · <span class="m">8</span> <span class="l-fr">actes</span><span class="l-en" lang="en">acts</span> · <span class="m">100&nbsp;%</span> <span class="l-fr">procédural</span><span class="l-en" lang="en">procedural</span> · <span class="m">2</span> <span class="l-fr">langues</span><span class="l-en" lang="en">languages</span></p>
+
+      <nav aria-label="Navigation principale">
+        <div class="job">
+          <span class="idx mono">01</span>
+          <a class="main" href="https://eclosion.noatournoy.dev">Éclosion</a>
+          <p class="desc"><span class="l-fr">Expérience web 3D où le défilement est le temps — huit actes, 100&nbsp;% procédurale.</span><span class="l-en" lang="en">A 3D web experience where scrolling is time — eight acts, 100% procedural.</span></p>
+        </div>
+        <div class="job">
+          <span class="idx mono">02</span>
+          <a class="main" href="/projets/"><span class="l-fr">Le dossier technique</span><span class="l-en" lang="en">The technical dossier</span></a>
+          <p class="desc"><span class="l-fr">Chiffres mesurés et coulisses d'Éclosion, plus <a href="https://github.com/Noa-trny/Gamedex" rel="noopener">Gamedex</a>, <a href="https://github.com/Noa-trny/laying_grass_cpp" rel="noopener">laying_grass_cpp</a> et <a href="https://github.com/simonpotel/Ludoria" rel="noopener">Ludoria</a> — tout le reste sur <a href="https://github.com/Noa-trny" rel="noopener">GitHub</a>.</span><span class="l-en" lang="en">Measured numbers and the backstage of Éclosion, plus <a href="https://github.com/Noa-trny/Gamedex" rel="noopener">Gamedex</a>, <a href="https://github.com/Noa-trny/laying_grass_cpp" rel="noopener">laying_grass_cpp</a> and <a href="https://github.com/simonpotel/Ludoria" rel="noopener">Ludoria</a> — everything else on <a href="https://github.com/Noa-trny" rel="noopener">GitHub</a>.</span></p>
+        </div>
+        <div class="job">
+          <span class="idx mono">03</span>
+          <a class="main" href="mailto:noa.tournoy@supinfo.com"><span class="l-fr">Écrivez-moi</span><span class="l-en" lang="en">Get in touch</span></a>
+          <p class="desc"><span class="email-wrap"><span class="email">noa.tournoy@supinfo.com</span><span class="copied" aria-live="polite"></span></span><span class="sep" aria-hidden="true">·</span><a href="https://www.linkedin.com/in/noa-tournoy/" rel="me noopener">LinkedIn</a></p>
+        </div>
+      </nav>
+    </main>
+
+    <footer class="mono">
+      <span><span class="l-fr">fin de page — aucune requête externe</span><span class="l-en" lang="en">end of page — zero external requests</span></span>
+      <span class="m">≈ 91 <span class="l-fr">Ko</span><span class="l-en" lang="en">KB</span></span>
+    </footer>
   </div>
-  <main>
-    <h1>Noa&nbsp;Tournoy</h1>
-    <p class="role"><span class="l-fr">Développeur généraliste &amp; web créatif</span><span class="l-en" lang="en">Generalist &amp; creative web developer</span></p>
-    <p class="now"><span class="l-fr">Alternance cybersécurité chez ADEO — dès octobre 2026</span><span class="l-en" lang="en">Cybersecurity apprenticeship at ADEO — starting October 2026</span></p>
-    <nav aria-label="Navigation principale">
-      <div class="destination">
-        <a class="eclosion" href="https://eclosion.noatournoy.dev"><span class="star" aria-hidden="true">✦ </span><span class="l-fr">Éclosion — la naissance d'un monde</span><span class="l-en" lang="en">Éclosion — the birth of a world</span></a>
-        <p class="hint"><span class="l-fr">Expérience web 3D où le défilement est le temps — huit actes, 100&nbsp;% procédurale.</span><span class="l-en" lang="en">A 3D web experience where scrolling is time — eight acts, 100% procedural.</span></p>
-      </div>
-      <div class="destination">
-        <a href="https://github.com/Noa-trny" rel="noopener">GitHub</a>
-        <ul class="projects">
-          <li><a href="https://github.com/Noa-trny/Gamedex" rel="noopener">Gamedex</a><span class="sep" aria-hidden="true">·</span><span class="l-fr">app TypeScript/React (API RAWG, filtres, favoris)</span><span class="l-en" lang="en">TypeScript/React app (RAWG API, filters, favorites)</span></li>
-          <li><a href="https://github.com/Noa-trny/laying_grass_cpp" rel="noopener">laying_grass_cpp</a><span class="sep" aria-hidden="true">·</span><span class="l-fr">jeu console en C++17, zéro dépendance</span><span class="l-en" lang="en">C++17 console game, zero dependencies</span></li>
-          <li><a href="https://github.com/simonpotel/Ludoria" rel="noopener">Ludoria</a><span class="sep" aria-hidden="true">·</span><span class="l-fr">jeux de plateau en Python, projet d'équipe à trois</span><span class="l-en" lang="en">Python board games, three-person team project</span></li>
-        </ul>
-        <p class="hint"><a href="/projets/"><span class="l-fr">Le dossier détaillé — chiffres et coulisses →</span><span class="l-en" lang="en">The full dossier — numbers and backstage →</span></a></p>
-      </div>
-      <div class="destination">
-        <a href="mailto:noa.tournoy@supinfo.com"><span class="l-fr">Écrivez-moi</span><span class="l-en" lang="en">Get in touch</span></a>
-        <p class="hint"><span class="email">noa.tournoy@supinfo.com</span><span class="sep" aria-hidden="true">·</span><a href="https://www.linkedin.com/in/noa-tournoy/" rel="me noopener">LinkedIn</a><span class="copied" aria-live="polite"></span></p>
-      </div>
-    </nav>
-  </main>
+  <span class="sr-live" aria-live="polite"></span>
+
   <script>
     (function () {
       "use strict";
       var sw = document.querySelector(".lang-switch");
       if (!sw) return;
-      var nav = document.querySelector("nav");
       var TITLES = {
         fr: "Noa Tournoy — Développeur généraliste & web créatif",
         en: "Noa Tournoy — Generalist & creative web developer"
       };
       var NAV_LABELS = { fr: "Navigation principale", en: "Main navigation" };
       var COPY_LABELS = { fr: "Copier l'adresse email", en: "Copy email address" };
-      var COPIED_MSG = { fr: "Adresse copiée ✓", en: "Address copied ✓" };
+      var COPIED_MSG = { fr: "copiée ✓", en: "copied ✓" };
+      var ANNOUNCE = { fr: "Page en français", en: "Page in English" };
       var current = "fr";
+      var nav = document.querySelector("nav");
+      var live = document.querySelector(".sr-live");
 
-      /* Amélioration progressive : le span d'adresse devient un bouton de copie. */
       var emailSpan = document.querySelector("span.email");
       var emailBtn = null;
       if (emailSpan) {
         emailBtn = document.createElement("button");
         emailBtn.type = "button";
-        emailBtn.className = "email";
+        emailBtn.className = "email mono";
         emailBtn.textContent = emailSpan.textContent;
         emailSpan.parentNode.replaceChild(emailBtn, emailSpan);
       }
 
-      function apply(lang) {
+      function apply(lang, announce) {
         current = lang;
         document.documentElement.lang = lang;
         document.title = TITLES[lang];
@@ -303,22 +307,23 @@
         sw.querySelectorAll("button").forEach(function (b) {
           b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false");
         });
+        if (announce && live) live.textContent = ANNOUNCE[lang];
       }
 
-      apply(document.documentElement.lang === "en" ? "en" : "fr");
+      apply(document.documentElement.lang === "en" ? "en" : "fr", false);
       sw.hidden = false;
       sw.addEventListener("click", function (e) {
         var b = e.target.closest("button");
         if (!b) return;
         var lang = b.getAttribute("data-lang");
-        apply(lang);
-        try { localStorage.setItem("lang", lang); } catch (err) { /* mode privé : choix non persisté */ }
+        apply(lang, true);
+        try { localStorage.setItem("lang", lang); } catch (err) { /* mode privé */ }
       });
 
       if (emailBtn) {
         var copied = document.querySelector(".copied");
         var hideTimer = null;
-        var announce = function () {
+        var announceCopy = function () {
           if (!copied) return;
           copied.textContent = COPIED_MSG[current];
           clearTimeout(hideTimer);
@@ -333,14 +338,14 @@
           document.body.appendChild(ta);
           ta.select();
           var ok = false;
-          try { ok = document.execCommand("copy"); } catch (err) { /* copie indisponible : l'adresse reste lisible */ }
+          try { ok = document.execCommand("copy"); } catch (err) { /* l'adresse reste lisible */ }
           document.body.removeChild(ta);
-          if (ok) announce();
+          if (ok) announceCopy();
         };
         emailBtn.addEventListener("click", function () {
           var addr = emailBtn.textContent;
           if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(addr).then(announce, function () { fallbackCopy(addr); });
+            navigator.clipboard.writeText(addr).then(announceCopy, function () { fallbackCopy(addr); });
           } else {
             fallbackCopy(addr);
           }
