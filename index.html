@@ -214,7 +214,7 @@
       cursor: pointer;
       transition: color 0.35s ease, background 0.35s ease;
     }
-    .lang-switch button[aria-current="true"] {
+    .lang-switch button[aria-pressed="true"] {
       color: #ffe9c4;
       background: rgba(255, 233, 196, 0.08);
       cursor: default;
@@ -241,8 +241,8 @@
 <body>
   <div class="stars" aria-hidden="true"></div>
   <div class="lang-switch" role="group" aria-label="Langue / Language" hidden>
-    <button type="button" data-lang="fr" aria-current="true">FR</button>
-    <button type="button" data-lang="en" aria-current="false">EN</button>
+    <button type="button" data-lang="fr" aria-pressed="true">FR</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
   </div>
   <main>
     <h1>Noa&nbsp;Tournoy</h1>
@@ -301,7 +301,7 @@
         if (nav) nav.setAttribute("aria-label", NAV_LABELS[lang]);
         if (emailBtn) emailBtn.setAttribute("aria-label", COPY_LABELS[lang]);
         sw.querySelectorAll("button").forEach(function (b) {
-          b.setAttribute("aria-current", b.getAttribute("data-lang") === lang ? "true" : "false");
+          b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false");
         });
       }
 
