@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#020308" />
+  <title>Noa Tournoy</title>
+  <meta name="description" content="Noa Tournoy — développeur. Éclosion : une expérience web 3D où le défilement est le temps." />
+  <style>
+    /* Zéro requête externe — la page entière tient dans ce fichier,
+       dans l'esprit d'Éclosion. */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background: radial-gradient(ellipse 120% 90% at 50% 110%, #0a1024 0%, #04060f 55%, #020308 100%);
+      color: #e8e6df;
+      font-family: Georgia, "Times New Roman", serif;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+    /* Un ciel : trois couches de "box-shadow stars", dérive lente. */
+    .stars, .stars::before, .stars::after {
+      content: "";
+      position: fixed;
+      inset: -10%;
+      pointer-events: none;
+    }
+    .stars {
+      animation: drift 240s linear infinite alternate;
+      background:
+        radial-gradient(1px 1px at 12% 22%, #fff8 50%, transparent 51%),
+        radial-gradient(1px 1px at 78% 12%, #fff6 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 33% 68%, #ffe9c455 50%, transparent 51%),
+        radial-gradient(1px 1px at 62% 41%, #fff7 50%, transparent 51%),
+        radial-gradient(1px 1px at 88% 74%, #fff5 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 45% 15%, #cfe0ff66 50%, transparent 51%),
+        radial-gradient(1px 1px at 8% 85%, #fff6 50%, transparent 51%),
+        radial-gradient(1px 1px at 55% 88%, #fff4 50%, transparent 51%),
+        radial-gradient(1.2px 1.2px at 25% 42%, #fff5 50%, transparent 51%),
+        radial-gradient(1px 1px at 93% 33%, #ffe9c44d 50%, transparent 51%),
+        radial-gradient(1px 1px at 70% 60%, #fff5 50%, transparent 51%),
+        radial-gradient(1.4px 1.4px at 17% 55%, #cfe0ff59 50%, transparent 51%);
+    }
+    @keyframes drift {
+      to { transform: translate3d(1.5%, -1%, 0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .stars { animation: none; }
+    }
+    main {
+      position: relative;
+      text-align: center;
+      padding: 2rem;
+      max-width: 34rem;
+    }
+    h1 {
+      font-weight: 400;
+      font-size: clamp(2.2rem, 7vw, 3.4rem);
+      letter-spacing: 0.14em;
+      text-shadow: 0 0 26px rgba(207, 224, 255, 0.28);
+    }
+    .role {
+      margin-top: 0.9rem;
+      font-size: 1.02rem;
+      letter-spacing: 0.34em;
+      text-transform: uppercase;
+      color: #9aa3b8;
+    }
+    nav {
+      margin-top: 3.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      align-items: center;
+    }
+    a {
+      color: #e8e6df;
+      text-decoration: none;
+      font-size: 1.12rem;
+      letter-spacing: 0.06em;
+      padding: 0.55rem 1.5rem;
+      border: 1px solid rgba(232, 230, 223, 0.22);
+      border-radius: 999px;
+      transition: border-color 0.35s ease, text-shadow 0.35s ease, background 0.35s ease;
+    }
+    a:hover, a:focus-visible {
+      border-color: rgba(255, 233, 196, 0.65);
+      background: rgba(255, 233, 196, 0.05);
+      text-shadow: 0 0 18px rgba(255, 233, 196, 0.5);
+      outline: none;
+    }
+    a.eclosion { border-color: rgba(255, 233, 196, 0.38); }
+    a.eclosion::before { content: "✦ "; color: #ffe9c4; }
+    footer {
+      position: fixed;
+      bottom: 1.3rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 0.8rem;
+      letter-spacing: 0.18em;
+      color: #5c6478;
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <main>
+    <h1>Noa&nbsp;Tournoy</h1>
+    <p class="role">Développeur</p>
+    <nav aria-label="Liens">
+      <a class="eclosion" href="https://eclosion.noatournoy.dev">Éclosion — la naissance d'un monde</a>
+      <a href="https://github.com/Noa-trny">GitHub</a>
+    </nav>
+  </main>
+  <footer>noatournoy.dev</footer>
+</body>
+</html>
