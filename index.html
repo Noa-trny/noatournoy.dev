@@ -2,31 +2,56 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#020308" />
-  <title>Noa Tournoy</title>
-  <meta name="description" content="Noa Tournoy — développeur. Éclosion : une expérience web 3D où le défilement est le temps." />
+  <title>Noa Tournoy — Développeur généraliste &amp; web créatif</title>
+  <script>
+    /* Applique la langue avant le premier rendu : pas de flash de français
+       pour un visiteur anglophone. Sans JS, la page reste en français. */
+    (function () {
+      try {
+        var l = localStorage.getItem("lang");
+        if (l !== "fr" && l !== "en") {
+          l = ((navigator.language || "fr").toLowerCase().indexOf("fr") === 0) ? "fr" : "en";
+        }
+        document.documentElement.lang = l;
+        if (l === "en") document.title = "Noa Tournoy — Generalist & creative web developer";
+      } catch (e) { /* la page reste en français */ }
+    })();
+  </script>
+  <meta name="description" content="Noa Tournoy — développeur généraliste & web créatif. Éclosion : une expérience web 3D où le défilement est le temps. Contact, GitHub, LinkedIn." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Noa Tournoy — Développeur généraliste & web créatif" />
+  <meta property="og:description" content="Éclosion : une expérience web 3D, 100 % procédurale, où le défilement est le temps." />
+  <meta property="og:url" content="https://noatournoy.dev/" />
+  <meta property="og:image" content="https://noatournoy.dev/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Une étoile dorée dans un ciel nocturne étoilé" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://noatournoy.dev/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 2 L60 40 L98 50 L60 60 L50 98 L40 60 L2 50 L40 40 Z' fill='%23ffe9c4'/%3E%3C/svg%3E" />
   <style>
-    /* Zéro requête externe — la page entière tient dans ce fichier,
-       dans l'esprit d'Éclosion. */
+    /* Page autonome par goût (v1 : un seul fichier) — pas une règle. */
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
     body {
+      min-height: 100vh;
+      min-height: 100svh;
       background: radial-gradient(ellipse 120% 90% at 50% 110%, #0a1024 0%, #04060f 55%, #020308 100%);
+      background-attachment: fixed;
       color: #e8e6df;
       font-family: Georgia, "Times New Roman", serif;
       display: grid;
       place-items: center;
-      overflow: hidden;
     }
-    /* Un ciel : trois couches de "box-shadow stars", dérive lente. */
-    .stars, .stars::before, .stars::after {
-      content: "";
+    /* Bascule de langue : le français par défaut, l'anglais dès que <html lang> change. */
+    :root[lang="en"] .l-fr { display: none; }
+    :root:not([lang="en"]) .l-en { display: none; }
+    /* Un ciel : des étoiles en radial-gradients, dérive lente. */
+    .stars {
       position: fixed;
       inset: -10%;
       pointer-events: none;
-    }
-    .stars {
       animation: drift 240s linear infinite alternate;
       background:
         radial-gradient(1px 1px at 12% 22%, #fff8 50%, transparent 51%),
@@ -51,8 +76,9 @@
     main {
       position: relative;
       text-align: center;
-      padding: 2rem;
-      max-width: 34rem;
+      padding: 2rem 1.4rem max(2rem, env(safe-area-inset-bottom));
+      width: 100%;
+      max-width: 36rem;
     }
     h1 {
       font-weight: 400;
@@ -62,19 +88,32 @@
     }
     .role {
       margin-top: 0.9rem;
-      font-size: 1.02rem;
-      letter-spacing: 0.34em;
+      font-size: 0.95rem;
+      letter-spacing: 0.22em;
       text-transform: uppercase;
       color: #9aa3b8;
     }
+    .now {
+      margin-top: 0.6rem;
+      font-size: 0.9rem;
+      font-style: italic;
+      letter-spacing: 0.04em;
+      color: #8d96aa;
+    }
     nav {
-      margin-top: 3.2rem;
+      margin-top: 2.8rem;
       display: flex;
       flex-direction: column;
-      gap: 1.1rem;
+      gap: 1.4rem;
       align-items: center;
     }
-    a {
+    .destination {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    nav > .destination > a {
       color: #e8e6df;
       text-decoration: none;
       font-size: 1.12rem;
@@ -84,36 +123,229 @@
       border-radius: 999px;
       transition: border-color 0.35s ease, text-shadow 0.35s ease, background 0.35s ease;
     }
-    a:hover, a:focus-visible {
+    nav > .destination > a:hover, nav > .destination > a:focus-visible {
       border-color: rgba(255, 233, 196, 0.65);
       background: rgba(255, 233, 196, 0.05);
       text-shadow: 0 0 18px rgba(255, 233, 196, 0.5);
-      outline: none;
+    }
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid rgba(255, 233, 196, 0.6);
+      outline-offset: 3px;
     }
     a.eclosion { border-color: rgba(255, 233, 196, 0.38); }
-    a.eclosion::before { content: "✦ "; color: #ffe9c4; }
-    footer {
-      position: fixed;
-      bottom: 1.3rem;
-      left: 0;
-      right: 0;
-      text-align: center;
+    .star { color: #ffe9c4; }
+    .hint {
+      font-size: 0.84rem;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+      color: #8d96aa;
+      max-width: min(26rem, 100%);
+    }
+    @media (max-width: 420px) {
+      nav > .destination > a { font-size: 1.02rem; padding-inline: 1.2rem; }
+    }
+    .projects {
+      list-style: none;
+      display: grid;
+      gap: 0.35rem;
+      font-size: 0.84rem;
+      letter-spacing: 0.04em;
+      line-height: 1.5;
+      color: #8d96aa;
+    }
+    .projects a, .hint a {
+      color: #b9c1d4;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(185, 193, 212, 0.35);
+      padding-bottom: 0.08em;
+      transition: color 0.35s ease, border-color 0.35s ease;
+    }
+    .projects a:hover, .projects a:focus-visible,
+    .hint a:hover, .hint a:focus-visible {
+      color: #ffe9c4;
+      border-color: rgba(255, 233, 196, 0.65);
+    }
+    .hint .email { overflow-wrap: anywhere; }
+    /* Le span devient un bouton de copie quand JS est là. */
+    button.email {
+      font: inherit;
+      letter-spacing: inherit;
+      background: none;
+      border: 0;
+      border-bottom: 1px dashed rgba(185, 193, 212, 0.45);
+      color: #b9c1d4;
+      padding: 0 0 0.08em;
+      cursor: copy;
+      transition: color 0.35s ease, border-color 0.35s ease;
+    }
+    button.email:hover, button.email:focus-visible {
+      color: #ffe9c4;
+      border-color: rgba(255, 233, 196, 0.65);
+    }
+    .copied {
+      display: block;
+      min-height: 1.3em;
+      margin-top: 0.25rem;
+      color: #ffe9c4;
       font-size: 0.8rem;
-      letter-spacing: 0.18em;
-      color: #5c6478;
+      letter-spacing: 0.06em;
+    }
+    .sep { margin: 0 0.6em; color: #5c6478; }
+    .lang-switch {
+      position: fixed;
+      top: max(1.1rem, env(safe-area-inset-top));
+      right: max(1.3rem, env(safe-area-inset-right));
+      display: flex;
+      align-items: center;
+      gap: 0.1rem;
+      border: 1px solid rgba(232, 230, 223, 0.18);
+      border-radius: 999px;
+      padding: 0.18rem 0.3rem;
+    }
+    .lang-switch button {
+      font-family: inherit;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      color: #9aa3b8;
+      background: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 0.28rem 0.6rem;
+      cursor: pointer;
+      transition: color 0.35s ease, background 0.35s ease;
+    }
+    .lang-switch button[aria-current="true"] {
+      color: #ffe9c4;
+      background: rgba(255, 233, 196, 0.08);
+      cursor: default;
+    }
+    .lang-switch button:hover, .lang-switch button:focus-visible {
+      color: #ffe9c4;
+    }
+    /* Sans JavaScript, la bascule n'existe pas : la page reste en français. */
+    .lang-switch[hidden] { display: none; }
+    /* Cibles tactiles plus généreuses au doigt. */
+    @media (pointer: coarse) {
+      nav > .destination > a { padding: 0.7rem 1.6rem; }
+      .lang-switch button { padding: 0.4rem 0.7rem; }
+      .projects { gap: 0.55rem; }
+      .hint a, .hint button { padding-bottom: 0.25em; }
+    }
+    /* Paysage bas de plafond : resserrer le rythme vertical pour limiter le scroll. */
+    @media (max-height: 480px) {
+      main { padding: 1.2rem 2rem; }
+      nav { margin-top: 1.6rem; gap: 1rem; }
     }
   </style>
 </head>
 <body>
   <div class="stars" aria-hidden="true"></div>
+  <div class="lang-switch" role="group" aria-label="Langue / Language" hidden>
+    <button type="button" data-lang="fr" aria-current="true">FR</button>
+    <button type="button" data-lang="en" aria-current="false">EN</button>
+  </div>
   <main>
     <h1>Noa&nbsp;Tournoy</h1>
-    <p class="role">Développeur</p>
-    <nav aria-label="Liens">
-      <a class="eclosion" href="https://eclosion.noatournoy.dev">Éclosion — la naissance d'un monde</a>
-      <a href="https://github.com/Noa-trny">GitHub</a>
+    <p class="role"><span class="l-fr">Développeur généraliste &amp; web créatif</span><span class="l-en" lang="en">Generalist &amp; creative web developer</span></p>
+    <p class="now"><span class="l-fr">Alternance cybersécurité chez ADEO — dès octobre 2026</span><span class="l-en" lang="en">Cybersecurity apprenticeship at ADEO — starting October 2026</span></p>
+    <nav aria-label="Navigation principale">
+      <div class="destination">
+        <a class="eclosion" href="https://eclosion.noatournoy.dev"><span class="star" aria-hidden="true">✦ </span><span class="l-fr">Éclosion — la naissance d'un monde</span><span class="l-en" lang="en">Éclosion — the birth of a world</span></a>
+        <p class="hint"><span class="l-fr">Expérience web 3D où le défilement est le temps — huit actes, 100&nbsp;% procédurale.</span><span class="l-en" lang="en">A 3D web experience where scrolling is time — eight acts, 100% procedural.</span></p>
+      </div>
+      <div class="destination">
+        <a href="https://github.com/Noa-trny" rel="noopener">GitHub</a>
+        <ul class="projects">
+          <li><a href="https://github.com/Noa-trny/Gamedex" rel="noopener">Gamedex</a><span class="sep" aria-hidden="true">·</span><span class="l-fr">app TypeScript/React (API RAWG, filtres, favoris)</span><span class="l-en" lang="en">TypeScript/React app (RAWG API, filters, favorites)</span></li>
+          <li><a href="https://github.com/Noa-trny/laying_grass_cpp" rel="noopener">laying_grass_cpp</a><span class="sep" aria-hidden="true">·</span><span class="l-fr">jeu console en C++17, zéro dépendance</span><span class="l-en" lang="en">C++17 console game, zero dependencies</span></li>
+          <li><a href="https://github.com/simonpotel/Ludoria" rel="noopener">Ludoria</a><span class="sep" aria-hidden="true">·</span><span class="l-fr">jeux de plateau en Python, projet d'équipe à trois</span><span class="l-en" lang="en">Python board games, three-person team project</span></li>
+        </ul>
+      </div>
+      <div class="destination">
+        <a href="mailto:noa.tournoy@supinfo.com"><span class="l-fr">Écrivez-moi</span><span class="l-en" lang="en">Get in touch</span></a>
+        <p class="hint"><span class="email">noa.tournoy@supinfo.com</span><span class="sep" aria-hidden="true">·</span><a href="https://www.linkedin.com/in/noa-tournoy/" rel="me noopener">LinkedIn</a><span class="copied" aria-live="polite"></span></p>
+      </div>
     </nav>
   </main>
-  <footer>noatournoy.dev</footer>
+  <script>
+    (function () {
+      "use strict";
+      var sw = document.querySelector(".lang-switch");
+      if (!sw) return;
+      var nav = document.querySelector("nav");
+      var TITLES = {
+        fr: "Noa Tournoy — Développeur généraliste & web créatif",
+        en: "Noa Tournoy — Generalist & creative web developer"
+      };
+      var NAV_LABELS = { fr: "Navigation principale", en: "Main navigation" };
+      var COPY_LABELS = { fr: "Copier l'adresse email", en: "Copy email address" };
+      var COPIED_MSG = { fr: "Adresse copiée ✓", en: "Address copied ✓" };
+      var current = "fr";
+
+      /* Amélioration progressive : le span d'adresse devient un bouton de copie. */
+      var emailSpan = document.querySelector("span.email");
+      var emailBtn = null;
+      if (emailSpan) {
+        emailBtn = document.createElement("button");
+        emailBtn.type = "button";
+        emailBtn.className = "email";
+        emailBtn.textContent = emailSpan.textContent;
+        emailSpan.parentNode.replaceChild(emailBtn, emailSpan);
+      }
+
+      function apply(lang) {
+        current = lang;
+        document.documentElement.lang = lang;
+        document.title = TITLES[lang];
+        if (nav) nav.setAttribute("aria-label", NAV_LABELS[lang]);
+        if (emailBtn) emailBtn.setAttribute("aria-label", COPY_LABELS[lang]);
+        sw.querySelectorAll("button").forEach(function (b) {
+          b.setAttribute("aria-current", b.getAttribute("data-lang") === lang ? "true" : "false");
+        });
+      }
+
+      apply(document.documentElement.lang === "en" ? "en" : "fr");
+      sw.hidden = false;
+      sw.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b) return;
+        var lang = b.getAttribute("data-lang");
+        apply(lang);
+        try { localStorage.setItem("lang", lang); } catch (err) { /* mode privé : choix non persisté */ }
+      });
+
+      if (emailBtn) {
+        var copied = document.querySelector(".copied");
+        var hideTimer = null;
+        var announce = function () {
+          if (!copied) return;
+          copied.textContent = COPIED_MSG[current];
+          clearTimeout(hideTimer);
+          hideTimer = setTimeout(function () { copied.textContent = ""; }, 2200);
+        };
+        var fallbackCopy = function (text) {
+          var ta = document.createElement("textarea");
+          ta.value = text;
+          ta.setAttribute("readonly", "");
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          var ok = false;
+          try { ok = document.execCommand("copy"); } catch (err) { /* copie indisponible : l'adresse reste lisible */ }
+          document.body.removeChild(ta);
+          if (ok) announce();
+        };
+        emailBtn.addEventListener("click", function () {
+          var addr = emailBtn.textContent;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(addr).then(announce, function () { fallbackCopy(addr); });
+          } else {
+            fallbackCopy(addr);
+          }
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
