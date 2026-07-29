@@ -1,0 +1,521 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#020308" />
+  <title>Projets — Noa Tournoy</title>
+  <script>
+    /* Applique la langue avant le premier rendu. Sans JS, la page reste en français. */
+    (function () {
+      try {
+        var l = localStorage.getItem("lang");
+        if (l !== "fr" && l !== "en") {
+          l = ((navigator.language || "fr").toLowerCase().indexOf("fr") === 0) ? "fr" : "en";
+        }
+        document.documentElement.lang = l;
+        if (l === "en") document.title = "Projects — Noa Tournoy";
+      } catch (e) { /* la page reste en français */ }
+    })();
+  </script>
+  <meta name="description" content="Le dossier technique de Noa Tournoy : l'étude de cas d'Éclosion (chiffres mesurés, choix d'architecture, débogage) et trois projets vérifiables." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Projets — Noa Tournoy" />
+  <meta property="og:description" content="L'étude de cas d'Éclosion : −19 % de charge, pire frame 617 → 167 ms, 100 % procédural. Chaque chiffre est mesuré." />
+  <meta property="og:url" content="https://noatournoy.dev/projets/" />
+  <meta property="og:image" content="https://noatournoy.dev/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Une étoile dorée dans un ciel nocturne étoilé" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="canonical" href="https://noatournoy.dev/projets/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 2 L60 40 L98 50 L60 60 L50 98 L40 60 L2 50 L40 40 Z' fill='%23ffe9c4'/%3E%3C/svg%3E" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      min-height: 100svh;
+      background: radial-gradient(ellipse 120% 90% at 50% 110%, #0a1024 0%, #04060f 55%, #020308 100%);
+      background-attachment: fixed;
+      color: #e8e6df;
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.65;
+    }
+    :root[lang="en"] .l-fr { display: none; }
+    :root:not([lang="en"]) .l-en { display: none; }
+    .stars {
+      position: fixed;
+      inset: -10%;
+      pointer-events: none;
+      animation: drift 240s linear infinite alternate;
+      background:
+        radial-gradient(1px 1px at 12% 22%, #fff8 50%, transparent 51%),
+        radial-gradient(1px 1px at 78% 12%, #fff6 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 33% 68%, #ffe9c455 50%, transparent 51%),
+        radial-gradient(1px 1px at 62% 41%, #fff7 50%, transparent 51%),
+        radial-gradient(1px 1px at 88% 74%, #fff5 50%, transparent 51%),
+        radial-gradient(1.5px 1.5px at 45% 15%, #cfe0ff66 50%, transparent 51%),
+        radial-gradient(1px 1px at 8% 85%, #fff6 50%, transparent 51%),
+        radial-gradient(1px 1px at 55% 88%, #fff4 50%, transparent 51%),
+        radial-gradient(1.2px 1.2px at 25% 42%, #fff5 50%, transparent 51%),
+        radial-gradient(1px 1px at 93% 33%, #ffe9c44d 50%, transparent 51%),
+        radial-gradient(1px 1px at 70% 60%, #fff5 50%, transparent 51%),
+        radial-gradient(1.4px 1.4px at 17% 55%, #cfe0ff59 50%, transparent 51%);
+    }
+    @keyframes drift { to { transform: translate3d(1.5%, -1%, 0); } }
+    @media (prefers-reduced-motion: reduce) { .stars { animation: none; } }
+
+    .page {
+      position: relative;
+      max-width: 44rem;
+      margin: 0 auto;
+      padding: 1.4rem 1.4rem max(3rem, env(safe-area-inset-bottom));
+    }
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 3.2rem;
+    }
+    .back {
+      color: #9aa3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      transition: color 0.35s ease;
+    }
+    .back:hover, .back:focus-visible { color: #ffe9c4; }
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid rgba(255, 233, 196, 0.6);
+      outline-offset: 3px;
+    }
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 0.1rem;
+      border: 1px solid rgba(232, 230, 223, 0.18);
+      border-radius: 999px;
+      padding: 0.18rem 0.3rem;
+    }
+    .lang-switch button {
+      font-family: inherit;
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      color: #9aa3b8;
+      background: none;
+      border: 0;
+      border-radius: 999px;
+      padding: 0.28rem 0.6rem;
+      cursor: pointer;
+      transition: color 0.35s ease, background 0.35s ease;
+    }
+    .lang-switch button[aria-current="true"] { color: #ffe9c4; background: rgba(255, 233, 196, 0.08); cursor: default; }
+    .lang-switch button:hover, .lang-switch button:focus-visible { color: #ffe9c4; }
+    .lang-switch[hidden] { display: none; }
+
+    h1 {
+      font-weight: 400;
+      font-size: clamp(1.9rem, 5.5vw, 2.6rem);
+      letter-spacing: 0.1em;
+      text-align: center;
+    }
+    .tagline {
+      text-align: center;
+      margin-top: 0.6rem;
+      font-style: italic;
+      color: #8d96aa;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+    }
+
+    /* La fiche signalétique — le focal : des mesures dorées posées dans la nuit. */
+    .fiche {
+      margin-top: 2.6rem;
+      border: 1px solid rgba(232, 230, 223, 0.16);
+      border-radius: 18px;
+      padding: 1.6rem 1.7rem;
+      background: rgba(10, 16, 36, 0.35);
+    }
+    .fiche h2 {
+      font-weight: 400;
+      font-size: 1.25rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.1rem;
+    }
+    .fiche h2 .star { color: #ffe9c4; }
+    .fiche dl {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 0.55rem 1.2rem;
+      font-size: 0.93rem;
+    }
+    .fiche dt {
+      color: #8d96aa;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.72rem;
+      padding-top: 0.2rem;
+    }
+    .fiche dd { color: #d6d4cc; }
+    .fiche .m { color: #ffe9c4; font-variant-numeric: tabular-nums; }
+    @media (max-width: 480px) {
+      .fiche dl { grid-template-columns: 1fr; gap: 0.15rem; }
+      .fiche dt { margin-top: 0.7rem; }
+    }
+
+    .toc {
+      margin: 2.2rem 0 0;
+      text-align: center;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      color: #5c6478;
+    }
+    .toc a { color: #9aa3b8; text-decoration: none; transition: color 0.35s ease; white-space: nowrap; }
+    .toc a:hover, .toc a:focus-visible { color: #ffe9c4; }
+    .toc .sep { margin: 0 0.45em; }
+
+    section { margin-top: 4.2rem; }
+    section > h2 {
+      font-weight: 400;
+      font-size: 1.45rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 1.3rem;
+    }
+    h3 {
+      font-weight: 400;
+      font-size: 1.08rem;
+      letter-spacing: 0.05em;
+      color: #ffe9c4;
+      margin: 1.9rem 0 0.5rem;
+    }
+    p + p { margin-top: 0.8rem; }
+    .muted { color: #8d96aa; }
+    em { color: #d6d4cc; }
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.88em;
+      color: #cfe0ff;
+    }
+    .prose p a, .prose dd a, .prose li a, .prose h3 a {
+      color: #b9c1d4;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(185, 193, 212, 0.35);
+      padding-bottom: 0.06em;
+      transition: color 0.35s ease, border-color 0.35s ease;
+    }
+    .prose p a:hover, .prose dd a:hover, .prose li a:hover, .prose h3 a:hover,
+    .prose p a:focus-visible, .prose dd a:focus-visible, .prose li a:focus-visible, .prose h3 a:focus-visible { color: #ffe9c4; border-color: rgba(255, 233, 196, 0.65); }
+
+    figure { margin: 1.6rem 0 0.4rem; }
+    figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 14px;
+      border: 1px solid rgba(232, 230, 223, 0.14);
+    }
+    figcaption {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      font-style: italic;
+      color: #8d96aa;
+      letter-spacing: 0.04em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 1.2rem 0 0.4rem;
+    }
+    th {
+      text-align: left;
+      font-weight: 400;
+      color: #8d96aa;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.72rem;
+      padding: 0.5rem 0.6rem 0.5rem 0;
+      border-bottom: 1px solid rgba(232, 230, 223, 0.16);
+    }
+    td {
+      padding: 0.55rem 0.6rem 0.55rem 0;
+      border-bottom: 1px solid rgba(232, 230, 223, 0.08);
+      vertical-align: top;
+    }
+    td.avant { color: #8d96aa; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    td.apres { color: #ffe9c4; font-variant-numeric: tabular-nums; }
+    .note { font-size: 0.8rem; color: #5c6478; margin-top: 0.5rem; }
+
+    ul.plain { list-style: none; }
+    ul.plain li { padding-left: 1.1rem; position: relative; margin-top: 0.45rem; }
+    ul.plain li::before { content: "·"; position: absolute; left: 0.2rem; color: #ffe9c4; }
+
+    .projfiche { margin-top: 1.8rem; }
+    .projfiche h3 { margin-top: 0; }
+    .projfiche .meta {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: #8d96aa;
+      margin-bottom: 0.35rem;
+    }
+
+    .contact {
+      margin-top: 4.5rem;
+      text-align: center;
+    }
+    .contact p.lead { color: #8d96aa; font-style: italic; }
+    .pill {
+      display: inline-block;
+      margin-top: 1.1rem;
+      color: #e8e6df;
+      text-decoration: none;
+      font-size: 1.12rem;
+      letter-spacing: 0.06em;
+      padding: 0.55rem 1.5rem;
+      border: 1px solid rgba(255, 233, 196, 0.38);
+      border-radius: 999px;
+      transition: border-color 0.35s ease, text-shadow 0.35s ease, background 0.35s ease;
+    }
+    .pill:hover, .pill:focus-visible {
+      border-color: rgba(255, 233, 196, 0.65);
+      background: rgba(255, 233, 196, 0.05);
+      text-shadow: 0 0 18px rgba(255, 233, 196, 0.5);
+    }
+    .contact .hint {
+      margin-top: 0.8rem;
+      font-size: 0.84rem;
+      letter-spacing: 0.04em;
+      color: #8d96aa;
+    }
+    .contact .hint a {
+      color: #b9c1d4;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(185, 193, 212, 0.35);
+      padding-bottom: 0.08em;
+      transition: color 0.35s ease, border-color 0.35s ease;
+    }
+    .contact .hint a:hover, .contact .hint a:focus-visible { color: #ffe9c4; border-color: rgba(255, 233, 196, 0.65); }
+    .contact .sep { margin: 0 0.6em; color: #5c6478; }
+    .foot {
+      margin-top: 3.5rem;
+      text-align: center;
+    }
+
+    @media (pointer: coarse) {
+      .lang-switch button { padding: 0.4rem 0.7rem; }
+      .prose p a, .prose dd a, .prose li a, .toc a { padding-bottom: 0.2em; }
+    }
+    /* Un dossier s'imprime : encre sur papier, sans le décor. */
+    @media print {
+      body { background: #fff; color: #1a1a1a; }
+      .stars, .lang-switch, .l-en { display: none; }
+      .back, .pill { color: #1a1a1a; }
+      .fiche { background: none; border-color: #bbb; }
+      .fiche dd, em { color: #1a1a1a; }
+      .fiche .m, td.apres, h3, .fiche h2 .star, ul.plain li::before { color: #7a5b12; }
+      .fiche dt, .muted, .tagline, figcaption, .toc, .note, td.avant, .projfiche .meta, .contact .lead, .contact .hint { color: #555; }
+      code { color: #333; }
+      figure img { border-color: #ccc; }
+      th, td { border-color: #ccc; }
+      .prose p a, .prose dd a, .prose li a, .prose h3 a, .contact .hint a { color: #1a1a1a; border-color: #999; }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="page prose" id="haut">
+    <div class="top">
+      <a class="back" href="/"><span class="l-fr">← noatournoy.dev</span><span class="l-en" lang="en">← noatournoy.dev</span></a>
+      <div class="lang-switch" role="group" aria-label="Langue / Language" hidden>
+        <button type="button" data-lang="fr" aria-current="true">FR</button>
+        <button type="button" data-lang="en" aria-current="false">EN</button>
+      </div>
+    </div>
+
+    <main>
+      <h1><span class="l-fr">Projets</span><span class="l-en" lang="en">Projects</span></h1>
+      <p class="tagline"><span class="l-fr">Chaque chiffre est mesuré, chaque anecdote est vraie.</span><span class="l-en" lang="en">Every number is measured, every story is true.</span></p>
+
+      <div class="fiche">
+        <h2><span class="star" aria-hidden="true">✦ </span>Éclosion</h2>
+        <dl>
+          <dt><span class="l-fr">Nature</span><span class="l-en" lang="en">What</span></dt>
+          <dd><span class="l-fr">Expérience web 3D où le défilement est le temps — huit actes, du Néant à l'Aube. 100&nbsp;% procédurale : aucun modèle, aucune texture, aucun fichier audio&nbsp;; géométrie, matériaux GLSL, plus de 100&nbsp;000 particules et la musique (WebAudio) générés par le code.</span><span class="l-en" lang="en">A 3D web experience where scrolling is time — eight acts, from the Void to Dawn. 100% procedural: no models, no textures, no audio files; geometry, GLSL materials, 100,000+ particles and the music itself (WebAudio) are generated by code.</span></dd>
+          <dt><span class="l-fr">Rôle</span><span class="l-en" lang="en">Role</span></dt>
+          <dd><span class="l-fr">Conception &amp; développement, en solo</span><span class="l-en" lang="en">Design &amp; development, solo</span></dd>
+          <dt>Stack</dt>
+          <dd>Next.js 15 · React 19 · TypeScript strict · Three.js / React Three Fiber · GSAP ScrollTrigger · Lenis · zustand · WebAudio</dd>
+          <dt><span class="l-fr">Volume</span><span class="l-en" lang="en">Size</span></dt>
+          <dd><span class="m">~11 600</span> <span class="l-fr">lignes ·</span><span class="l-en" lang="en">lines ·</span> <span class="m">195</span> <span class="l-fr">fichiers</span><span class="l-en" lang="en">files</span></dd>
+          <dt><span class="l-fr">Mesures</span><span class="l-en" lang="en">Measured</span></dt>
+          <dd><span class="m">−19&nbsp;%</span> <span class="l-fr">de charge ·</span><span class="l-en" lang="en">first-visit weight ·</span> <span class="l-fr">pire frame</span><span class="l-en" lang="en">worst frame</span> <span class="m">617 → 167&nbsp;ms</span> · Lighthouse <span class="m">100&nbsp;/&nbsp;100&nbsp;/&nbsp;100</span></dd>
+          <dt><span class="l-fr">Liens</span><span class="l-en" lang="en">Links</span></dt>
+          <dd><a href="https://eclosion.noatournoy.dev"><span class="l-fr">Voir l'expérience</span><span class="l-en" lang="en">See it live</span></a> &nbsp;·&nbsp; <a href="https://github.com/Noa-trny/eclosion" rel="noopener"><span class="l-fr">Lire le code</span><span class="l-en" lang="en">Read the code</span></a></dd>
+        </dl>
+      </div>
+
+      <nav class="toc" aria-label="Sommaire">
+        <a href="#choix"><span class="l-fr">Choix</span><span class="l-en" lang="en">Choices</span></a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#chiffres"><span class="l-fr">Chiffres</span><span class="l-en" lang="en">Numbers</span></a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#debogage"><span class="l-fr">Débogage</span><span class="l-en" lang="en">Debugging</span></a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#qualite"><span class="l-fr">Qualité</span><span class="l-en" lang="en">Quality</span></a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#accessibilite"><span class="l-fr">Accessibilité</span><span class="l-en" lang="en">Accessibility</span></a>
+        <span class="sep" aria-hidden="true">·</span>
+        <a href="#autres"><span class="l-fr">Autres projets</span><span class="l-en" lang="en">More projects</span></a>
+      </nav>
+
+      <section id="choix">
+        <h2><span class="l-fr">Trois choix qui structurent tout</span><span class="l-en" lang="en">Three choices that shape everything</span></h2>
+
+        <h3><span class="l-fr">Le contrat de scroll : zéro render React à 60 fps</span><span class="l-en" lang="en">The scroll contract: zero React renders at 60 fps</span></h3>
+        <p><span class="l-fr">Un seul lissage (Lenis), un seul ScrollTrigger maître qui scrube une timeline GSAP de durée 1, et un registre d'uniforms mutables que les tweens écrivent et que le rendu lit à chaque frame — sans jamais passer par un render React. React ne se réveille qu'aux changements d'acte ; le texte DOM suit via un unique MotionValue, hors React lui aussi.</span><span class="l-en" lang="en">One smoothing pass (Lenis), one master ScrollTrigger scrubbing a duration-1 GSAP timeline, and a registry of mutable uniforms that tweens write and the render loop reads every frame — without ever going through a React render. React only wakes on act changes; the DOM text follows through a single MotionValue, outside React too.</span></p>
+        <figure>
+          <img src="img/void-constellations.jpg" width="1600" height="1000" loading="lazy" decoding="async" alt="Acte I d'Éclosion : des constellations dessinées dans le Néant" data-alt-en="Éclosion, act I: constellations drawn in the Void" />
+          <figcaption><span class="l-fr">Acte I — le Néant. Tout ce qui est à l'écran est calculé, rien n'est chargé.</span><span class="l-en" lang="en">Act I — the Void. Everything on screen is computed, nothing is loaded.</span></figcaption>
+        </figure>
+
+        <h3><span class="l-fr">Un seul monde, une seule vérité</span><span class="l-en" lang="en">One world, one truth</span></h3>
+        <p><span class="l-fr"><code>groundHeight(x, z)</code> — une fonction analytique — génère le terrain visible, contraint la marche en exploration libre, fait rebondir la physique et borne les vols d'oiseaux. Ce qu'on voit est exactement ce qu'on touche. Même logique pour la caméra : une seule courbe CatmullRom continue, chaque acte voyageant jusqu'au premier point du suivant — aucune coupure sur tout le film.</span><span class="l-en" lang="en"><code>groundHeight(x, z)</code> — one analytic function — generates the visible terrain, constrains free-roam walking, bounces the physics and bounds the birds' flight. What you see is exactly what you touch. Same logic for the camera: a single continuous CatmullRom curve, each act travelling to the first point of the next — not one cut across the whole film.</span></p>
+
+        <h3><span class="l-fr">Des particules sans état</span><span class="l-en" lang="en">Stateless particles</span></h3>
+        <p><span class="l-fr">Pluie, lucioles en curl-noise, braises, vortex du final : chaque comportement est une fonction fermée de <code>(graine, temps)</code> évaluée dans le vertex shader. Pas de simulation à maintenir, pas d'aller-retour GPU. Les buffers sont alloués une fois au niveau de qualité maximal ; changer de tier ne fait que déplacer un <code>setDrawRange</code>.</span><span class="l-en" lang="en">Rain, curl-noise fireflies, embers, the finale's vortex: every behaviour is a closed function of <code>(seed, time)</code> evaluated in the vertex shader. No simulation to maintain, no GPU round-trips. Buffers are allocated once at the maximum quality tier; switching tiers only moves a <code>setDrawRange</code>.</span></p>
+        <figure>
+          <img src="img/storm.jpg" width="1600" height="1000" loading="lazy" decoding="async" alt="L'acte de l'orage : pluie et éclairs procéduraux au-dessus du monde" data-alt-en="The storm act: procedural rain and lightning over the world" />
+          <figcaption><span class="l-fr">L'orage — la pluie est une fonction, pas une simulation.</span><span class="l-en" lang="en">The storm — rain is a function, not a simulation.</span></figcaption>
+        </figure>
+      </section>
+
+      <section id="chiffres">
+        <h2><span class="l-fr">L'ingénierie, chiffrée</span><span class="l-en" lang="en">Engineering, measured</span></h2>
+        <table>
+          <thead>
+            <tr><th scope="col"><span class="l-fr">Mesure</span><span class="l-en" lang="en">Metric</span></th><th scope="col"><span class="l-fr">Avant</span><span class="l-en" lang="en">Before</span></th><th scope="col"><span class="l-fr">Après</span><span class="l-en" lang="en">After</span></th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="l-fr">Charge de première visite</span><span class="l-en" lang="en">First-visit weight</span></td><td class="avant">422 Kio</td><td class="apres">342 Kio (−19 %)</td></tr>
+            <tr><td><span class="l-fr">Pire frame aux frontières d'acte*</span><span class="l-en" lang="en">Worst frame at act boundaries*</span></td><td class="avant">617 ms</td><td class="apres">167 ms</td></tr>
+            <tr><td><span class="l-fr">Lighthouse (accessibilité / bonnes pratiques / SEO)</span><span class="l-en" lang="en">Lighthouse (accessibility / best practices / SEO)</span></td><td class="avant">—</td><td class="apres">100 / 100 / 100</td></tr>
+            <tr><td><span class="l-fr">Arbres de la forêt, à coût de frame mesuré</span><span class="l-en" lang="en">Forest trees, at measured frame cost</span></td><td class="avant">420</td><td class="apres">630<span class="l-fr">, médiane inchangée à 0,1 ms près</span><span class="l-en" lang="en">, median unchanged within 0.1 ms</span></td></tr>
+          </tbody>
+        </table>
+        <p class="note"><span class="l-fr">*banc GPU intégré forcé au tier maximal — le pire cas mesurable.</span><span class="l-en" lang="en">*integrated GPU bench forced to the maximum tier — the worst measurable case.</span></p>
+        <p><span class="l-fr"><em>Les −19&nbsp;%</em> : la police italique de Fraunces — 80&nbsp;Ko préchargés en priorité haute — n'était rendue nulle part. Une seule occurrence du mot «&nbsp;italic&nbsp;» dans tout le code : sa propre déclaration.</span><span class="l-en" lang="en"><em>The −19%</em>: Fraunces' italic face — 80 KB preloaded at high priority — was never rendered anywhere. A single occurrence of the word “italic” in the whole codebase: its own declaration.</span></p>
+        <p><span class="l-fr"><em>Les 617&nbsp;ms</em> : trois stalls empilés à chaque frontière d'acte — le préchauffage de shaders compilait sous la mauvaise clé de cache, un acte se dessinait prêt ou pas, et le driver payait son introspection différée (~180&nbsp;ms par programme sur GPU intégré). Démêlés au profileur CPU et aux hooks GL posés sur <code>linkProgram</code>. Réponse : chaque acte monte invisible, compile sous l'état du composer, se fait introspecter un programme par frame, puis se révèle — le tout couvert par le brouillard de la scène. Aucun changement visuel, frontières fluides.</span><span class="l-en" lang="en"><em>The 617 ms</em>: three stalls stacked at every act boundary — shader warm-up compiled under the wrong cache key, an act drew whether ready or not, and the driver charged its deferred introspection (~180 ms per program on integrated GPUs). Untangled with the CPU profiler and GL hooks on <code>linkProgram</code>. The answer: each act mounts invisible, compiles under the composer's state, gets one program introspected per frame, then reveals itself — all covered by the scene's fog. No visual change, fluid boundaries.</span></p>
+        <figure>
+          <img src="img/forest.jpg" width="1600" height="1000" loading="lazy" decoding="async" alt="La forêt d'Éclosion, générée procéduralement" data-alt-en="Éclosion's procedurally generated forest" />
+          <figcaption><span class="l-fr">La forêt — 630 arbres, médiane de frame inchangée.</span><span class="l-en" lang="en">The forest — 630 trees, frame median unchanged.</span></figcaption>
+        </figure>
+      </section>
+
+      <section id="debogage">
+        <h2><span class="l-fr">Le débogage comme discipline</span><span class="l-en" lang="en">Debugging as a discipline</span></h2>
+        <p><span class="l-fr">Rien ne se corrige sans être vu. Un harnais CDP pilote un vrai Chrome : entrée dans l'expérience, saut à un beat précis, capture — avant/après pour chaque changement de rendu. Les effets liés à la vitesse se capturent en plein défilement ; une capture posée ne montre rien. Le tier GPU se force en injectant la chaîne du renderer.</span><span class="l-en" lang="en">Nothing gets fixed without being seen. A CDP harness drives a real Chrome: enter the experience, jump to a precise beat, capture — before/after for every rendering change. Speed-dependent effects are captured mid-scroll; a static capture shows nothing. The GPU tier is forced by injecting the renderer string.</span></p>
+
+        <h3><span class="l-fr">Le soleil qui ne s'embrasait pas</span><span class="l-en" lang="en">The sun that would not ignite</span></h3>
+        <p><span class="l-fr">Le disque de l'aube rendait gris — le brouillard exponentiel en mangeait 99,5&nbsp;% à cette distance, et son plafond de luminance restait sous le seuil du bloom : «&nbsp;bright enough to bloom&nbsp;», disait le commentaire ; c'était faux depuis toujours. Correctif : le soleil ignore le brouillard (la lune, elle, le ré-émule à l'identique en JS) et une courbe d'embrasement qui passe le seuil — braise sous l'horizon, or à l'affleurement, crème au zénith.</span><span class="l-en" lang="en">The dawn disc rendered grey — exponential fog ate 99.5% of it at that distance, and its luminance ceiling sat below the bloom threshold: “bright enough to bloom”, the comment said; it had been false all along. The fix: the sun ignores fog (the moon re-emulates it identically in JS) and an ignition curve that crosses the threshold — ember below the horizon, gold at the rim, cream at the zenith.</span></p>
+        <figure>
+          <img src="img/freeroam-dawn.jpg" width="1600" height="1000" loading="lazy" decoding="async" alt="Exploration libre à l'aube : un champ de fleurs roses et bleues sous un ciel pâle" data-alt-en="Free roam at dawn: a field of pink and blue flowers under a pale sky" />
+          <figcaption><span class="l-fr">L'aube en exploration libre — le mode qui a exigé que le terrain, la physique et la lumière disent la même vérité.</span><span class="l-en" lang="en">Dawn in free roam — the mode that required terrain, physics and light to tell the same truth.</span></figcaption>
+        </figure>
+
+        <h3><span class="l-fr">Les lignes de l'océan</span><span class="l-en" lang="en">The ocean lines</span></h3>
+        <p><span class="l-fr">Un même symptôme — «&nbsp;des traits blancs&nbsp;» — s'est révélé être cinq défauts empilés, chacun masquant le suivant : ghosting du flou de vitesse, arêtes des fûts de lumière, dôme de ciel nocturne visible sous l'eau, bord de la nappe de Gerstner, plancher trop éclairé. La méthode qui a fini par gagner : masquer les composants un à un pour isoler la source avant de toucher au moindre shader.</span><span class="l-en" lang="en">One symptom — “white streaks” — turned out to be five stacked defects, each masking the next: motion-blur ghosting, light-shaft edges, the night skydome visible underwater, the edge of the Gerstner sheet, an over-lit seafloor. The method that finally won: hide components one by one to isolate the source before touching a single shader.</span></p>
+        <figure>
+          <img src="img/ocean-whale.jpg" width="1600" height="1000" loading="lazy" decoding="async" alt="La plongée d'Éclosion : une baleine passe dans l'océan procédural" data-alt-en="Éclosion's dive: a whale passes through the procedural ocean" />
+          <figcaption><span class="l-fr">L'océan — cinq défauts empilés derrière un seul symptôme.</span><span class="l-en" lang="en">The ocean — five defects stacked behind one symptom.</span></figcaption>
+        </figure>
+      </section>
+
+      <section id="qualite">
+        <h2><span class="l-fr">Tenir la qualité dans le temps</span><span class="l-en" lang="en">Holding quality over time</span></h2>
+        <ul class="plain">
+          <li><span class="l-fr"><em>CI sur chaque push</em> : lint strict (<code>any</code> interdit), TypeScript strict, 16 tests unitaires — pavage des actes, PRNG seedé, sol analytique, parité FR/EN — et build.</span><span class="l-en" lang="en"><em>CI on every push</em>: strict lint (<code>any</code> forbidden), strict TypeScript, 16 unit tests — act tiling, seeded PRNG, analytic ground, FR/EN parity — and the build.</span></li>
+          <li><span class="l-fr"><em>Un smoke test e2e</em> joue le film entier — boot, entrée, chaque acte, l'émergence, le fallback, dans les deux langues — et exige zéro erreur console. Il a attrapé une vraie course (dispose pendant un link de shader) le jour de sa mise en service.</span><span class="l-en" lang="en"><em>An e2e smoke test</em> plays the whole film — boot, entry, every act, the emergence, the fallback, in both languages — and requires zero console errors. It caught a real race (dispose during a shader link) the day it went live.</span></li>
+          <li><span class="l-fr"><em>Workflow</em> : PRs de features vers <code>dev</code>, release <code>dev → main</code> = déploiement.</span><span class="l-en" lang="en"><em>Workflow</em>: feature PRs into <code>dev</code>, release <code>dev → main</code> = deploy.</span></li>
+        </ul>
+      </section>
+
+      <section id="accessibilite">
+        <h2><span class="l-fr">Accessible par construction</span><span class="l-en" lang="en">Accessible by construction</span></h2>
+        <ul class="plain">
+          <li><span class="l-fr">Sans WebGL2 : <a href="https://eclosion.noatournoy.dev/fallback"><code>/fallback</code></a> — le récit complet en HTML rendu serveur, sans JavaScript, bilingue.</span><span class="l-en" lang="en">Without WebGL2: <a href="https://eclosion.noatournoy.dev/fallback"><code>/fallback</code></a> — the full story as server-rendered HTML, no JavaScript, bilingual.</span></li>
+          <li><span class="l-fr"><code>prefers-reduced-motion</code> : scroll natif, particules à 4&nbsp;%, pas de shake, son coupé.</span><span class="l-en" lang="en"><code>prefers-reduced-motion</code>: native scroll, particles at 4%, no shake, sound off.</span></li>
+          <li><span class="l-fr">Annonces <code>aria-live</code> par acte, parcours clavier complet, <code>focus-visible</code> partout.</span><span class="l-en" lang="en"><code>aria-live</code> announcements per act, full keyboard path, <code>focus-visible</code> everywhere.</span></li>
+        </ul>
+        <p><span class="l-fr">Ce que ce projet dit de ma façon de travailler : mesurer avant de corriger, vérifier chaque changement de rendu par capture, isoler avant d'accuser — et encoder chaque leçon payée, en test, en garde-fou, en invariant écrit, pour qu'elle ne coûte qu'une fois.</span><span class="l-en" lang="en">What this project says about how I work: measure before fixing, verify every rendering change with a capture, isolate before blaming — and encode every lesson paid for, as a test, a guardrail, a written invariant, so it only costs once.</span></p>
+      </section>
+
+      <section id="autres">
+        <h2><span class="l-fr">Autres projets</span><span class="l-en" lang="en">More projects</span></h2>
+
+        <div class="projfiche">
+          <p class="meta">TypeScript · React · <span class="l-fr">en solo</span><span class="l-en" lang="en">solo</span></p>
+          <h3><a href="https://github.com/Noa-trny/Gamedex" rel="noopener">Gamedex</a></h3>
+          <p><span class="l-fr">Une vraie app, pas un tutoriel : recherche sur l'API RAWG, filtres, favoris persistants.</span><span class="l-en" lang="en">A real app, not a tutorial: RAWG API search, filters, persistent favorites.</span></p>
+        </div>
+
+        <div class="projfiche">
+          <p class="meta">C++17 · console · <span class="l-fr">en solo</span><span class="l-en" lang="en">solo</span></p>
+          <h3><a href="https://github.com/Noa-trny/laying_grass_cpp" rel="noopener">laying_grass_cpp</a></h3>
+          <p><span class="l-fr">Le versant systèmes : un jeu console en C++17, zéro dépendance.</span><span class="l-en" lang="en">The systems side: a console game in C++17, zero dependencies.</span></p>
+        </div>
+
+        <div class="projfiche">
+          <p class="meta">Python · <span class="l-fr">équipe de trois</span><span class="l-en" lang="en">three-person team</span></p>
+          <h3><a href="https://github.com/simonpotel/Ludoria" rel="noopener">Ludoria</a></h3>
+          <p><span class="l-fr">Katerenga, Congress, Isolation — jeux de plateau développés à trois ; 32 commits vérifiés de ma main, repo d'origine chez simonpotel.</span><span class="l-en" lang="en">Katerenga, Congress, Isolation — board games built as a team of three; 32 verified commits of mine, original repo under simonpotel.</span></p>
+        </div>
+      </section>
+
+      <div class="contact">
+        <p class="lead"><span class="l-fr">Un détail à creuser, un projet à discuter&nbsp;?</span><span class="l-en" lang="en">A detail worth digging into, a project to discuss?</span></p>
+        <a class="pill" href="mailto:noa.tournoy@supinfo.com"><span class="l-fr">Écrivez-moi</span><span class="l-en" lang="en">Get in touch</span></a>
+        <p class="hint">noa.tournoy@supinfo.com<span class="sep" aria-hidden="true">·</span><a href="https://www.linkedin.com/in/noa-tournoy/" rel="me noopener">LinkedIn</a></p>
+      </div>
+
+      <p class="foot"><a class="back" href="/"><span class="l-fr">← Retour à l'accueil</span><span class="l-en" lang="en">← Back to the front door</span></a><span class="sep" aria-hidden="true">·</span><a class="back" href="#haut"><span class="l-fr">↑ Haut de page</span><span class="l-en" lang="en">↑ Top of page</span></a></p>
+    </main>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      var sw = document.querySelector(".lang-switch");
+      if (!sw) return;
+      var TITLES = { fr: "Projets — Noa Tournoy", en: "Projects — Noa Tournoy" };
+      var TOC_LABELS = { fr: "Sommaire", en: "Contents" };
+      var toc = document.querySelector(".toc");
+
+      function apply(lang) {
+        document.documentElement.lang = lang;
+        document.title = TITLES[lang];
+        if (toc) toc.setAttribute("aria-label", TOC_LABELS[lang]);
+        document.querySelectorAll("img[data-alt-en]").forEach(function (img) {
+          if (!img.getAttribute("data-alt-fr")) img.setAttribute("data-alt-fr", img.getAttribute("alt"));
+          img.setAttribute("alt", lang === "en" ? img.getAttribute("data-alt-en") : img.getAttribute("data-alt-fr"));
+        });
+        sw.querySelectorAll("button").forEach(function (b) {
+          b.setAttribute("aria-current", b.getAttribute("data-lang") === lang ? "true" : "false");
+        });
+      }
+
+      apply(document.documentElement.lang === "en" ? "en" : "fr");
+      sw.hidden = false;
+      sw.addEventListener("click", function (e) {
+        var b = e.target.closest("button");
+        if (!b) return;
+        var lang = b.getAttribute("data-lang");
+        apply(lang);
+        try { localStorage.setItem("lang", lang); } catch (err) { /* mode privé */ }
+      });
+    })();
+  </script>
+</body>
+</html>
