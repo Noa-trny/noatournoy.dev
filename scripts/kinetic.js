@@ -1,8 +1,10 @@
-/* Le mécanisme du site, sur GSAP + ScrollTrigger.
-   Trois usages, pas un de plus :
-   1. la vitesse de défilement pilote les axes de la fonte variable (--vel) ;
-   2. le premier écran s'échappe en parallaxe quand on le quitte ;
-   3. les planches entrent une fois, décalées.
+/* Le mécanisme du site, sur GSAP + ScrollTrigger. Deux usages, et ils ne
+   touchent qu'un seul élément : le nom du premier écran.
+   1. la vitesse de défilement pilote ses axes variables et son volume (--vel) ;
+   2. il s'échappe vers le haut quand on quitte le premier écran.
+   Le corps de texte, les listes et les planches ne bougent jamais : faire
+   varier la chasse d'un texte le relayoute, et un texte qui glisse pendant
+   qu'on le lit est illisible.
    Sans JavaScript, --vel reste à 0 et tout est déjà lisible et visible. */
 (function () {
   "use strict";
@@ -51,69 +53,24 @@
       },
     });
 
-    /* ---- 2. le premier écran s'échappe ------------------------------- */
+    /* ---- 2. le nom s'échappe quand on quitte le premier écran --------- */
 
-    var opening = document.querySelector(".opening");
-    if (opening) {
-      gsap.to(opening.querySelector(".wordmark"), {
-        yPercent: -14,
-        scale: 0.94,
-        transformOrigin: "0% 50%",
+    /* C'est le seul déplacement du site. Rien d'autre ne bouge : ni le corps
+       de texte, ni les listes, ni les planches. Un texte qui glisse pendant
+       qu'on le lit est illisible. */
+    var wordmark = document.querySelector(".opening .wordmark");
+    if (wordmark) {
+      gsap.to(wordmark, {
+        yPercent: -10,
         ease: "none",
         scrollTrigger: {
-          trigger: opening,
-          start: "top top",
-          end: "bottom top",
-          scrub: 0.4,
-        },
-      });
-      gsap.to(opening.querySelector(".identification"), {
-        yPercent: -30,
-        opacity: 0.35,
-        ease: "none",
-        scrollTrigger: {
-          trigger: opening,
+          trigger: ".opening",
           start: "top top",
           end: "bottom top",
           scrub: 0.4,
         },
       });
     }
-
-    /* ---- 3. les planches entrent ------------------------------------- */
-
-    /* fromTo sans rendu immédiat : rien n'est estompé tant que le déclencheur
-       n'a pas parlé. Si l'un d'eux ne parle jamais, le texte reste simplement
-       à son état normal. */
-    function enter(targets, trigger, opts) {
-      gsap.fromTo(
-        targets,
-        { opacity: opts.from, y: opts.y },
-        {
-          opacity: 1,
-          y: 0,
-          duration: opts.duration,
-          stagger: opts.stagger,
-          ease: "power2.out",
-          immediateRender: false,
-          scrollTrigger: { trigger: trigger, start: opts.start, once: true },
-        }
-      );
-    }
-
-    gsap.utils.toArray(".plate:not(.opening)").forEach(function (plate) {
-      if (!plate.children.length) return;
-      enter(plate.children, plate, {
-        from: 0.3, y: 26, duration: 0.7, stagger: 0.07, start: "top 88%",
-      });
-    });
-
-    /* la cascade et l'index des travaux entrent ligne à ligne */
-    gsap.utils.toArray(".cascade, .works").forEach(function (list) {
-      enter(list.children, list, {
-        from: 0.25, y: 18, duration: 0.6, stagger: 0.08, start: "top 85%",
-      });
-    });
 
     return function () {
       state.v = 0;

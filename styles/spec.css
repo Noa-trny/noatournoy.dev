@@ -77,7 +77,19 @@ body {
 
 /* ---------- le mécanisme : le défilement pilote les axes ---------- */
 
+/* Les axes composent la page, mais ils ne bougent pas : faire varier la chasse
+   change la largeur des éléments, donc relayoute à chaque frame. Le texte se
+   mettait à trembler. Seul le nom, isolé, suit la vitesse. */
 .kin {
+  font-variation-settings:
+    "opsz" 144,
+    "wght" var(--ax-wght),
+    "wdth" var(--ax-wdth),
+    "GRAD" var(--ax-grad);
+}
+
+.wordmark.kin,
+.wordmark .kin {
   font-variation-settings:
     "opsz" 144,
     "wght" calc(var(--ax-wght) + (var(--ax-wght-f) - var(--ax-wght)) * var(--vel)),
