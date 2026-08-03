@@ -256,7 +256,8 @@ body {
 .step:nth-child(2) { --step-size: clamp(1.35rem, 3.1vw, 2.1rem); }
 .step:nth-child(3) { --step-size: clamp(1.5rem, 3.8vw, 2.6rem); }
 .step:nth-child(4) { --step-size: clamp(1.7rem, 4.6vw, 3.2rem); }
-.step:nth-child(5) { --step-size: clamp(2rem, 5.6vw, 4rem); }
+.step:nth-child(5) { --step-size: clamp(1.85rem, 5.1vw, 3.6rem); }
+.step:nth-child(6) { --step-size: clamp(2rem, 5.6vw, 4rem); }
 
 /* ---------- index des travaux ---------- */
 
