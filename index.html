@@ -1,357 +1,202 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" data-face="robotoflex">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#FBFBF8" />
-  <title>Noa Tournoy — Développeur généraliste &amp; web créatif</title>
-  <script>
-    /* Applique la langue avant le premier rendu. Sans JS, la page reste en français. */
-    (function () {
-      try {
-        var l = localStorage.getItem("lang");
-        if (l !== "fr" && l !== "en") {
-          l = ((navigator.language || "fr").toLowerCase().indexOf("fr") === 0) ? "fr" : "en";
-        }
-        document.documentElement.lang = l;
-        if (l === "en") document.title = "Noa Tournoy — Generalist & creative web developer";
-      } catch (e) { /* la page reste en français */ }
-    })();
-  </script>
-  <meta name="description" content="Noa Tournoy — développeur généraliste & web créatif. Éclosion : une expérience web 3D où le défilement est le temps. Dossier technique, GitHub, contact." />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Noa Tournoy — Développeur généraliste & web créatif" />
-  <meta property="og:description" content="Éclosion : une expérience web 3D, 100 % procédurale, où le défilement est le temps." />
-  <meta property="og:url" content="https://noatournoy.dev/" />
-  <meta property="og:image" content="https://noatournoy.dev/og.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Page de garde de listing : Noa Tournoy, développeur généraliste et web créatif" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="canonical" href="https://noatournoy.dev/" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23FBFBF8'/%3E%3Crect y='16' width='100' height='18' fill='%23F0F4EC'/%3E%3Crect y='50' width='100' height='18' fill='%23F0F4EC'/%3E%3Crect y='84' width='100' height='16' fill='%23F0F4EC'/%3E%3Ccircle cx='13' cy='13' r='6' fill='%231D6B45'/%3E%3C/svg%3E" />
-  <style>
-    /* Le Listing — voir DESIGN.md. Page autonome, zéro requête externe au runtime. */
-    @font-face {
-      font-family: "Bricolage Grotesque";
-      src: url("/fonts/bricolage-grotesque-latin.woff2") format("woff2");
-      font-weight: 200 800;
-      font-stretch: 75% 125%;
-      font-display: swap;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    :root {
-      --paper: #FBFBF8;
-      --band: #F0F4EC;
-      --ink: #17201B;
-      --ink2: #5A665E;
-      --green: #1D6B45;
-      --hair: rgba(23, 32, 27, 0.16);
-    }
-    body {
-      min-height: 100vh;
-      min-height: 100svh;
-      background: var(--paper);
-      color: var(--ink);
-      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
-      line-height: 1.6;
-      display: grid;
-      place-items: center;
-    }
-    :root[lang="en"] .l-fr { display: none; }
-    :root:not([lang="en"]) .l-en { display: none; }
-    .mono {
-      font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
-      font-variant-numeric: tabular-nums;
-    }
-    /* Marges à picots : la signature des bords, grands écrans seulement. */
-    body::before, body::after {
-      content: "";
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      width: 2.2rem;
-      background-image: radial-gradient(circle 3.5px at 50% 50%, transparent 2.9px, var(--hair) 3px, var(--hair) 3.4px, transparent 3.5px);
-      background-size: 100% 3.4rem;
-      pointer-events: none;
-    }
-    body::before { left: 0; border-right: 1px solid var(--hair); }
-    body::after { right: 0; border-left: 1px solid var(--hair); }
-    @media (max-width: 900px) { body::before, body::after { display: none; } }
-
-    .sheet {
-      width: 100%;
-      max-width: 46rem;
-      padding: 1.6rem 1.4rem max(2.4rem, env(safe-area-inset-bottom));
-      animation: feed 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes feed {
-      from { transform: translateY(1.6rem); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @media (prefers-reduced-motion: reduce) { .sheet { animation: none; } }
-
-    .jobline {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--ink2);
-      border-bottom: 1px solid var(--hair);
-      padding-bottom: 0.7rem;
-      margin-bottom: 3.4rem;
-    }
-    .lang-switch { display: flex; gap: 0.15rem; }
-    .lang-switch button {
-      font: inherit;
-      letter-spacing: inherit;
-      color: var(--ink2);
-      background: none;
-      border: 1px solid transparent;
-      padding: 0.15rem 0.5rem;
-      cursor: pointer;
-    }
-    .lang-switch button[aria-pressed="true"] {
-      color: var(--green);
-      border-color: var(--green);
-      cursor: default;
-    }
-    .lang-switch button:hover, .lang-switch button:focus-visible { color: var(--green); }
-    .lang-switch[hidden] { display: none; }
-    a:focus-visible, button:focus-visible {
-      outline: 2px solid var(--green);
-      outline-offset: 3px;
-    }
-
-    h1 {
-      font-family: "Bricolage Grotesque", system-ui, sans-serif;
-      font-weight: 700;
-      font-size: clamp(2.6rem, 9vw, 4.6rem);
-      line-height: 1.02;
-      letter-spacing: -0.015em;
-    }
-    .role {
-      margin-top: 1rem;
-      font-size: 1.05rem;
-      color: var(--ink);
-    }
-    .now {
-      margin-top: 0.3rem;
-      font-size: 0.9rem;
-      color: var(--ink2);
-    }
-    .spec {
-      margin-top: 1.4rem;
-      font-size: 0.78rem;
-      letter-spacing: 0.06em;
-      color: var(--ink2);
-    }
-    .spec .m { color: var(--green); }
-
-    nav { margin-top: 3.2rem; }
-    .job {
-      display: grid;
-      grid-template-columns: 3.2rem 1fr;
-      gap: 0.2rem 1.1rem;
-      padding: 1.15rem 0.9rem;
-      border-top: 1px solid var(--hair);
-      align-items: baseline;
-    }
-    .job:nth-child(odd) { background: var(--band); }
-    .job:last-child { border-bottom: 1px solid var(--hair); }
-    .job .idx {
-      grid-row: span 2;
-      font-size: 0.95rem;
-      color: var(--ink2);
-    }
-    .job a.main {
-      font-family: "Bricolage Grotesque", system-ui, sans-serif;
-      font-weight: 600;
-      font-size: 1.35rem;
-      color: var(--ink);
-      text-decoration: none;
-      width: fit-content;
-      border-bottom: 2px solid transparent;
-      transition: color 0.2s ease, border-color 0.2s ease;
-    }
-    .job a.main:hover, .job a.main:focus-visible { color: var(--green); border-color: var(--green); }
-    .job .desc {
-      font-size: 0.92rem;
-      color: var(--ink2);
-    }
-    .job .desc a {
-      color: var(--green);
-      text-decoration: none;
-      border-bottom: 1px solid rgba(29, 107, 69, 0.35);
-      transition: border-color 0.2s ease;
-    }
-    .job .desc a:hover, .job .desc a:focus-visible { border-color: var(--green); }
-    .job .desc .sep { color: var(--ink2); margin: 0 0.4em; }
-    button.email {
-      font: inherit;
-      color: var(--green);
-      background: none;
-      border: 0;
-      border-bottom: 1px dashed rgba(29, 107, 69, 0.45);
-      padding: 0;
-      cursor: copy;
-      transition: border-color 0.2s ease;
-    }
-    button.email:hover, button.email:focus-visible { border-bottom-style: solid; }
-    .copied { margin-left: 0.6em; color: var(--green); font-size: 0.8rem; }
-
-    footer {
-      margin-top: 3.2rem;
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--ink2);
-      border-top: 1px solid var(--hair);
-      padding-top: 0.7rem;
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    footer .m { color: var(--green); text-transform: none; letter-spacing: 0.06em; }
-    .sr-live {
-      position: absolute;
-      width: 1px; height: 1px;
-      overflow: hidden;
-      clip-path: inset(50%);
-    }
-    @media (pointer: coarse) {
-      .job { padding: 1.35rem 0.9rem; }
-      .lang-switch button { padding: 0.4rem 0.7rem; }
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n="doc.title">Noa Tournoy — ingénieur logiciel, développement et sécurité</title>
+<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="Noa Tournoy, étudiant ingénieur à Lille. Développement, données et cybersécurité. Six travaux, du tableau de bord Looker à l'expérience web 3D Éclosion.">
+<meta name="theme-color" content="#001489">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Noa Tournoy — ingénieur logiciel, développement et sécurité">
+<meta property="og:description" content="Développement, données et cybersécurité. Six travaux, du tableau de bord Looker à l'expérience web 3D Éclosion.">
+<meta property="og:url" content="https://noatournoy.dev/">
+<meta property="og:image" content="https://noatournoy.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://noatournoy.dev/">
+<link rel="stylesheet" href="/styles/spec.css">
+<!-- provisoire : permutation de caractère pour l'arbitrage (?face=anybody|recursive) -->
+<script>(function(){var q=new URLSearchParams(location.search),f=q.get("face"),v=q.get("vel"),y=q.get("y");if(f)document.documentElement.dataset.face=f;if(v)document.documentElement.style.setProperty("--vel",v);if(y)addEventListener("load",function(){scrollTo(0,+y)});})();</script>
 </head>
 <body>
-  <div class="sheet">
-    <div class="jobline mono">
-      <span><span class="l-fr">noatournoy.dev · page de garde · feuille&nbsp;1/1</span><span class="l-en" lang="en">noatournoy.dev · cover page · sheet&nbsp;1/1</span></span>
-      <div class="lang-switch" role="group" aria-label="Langue / Language" hidden>
-        <button type="button" data-lang="fr" aria-pressed="true">FR</button>
-        <button type="button" data-lang="en" aria-pressed="false">EN</button>
-      </div>
-    </div>
 
-    <main>
-      <h1>Noa Tournoy</h1>
-      <p class="role"><span class="l-fr">Développeur généraliste &amp; web créatif</span><span class="l-en" lang="en">Generalist &amp; creative web developer</span></p>
-      <p class="now"><span class="l-fr">Alternance cybersécurité chez ADEO — dès octobre 2026</span><span class="l-en" lang="en">Cybersecurity apprenticeship at ADEO — starting October 2026</span></p>
-      <p class="spec mono"><span class="m">1</span> <span class="l-fr">œuvre signature</span><span class="l-en" lang="en">signature work</span> · <span class="m">8</span> <span class="l-fr">actes</span><span class="l-en" lang="en">acts</span> · <span class="m">100&nbsp;%</span> <span class="l-fr">procédural</span><span class="l-en" lang="en">procedural</span> · <span class="m">2</span> <span class="l-fr">langues</span><span class="l-en" lang="en">languages</span></p>
+<nav class="lang" data-lang-bar aria-label="Langue">
+  <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
+  <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+</nav>
 
-      <nav aria-label="Navigation principale">
-        <div class="job">
-          <span class="idx mono">01</span>
-          <a class="main" href="https://eclosion.noatournoy.dev">Éclosion</a>
-          <p class="desc"><span class="l-fr">Expérience web 3D où le défilement est le temps — huit actes, 100&nbsp;% procédurale.</span><span class="l-en" lang="en">A 3D web experience where scrolling is time — eight acts, 100% procedural.</span></p>
+<main id="contenu">
+
+  <section class="plate opening inked" aria-labelledby="nom">
+    <p class="cartouche">
+      <span data-i18n="c1.a">Spécimen</span>
+      <span class="plate-no" data-i18n="c1.b">Pl. 01 — le caractère</span>
+      <span data-i18n="c1.c">Lille, France</span>
+    </p>
+
+    <h1 class="wordmark kin" id="nom"><span class="given">Noa</span>Tournoy</h1>
+
+    <p class="identification" data-i18n="id">
+      Ingénieur logiciel en formation. Développement, données, sécurité.
+      Alternant en cybersécurité chez ADEO à partir du 1<sup>er</sup> octobre 2026.
+    </p>
+
+    <p class="scroll-cue">
+      <span data-i18n="cue.a">Défiler</span>
+      <span data-i18n="cue.b">la vitesse compose la page</span>
+    </p>
+  </section>
+
+  <section class="plate" aria-labelledby="decl">
+    <h2 class="statement kin" id="decl" data-i18n="decl">
+      Je conçois des logiciels fiables et sécurisés.
+    </h2>
+    <p class="statement-body" data-i18n="decl.1">
+      Étudiant ingénieur à SUPINFO, à Lille. À l'été 2025 chez ADEO, j'ai construit
+      DataSentinel : un tableau de bord qui a remplacé le suivi manuel de la sécurité des
+      produits digitaux, et les extensions full-stack qui vont avec. J'y retourne en
+      alternance cybersécurité le 1<sup>er</sup> octobre 2026.
+    </p>
+    <p class="statement-body" data-i18n="decl.2">
+      Le reste du temps, j'écris du C++ pour la contrainte, du Python pour la vitesse
+      d'essai, et des shaders pour <a href="https://eclosion.noatournoy.dev">Éclosion</a> —
+      une expérience web 3D entièrement procédurale, où le défilement est le temps.
+    </p>
+  </section>
+
+  <section class="plate" aria-labelledby="parcours">
+    <p class="cartouche">
+      <span class="plate-no" data-i18n="c2.a">Pl. 02 — parcours</span>
+      <span data-i18n="c2.b">2021 → 2026</span>
+    </p>
+    <h2 class="sr-only" id="parcours" data-i18n="h.parcours">Parcours</h2>
+
+    <ol class="cascade">
+      <li class="step">
+        <p class="step-date">2021 → 2024</p>
+        <div class="step-body">
+          <h3 class="step-title" data-i18n="p1.t">Baccalauréat<span class="where">Institut de Genech</span></h3>
+          <p class="step-note" data-i18n="p1.n">Mention bien. Spécialités mathématiques et NSI.</p>
         </div>
-        <div class="job">
-          <span class="idx mono">02</span>
-          <a class="main" href="/projets/"><span class="l-fr">Le dossier technique</span><span class="l-en" lang="en">The technical dossier</span></a>
-          <p class="desc"><span class="l-fr">Chiffres mesurés et coulisses d'Éclosion, plus <a href="https://github.com/Noa-trny/Gamedex" rel="noopener">Gamedex</a>, <a href="https://github.com/Noa-trny/laying_grass_cpp" rel="noopener">laying_grass_cpp</a> et <a href="https://github.com/simonpotel/Ludoria" rel="noopener">Ludoria</a> — tout le reste sur <a href="https://github.com/Noa-trny" rel="noopener">GitHub</a>.</span><span class="l-en" lang="en">Measured numbers and the backstage of Éclosion, plus <a href="https://github.com/Noa-trny/Gamedex" rel="noopener">Gamedex</a>, <a href="https://github.com/Noa-trny/laying_grass_cpp" rel="noopener">laying_grass_cpp</a> and <a href="https://github.com/simonpotel/Ludoria" rel="noopener">Ludoria</a> — everything else on <a href="https://github.com/Noa-trny" rel="noopener">GitHub</a>.</span></p>
+      </li>
+      <li class="step">
+        <p class="step-date">2022</p>
+        <div class="step-body">
+          <h3 class="step-title" data-i18n="p2.t">Stage d'observation<span class="where">Proges Plus, Willems</span></h3>
+          <p class="step-note" data-i18n="p2.n">Une semaine. L'interface d'un site de gestion RH en HTML et CSS, reproduite d'après les maquettes du designer.</p>
         </div>
-        <div class="job">
-          <span class="idx mono">03</span>
-          <a class="main" href="mailto:noa.tournoy@supinfo.com"><span class="l-fr">Écrivez-moi</span><span class="l-en" lang="en">Get in touch</span></a>
-          <p class="desc"><span class="email-wrap"><span class="email">noa.tournoy@supinfo.com</span><span class="copied" aria-live="polite"></span></span><span class="sep" aria-hidden="true">·</span><a href="https://www.linkedin.com/in/noa-tournoy/" rel="me noopener">LinkedIn</a></p>
+      </li>
+      <li class="step">
+        <p class="step-date">2024 → 2029</p>
+        <div class="step-body">
+          <h3 class="step-title" data-i18n="p3.t">Master of Engineering<span class="where">SUPINFO International University</span></h3>
+          <p class="step-note" data-i18n="p3.n">Cycle ingénieur, en cours.</p>
         </div>
-      </nav>
-    </main>
+      </li>
+      <li class="step">
+        <p class="step-date">2025</p>
+        <div class="step-body">
+          <h3 class="step-title" data-i18n="p4.t">Stage — DataSentinel<span class="where">ADEO, Ronchin</span></h3>
+          <p class="step-note" data-i18n="p4.n">De juin à août. Looker et LookML, extensions full-stack Python et React, BigQuery, Terraform, Kubernetes. Certifications Google Looker et LookML obtenues.</p>
+        </div>
+      </li>
+      <li class="step">
+        <p class="step-date" data-i18n="p5.d">Oct. 2026</p>
+        <div class="step-body">
+          <h3 class="step-title kin" data-i18n="p5.t">Alternance cybersécurité<span class="where">ADEO</span></h3>
+          <p class="step-note" data-i18n="p5.n">En parallèle du cycle ingénieur.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
 
-    <footer class="mono">
-      <span><span class="l-fr">fin de page — aucune requête externe</span><span class="l-en" lang="en">end of page — zero external requests</span></span>
-      <span class="m">≈ 91 <span class="l-fr">Ko</span><span class="l-en" lang="en">KB</span></span>
-    </footer>
-  </div>
-  <span class="sr-live" aria-live="polite"></span>
+  <section class="plate" aria-labelledby="travaux">
+    <p class="cartouche">
+      <span class="plate-no" data-i18n="c3.a">Pl. 03 — travaux</span>
+      <span data-i18n="c3.b">six planches</span>
+    </p>
+    <h2 class="sr-only" id="travaux" data-i18n="h.travaux">Travaux</h2>
 
-  <script>
-    (function () {
-      "use strict";
-      var sw = document.querySelector(".lang-switch");
-      if (!sw) return;
-      var TITLES = {
-        fr: "Noa Tournoy — Développeur généraliste & web créatif",
-        en: "Noa Tournoy — Generalist & creative web developer"
-      };
-      var NAV_LABELS = { fr: "Navigation principale", en: "Main navigation" };
-      var COPY_LABELS = { fr: "Copier l'adresse email", en: "Copy email address" };
-      var COPIED_MSG = { fr: "copiée ✓", en: "copied ✓" };
-      var ANNOUNCE = { fr: "Page en français", en: "Page in English" };
-      var current = "fr";
-      var nav = document.querySelector("nav");
-      var live = document.querySelector(".sr-live");
+    <ul class="works">
+      <li class="work"><a class="work-link" href="/travaux/eclosion/">
+        <span class="work-name kin">Éclosion</span>
+        <span class="work-year">2026</span>
+        <span class="work-spec" data-i18n="w1">TypeScript · Next.js · React Three Fiber · GLSL — expérience web 3D entièrement procédurale, huit actes</span>
+      </a></li>
+      <li class="work"><a class="work-link" href="/travaux/datasentinel/">
+        <span class="work-name kin">DataSentinel</span>
+        <span class="work-year">2025</span>
+        <span class="work-spec" data-i18n="w2">LookML · Python · React · BigQuery · Terraform · Kubernetes — pilotage de la sécurité des produits digitaux, chez ADEO</span>
+      </a></li>
+      <li class="work"><a class="work-link" href="/travaux/supkonquest/">
+        <span class="work-name kin">SupKonQuest</span>
+        <span class="work-year">2026</span>
+        <span class="work-spec" data-i18n="w3">C++ · Unreal Engine · Docker — stratégie temps réel isométrique, 2 à 8 joueurs, en ligne</span>
+      </a></li>
+      <li class="work"><a class="work-link" href="/travaux/gamedex/">
+        <span class="work-name kin">Gamedex</span>
+        <span class="work-year">2026</span>
+        <span class="work-spec" data-i18n="w4">TypeScript · React — catalogue de jeux sur l'API RAWG, filtres et favoris persistants</span>
+      </a></li>
+      <li class="work"><a class="work-link" href="/travaux/laying-grass/">
+        <span class="work-name kin">laying_grass</span>
+        <span class="work-year">2026</span>
+        <span class="work-spec" data-i18n="w5">C++17 · console · zéro dépendance</span>
+      </a></li>
+      <li class="work"><a class="work-link" href="/travaux/ludoria/">
+        <span class="work-name kin">Ludoria</span>
+        <span class="work-year">2025</span>
+        <span class="work-spec" data-i18n="w6">Python · Pygame · sockets — trois jeux de plateau en réseau, à trois</span>
+      </a></li>
+    </ul>
+  </section>
 
-      var emailSpan = document.querySelector("span.email");
-      var emailBtn = null;
-      if (emailSpan) {
-        emailBtn = document.createElement("button");
-        emailBtn.type = "button";
-        emailBtn.className = "email mono";
-        emailBtn.textContent = emailSpan.textContent;
-        emailSpan.parentNode.replaceChild(emailBtn, emailSpan);
-      }
+  <section class="plate" aria-labelledby="savoir">
+    <p class="cartouche">
+      <span class="plate-no" data-i18n="c4.a">Pl. 04 — jeu de caractères</span>
+      <span data-i18n="c4.b">11 langages, 6 outils</span>
+    </p>
+    <h2 class="sr-only" id="savoir" data-i18n="h.savoir">Savoir-faire</h2>
 
-      function apply(lang, announce) {
-        current = lang;
-        document.documentElement.lang = lang;
-        document.title = TITLES[lang];
-        if (nav) nav.setAttribute("aria-label", NAV_LABELS[lang]);
-        if (emailBtn) emailBtn.setAttribute("aria-label", COPY_LABELS[lang]);
-        sw.querySelectorAll("button").forEach(function (b) {
-          b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false");
-        });
-        if (announce && live) live.textContent = ANNOUNCE[lang];
-      }
+    <ul class="charset kin">
+      <li>Python</li><li>C</li><li>C++</li><li>Java</li><li>PHP</li><li>SQL</li>
+      <li>LookML</li><li>JavaScript</li><li>TypeScript</li><li>HTML</li><li>CSS</li>
+      <li class="dim">Docker</li><li class="dim">Kubernetes</li><li class="dim">Terraform</li>
+      <li class="dim">BigQuery</li><li class="dim">Looker</li><li class="dim">GitHub&nbsp;Actions</li>
+    </ul>
+    <p class="step-note"><a href="/savoir-faire/" data-i18n="savoir.link">Le détail : langages, infrastructure, certifications, langues parlées</a></p>
+  </section>
 
-      apply(document.documentElement.lang === "en" ? "en" : "fr", false);
-      sw.hidden = false;
-      sw.addEventListener("click", function (e) {
-        var b = e.target.closest("button");
-        if (!b) return;
-        var lang = b.getAttribute("data-lang");
-        apply(lang, true);
-        try { localStorage.setItem("lang", lang); } catch (err) { /* mode privé */ }
-      });
+  <section class="plate inked" aria-labelledby="contact">
+    <p class="cartouche">
+      <span class="plate-no" data-i18n="c5.a">Pl. 05 — contact</span>
+    </p>
+    <h2 class="sr-only" id="contact" data-i18n="h.contact">Contact</h2>
 
-      if (emailBtn) {
-        var copied = document.querySelector(".copied");
-        var hideTimer = null;
-        var announceCopy = function () {
-          if (!copied) return;
-          copied.textContent = COPIED_MSG[current];
-          clearTimeout(hideTimer);
-          hideTimer = setTimeout(function () { copied.textContent = ""; }, 2200);
-        };
-        var fallbackCopy = function (text) {
-          var ta = document.createElement("textarea");
-          ta.value = text;
-          ta.setAttribute("readonly", "");
-          ta.style.position = "fixed";
-          ta.style.opacity = "0";
-          document.body.appendChild(ta);
-          ta.select();
-          var ok = false;
-          try { ok = document.execCommand("copy"); } catch (err) { /* l'adresse reste lisible */ }
-          document.body.removeChild(ta);
-          if (ok) announceCopy();
-        };
-        emailBtn.addEventListener("click", function () {
-          var addr = emailBtn.textContent;
-          if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(addr).then(announceCopy, function () { fallbackCopy(addr); });
-          } else {
-            fallbackCopy(addr);
-          }
-        });
-      }
-    })();
-  </script>
+    <a class="contact-line kin" href="mailto:noa.tournoy@supinfo.com">noa.tournoy@supinfo.com</a>
+
+    <ul class="elsewhere">
+      <li><a href="https://www.linkedin.com/in/noa-tournoy/">LinkedIn</a></li>
+      <li><a href="https://github.com/Noa-trny">GitHub</a></li>
+      <li><a href="https://eclosion.noatournoy.dev">Éclosion</a></li>
+    </ul>
+  </section>
+
+</main>
+
+<footer class="colophon">
+  <p>
+    <span data-i18n="colo.face">Composé en</span>
+    <span class="face-note" data-face-note="robotoflex">Roboto&nbsp;Flex — axes <i>opsz</i>, <i>wght</i>, <i>wdth</i>, <i>GRAD</i> — sous-ensemblée latin, 235&nbsp;Ko.</span>
+    <span class="face-note" data-face-note="anybody">Anybody — axes <i>wdth</i>, <i>wght</i> — sous-ensemblée latin, 56&nbsp;Ko.</span>
+    <span class="face-note" data-face-note="recursive">Recursive — axes <i>wght</i>, <i>CASL</i>, <i>MONO</i> — sous-ensemblée latin, 221&nbsp;Ko.</span>
+  </p>
+  <p data-i18n="colo.hand">
+    Écrit à la main : une page, une feuille de style, deux scripts. Aucune dépendance,
+    aucune requête vers un tiers, aucun traceur. Le texte se lit sans JavaScript.
+  </p>
+</footer>
+
+<script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/i18n.js" defer></script>
 </body>
 </html>

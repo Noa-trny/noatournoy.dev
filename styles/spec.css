@@ -1,0 +1,501 @@
+/* Le Spécimen — feuille unique. Deux valeurs, un caractère, un mécanisme. */
+
+@font-face {
+  font-family: "Face RobotoFlex";
+  src: url("../fonts/RobotoFlex.woff2") format("woff2-variations");
+  font-weight: 100 1000;
+  font-stretch: 25% 151%;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Face Anybody";
+  src: url("../fonts/Anybody.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-stretch: 50% 150%;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Face Recursive";
+  src: url("../fonts/Recursive.woff2") format("woff2-variations");
+  font-weight: 300 1000;
+  font-display: swap;
+}
+
+/* Vitesse de défilement, 0 au repos. Typée pour être interpolable. */
+@property --vel {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+:root {
+  --paper: #edeef0;
+  --ink: #001489;
+  --ink-2: #3f4880;
+
+  --fg: var(--ink);
+  --bg: var(--paper);
+
+  /* Axes : valeur au repos → valeur à pleine vitesse. Le repos est l'état de lecture. */
+  --ax-wght: 780;
+  --ax-wght-f: 280;
+  --ax-wdth: 105;
+  --ax-wdth-f: 45;
+  --ax-grad: 0;
+  --ax-grad-f: 120;
+  --ax-casl: 0;
+  --ax-casl-f: 1;
+
+  /* Échelle de spécimen — six degrés réellement distincts. */
+  --t-mega: clamp(2.75rem, min(19vw, 30svh), 17rem);
+  --t-1: clamp(2.25rem, 8.5vw, 6.5rem);
+  --t-2: clamp(1.5rem, 4.6vw, 3rem);
+  --t-3: clamp(1.125rem, 2.2vw, 1.6rem);
+  --t-body: clamp(1rem, 0.95rem + 0.35vw, 1.1875rem);
+  --t-note: 0.8125rem;
+  --t-cart: 0.6875rem;
+
+  --gut: clamp(1.25rem, 4vw, 3.5rem);
+  --rule: 1px;
+
+  --face: "Face RobotoFlex", system-ui, sans-serif;
+}
+
+/* Chaque caractère a sa propre chasse : l'échelle et les axes se recalent par face
+   pour que le nom tienne sur une ligne. */
+:root[data-face="anybody"] {
+  --face: "Face Anybody", system-ui, sans-serif;
+  --t-mega: clamp(2.5rem, min(16.5vw, 28svh), 15rem);
+  --ax-wdth: 88;
+  --ax-wdth-f: 52;
+}
+:root[data-face="recursive"] {
+  --face: "Face Recursive", system-ui, sans-serif;
+  --ax-wght: 800;
+  --ax-wght-f: 350;
+}
+
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+html {
+  background: var(--paper);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--face);
+  font-size: var(--t-body);
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--ink);
+  color: var(--paper);
+}
+.inked ::selection {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* ---------- le mécanisme : le défilement pilote les axes ---------- */
+
+.kin {
+  font-variation-settings:
+    "opsz" 144,
+    "wght" calc(var(--ax-wght) + (var(--ax-wght-f) - var(--ax-wght)) * var(--vel)),
+    "wdth" calc(var(--ax-wdth) + (var(--ax-wdth-f) - var(--ax-wdth)) * var(--vel)),
+    "GRAD" calc(var(--ax-grad) + (var(--ax-grad-f) - var(--ax-grad)) * var(--vel));
+}
+:root[data-face="anybody"] .kin {
+  font-variation-settings:
+    "wght" calc(var(--ax-wght) + (var(--ax-wght-f) - var(--ax-wght)) * var(--vel)),
+    "wdth" calc(var(--ax-wdth) + (var(--ax-wdth-f) - var(--ax-wdth)) * var(--vel));
+}
+:root[data-face="recursive"] .kin {
+  font-variation-settings:
+    "MONO" 0,
+    "CASL" calc(var(--ax-casl) + (var(--ax-casl-f) - var(--ax-casl)) * var(--vel)),
+    "wght" calc(var(--ax-wght) + (var(--ax-wght-f) - var(--ax-wght)) * var(--vel));
+}
+
+/* Le corps de texte ne bouge jamais. */
+.identification,
+.statement-body,
+.step-note,
+.step-date,
+.cartouche,
+.scroll-cue,
+.work-spec,
+.work-year,
+.elsewhere,
+.colophon p { font-variation-settings: normal; }
+
+/* ---------- planches ---------- */
+
+.plate {
+  padding: clamp(3.5rem, 11vh, 8rem) var(--gut);
+  border-top: var(--rule) solid color-mix(in srgb, var(--fg) 22%, transparent);
+}
+.plate:first-child { border-top: 0; }
+
+.inked {
+  background: var(--ink);
+  color: var(--paper);
+  --fg: var(--paper);
+  position: relative;
+}
+
+/* Repères de repérage aux angles des blocs noyés. */
+.inked::before,
+.inked::after {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  opacity: 0.45;
+  background:
+    linear-gradient(var(--paper), var(--paper)) center / 100% 1px no-repeat,
+    linear-gradient(var(--paper), var(--paper)) center / 1px 100% no-repeat;
+}
+.inked::before { top: 14px; left: 14px; }
+.inked::after { bottom: 14px; right: 14px; }
+
+/* ---------- cartouche ---------- */
+
+.cartouche {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem clamp(1rem, 4vw, 3rem);
+  align-items: baseline;
+  margin: 0 0 clamp(2rem, 6vh, 4rem);
+  font-size: var(--t-cart);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+}
+.cartouche > * { margin: 0; }
+.cartouche .plate-no { font-weight: 700; letter-spacing: 0.2em; }
+
+/* ---------- premier écran ---------- */
+
+.opening {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-bottom: clamp(1.5rem, 4vh, 3rem);
+}
+
+.wordmark {
+  margin: 0;
+  font-size: var(--t-mega);
+  line-height: 0.78;
+  letter-spacing: -0.035em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+.wordmark .given {
+  display: block;
+  font-size: 0.31em;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  margin-bottom: 0.18em;
+  --ax-wght: 300;
+  --ax-wght-f: 200;
+}
+
+.identification {
+  max-width: 46ch;
+  margin: clamp(1.75rem, 5vh, 3rem) 0 0;
+  font-size: var(--t-3);
+  line-height: 1.4;
+  text-wrap: balance;
+}
+
+.scroll-cue {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: clamp(2rem, 6vh, 4rem);
+  font-size: var(--t-cart);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--fg) 72%, transparent);
+}
+
+/* ---------- déclaration ---------- */
+
+.statement {
+  max-width: 24ch;
+  margin: 0 0 clamp(1.5rem, 4vh, 2.5rem);
+  font-size: var(--t-1);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.statement-body {
+  max-width: 66ch;
+  margin: 0;
+  color: color-mix(in srgb, var(--fg) 88%, transparent);
+}
+.statement-body + .statement-body { margin-top: 1.1em; }
+
+/* ---------- cascade ---------- */
+
+.cascade {
+  margin: 0;
+  display: grid;
+  gap: clamp(2rem, 5vh, 3.5rem);
+}
+.step {
+  display: grid;
+  grid-template-columns: minmax(6.5ch, 9ch) 1fr;
+  gap: 0.5rem clamp(1rem, 3vw, 2.5rem);
+  align-items: baseline;
+}
+.step-date {
+  margin: 0;
+  font-size: var(--t-note);
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--fg) 70%, transparent);
+  white-space: nowrap;
+}
+.step-body { margin: 0; }
+.step-title {
+  margin: 0;
+  line-height: 0.95;
+  letter-spacing: -0.025em;
+  font-size: var(--step-size, var(--t-2));
+  text-wrap: balance;
+}
+.step-title .where {
+  display: block;
+  font-size: 0.42em;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  margin-top: 0.35em;
+  color: color-mix(in srgb, var(--fg) 82%, transparent);
+  --ax-wght: 480;
+  --ax-wght-f: 400;
+}
+.step-note {
+  margin: 0.75rem 0 0;
+  max-width: 62ch;
+  font-size: var(--t-body);
+  color: color-mix(in srgb, var(--fg) 84%, transparent);
+}
+/* la cascade grandit vers le présent */
+.step:nth-child(1) { --step-size: clamp(1.25rem, 2.6vw, 1.75rem); }
+.step:nth-child(2) { --step-size: clamp(1.35rem, 3.1vw, 2.1rem); }
+.step:nth-child(3) { --step-size: clamp(1.5rem, 3.8vw, 2.6rem); }
+.step:nth-child(4) { --step-size: clamp(1.7rem, 4.6vw, 3.2rem); }
+.step:nth-child(5) { --step-size: clamp(2rem, 5.6vw, 4rem); }
+
+/* ---------- index des travaux ---------- */
+
+.works {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--rule) solid color-mix(in srgb, var(--fg) 22%, transparent);
+}
+.work {
+  border-bottom: var(--rule) solid color-mix(in srgb, var(--fg) 22%, transparent);
+}
+.work-link {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.25rem clamp(1rem, 3vw, 2.5rem);
+  align-items: baseline;
+  padding: clamp(1rem, 2.5vh, 1.75rem) 0;
+  color: inherit;
+  text-decoration: none;
+}
+.work-name {
+  font-size: clamp(1.75rem, 5.5vw, 3.75rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  --ax-wght: 700;
+  --ax-wght-f: 300;
+}
+.work-spec {
+  grid-column: 1 / -1;
+  font-size: var(--t-note);
+  letter-spacing: 0.04em;
+  color: color-mix(in srgb, var(--fg) 74%, transparent);
+}
+.work-year {
+  font-size: var(--t-note);
+  letter-spacing: 0.08em;
+  color: color-mix(in srgb, var(--fg) 70%, transparent);
+}
+.work-link:hover .work-name,
+.work-link:focus-visible .work-name { --ax-wght: 1000; --ax-wght-f: 900; }
+.work-link:hover,
+.work-link:focus-visible { background: color-mix(in srgb, var(--fg) 7%, transparent); }
+
+/* ---------- jeu de caractères ---------- */
+
+.charset {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em 0.75em;
+  margin: 0;
+  font-size: clamp(1.5rem, 4.4vw, 3rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+.charset li { list-style: none; }
+.charset .dim {
+  color: color-mix(in srgb, var(--fg) 55%, transparent);
+  font-size: 0.62em;
+}
+
+/* ---------- contact ---------- */
+
+.contact-line {
+  display: block;
+  margin: 0 0 clamp(1.5rem, 4vh, 2.5rem);
+  font-size: clamp(1.5rem, 6vw, 4.5rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 2px solid color-mix(in srgb, var(--fg) 45%, transparent);
+  padding-bottom: 0.12em;
+  overflow-wrap: anywhere;
+}
+.contact-line:hover,
+.contact-line:focus-visible { border-bottom-color: var(--fg); }
+
+.elsewhere {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-3);
+}
+
+/* ---------- liens, focus ---------- */
+
+a { color: inherit; }
+.plate p a,
+.elsewhere a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+.plate p a:hover,
+.elsewhere a:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 3px;
+}
+
+/* ---------- barre de langue ---------- */
+
+/* Toujours lisible, sur le papier comme sur l'encre : elle porte son propre fond. */
+.lang {
+  position: fixed;
+  top: clamp(0.5rem, 1.5vh, 1rem);
+  right: clamp(0.5rem, 1.5vw, 1rem);
+  z-index: 10;
+  display: flex;
+  margin: 0;
+  padding: 0;
+  font-size: var(--t-cart);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--paper);
+  border: var(--rule) solid var(--ink);
+  font-variation-settings: normal;
+}
+.lang button {
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: var(--ink);
+  background: var(--paper);
+  border: 0;
+  padding: 0 0.85rem;
+  min-width: 46px;
+  min-height: 42px;
+  cursor: pointer;
+}
+.lang button + button { border-left: var(--rule) solid var(--ink); }
+.lang button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---------- utilitaires ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- colophon ---------- */
+
+.face-note { display: none; }
+:root[data-face="robotoflex"] [data-face-note="robotoflex"],
+:root[data-face="anybody"] [data-face-note="anybody"],
+:root[data-face="recursive"] [data-face-note="recursive"] { display: inline; }
+.colophon i { font-style: normal; font-variation-settings: "wght" 700; }
+
+.colophon {
+  padding: clamp(2rem, 6vh, 3.5rem) var(--gut) clamp(3rem, 8vh, 5rem);
+  border-top: var(--rule) solid color-mix(in srgb, var(--fg) 22%, transparent);
+  font-size: var(--t-note);
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+}
+.colophon p {
+  margin: 0 0 0.6em;
+  max-width: 62ch;
+}
+
+/* ---------- entrées : uniquement là où c'est piloté par le défilement ---------- */
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .plate:not(.opening) > * {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 22%;
+    }
+    @keyframes rise {
+      from { opacity: 0.45; transform: translateY(1.25rem); }
+      to { opacity: 1; transform: none; }
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --vel: 0 !important; }
+  * { animation: none !important; transition: none !important; }
+}
+
+@media print {
+  .lang { display: none; }
+  .inked { background: #fff; color: #000; --fg: #000; }
+  .plate { break-inside: avoid; padding: 1.5rem 0; }
+}

@@ -1,0 +1,51 @@
+{
+  "doc.title": "Noa Tournoy — software engineering, data and security",
+  "doc.desc": "Noa Tournoy, engineering student in Lille, France. Software, data and cybersecurity. Six works, from a Looker security dashboard to the procedural 3D web experience Éclosion.",
+
+  "c1.a": "Specimen",
+  "c1.b": "Pl. 01 — the typeface",
+  "c1.c": "Lille, France",
+  "id": "Software engineering student. Development, data, security. Joining ADEO as a cybersecurity apprentice on 1 October 2026.",
+  "cue.a": "Scroll",
+  "cue.b": "speed sets the page",
+
+  "decl": "I build software that holds up and stays secure.",
+  "decl.1": "Engineering student at SUPINFO, in Lille. In the summer of 2025 at ADEO I built DataSentinel: a dashboard that replaced the manual tracking of digital-product security, along with the full-stack extensions around it. I return there as a cybersecurity apprentice on 1 October 2026.",
+  "decl.2": "The rest of the time I write C++ for the constraint, Python for how fast it lets me try things, and shaders for <a href=\"https://eclosion.noatournoy.dev\">Éclosion</a> — a fully procedural 3D web experience where scrolling is time.",
+
+  "c2.a": "Pl. 02 — path",
+  "c2.b": "2021 → 2026",
+  "h.parcours": "Path",
+  "p1.t": "Baccalauréat<span class=\"where\">Institut de Genech</span>",
+  "p1.n": "Passed with honours. Mathematics and computer science majors.",
+  "p2.t": "Observation placement<span class=\"where\">Proges Plus, Willems</span>",
+  "p2.n": "One week. The front end of an HR management site in HTML and CSS, built from the designer's mockups.",
+  "p3.t": "Master of Engineering<span class=\"where\">SUPINFO International University</span>",
+  "p3.n": "Engineering programme, in progress.",
+  "p4.t": "Internship — DataSentinel<span class=\"where\">ADEO, Ronchin</span>",
+  "p4.n": "June to August. Looker and LookML, full-stack Python and React extensions, BigQuery, Terraform, Kubernetes. Google Looker and LookML certifications obtained.",
+  "p5.d": "Oct. 2026",
+  "p5.t": "Cybersecurity apprenticeship<span class=\"where\">ADEO</span>",
+  "p5.n": "Alongside the engineering programme.",
+
+  "c3.a": "Pl. 03 — works",
+  "c3.b": "six plates",
+  "h.travaux": "Works",
+  "w1": "TypeScript · Next.js · React Three Fiber · GLSL — a fully procedural 3D web experience in eight acts",
+  "w2": "LookML · Python · React · BigQuery · Terraform · Kubernetes — digital-product security monitoring, at ADEO",
+  "w3": "C++ · Unreal Engine · Docker — isometric real-time strategy, 2 to 8 players, online",
+  "w4": "TypeScript · React — a game catalogue on the RAWG API, filters and persistent favourites",
+  "w5": "C++17 · console · zero dependencies",
+  "w6": "Python · Pygame · sockets — three networked board games, built by three",
+
+  "c4.a": "Pl. 04 — character set",
+  "c4.b": "11 languages, 6 tools",
+  "h.savoir": "Skills",
+  "savoir.link": "In detail: languages, infrastructure, certifications, spoken languages",
+
+  "c5.a": "Pl. 05 — contact",
+  "h.contact": "Contact",
+
+  "colo.face": "Set in",
+  "colo.hand": "Written by hand: one page, one stylesheet, two scripts. No dependencies, no third-party requests, no tracker. The text reads without JavaScript."
+}
