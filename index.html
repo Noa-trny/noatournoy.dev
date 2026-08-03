@@ -1,11 +1,11 @@
 <!doctype html>
-<html lang="fr" data-face="robotoflex">
+<html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title data-i18n="doc.title">Noa Tournoy — ingénieur logiciel, développement et sécurité</title>
 <meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="Noa Tournoy, étudiant ingénieur à Lille. Développement, données et cybersécurité. Six travaux, du tableau de bord Looker à l'expérience web 3D Éclosion.">
-<meta name="theme-color" content="#001489">
+<meta name="theme-color" content="#000000">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Noa Tournoy — ingénieur logiciel, développement et sécurité">
 <meta property="og:description" content="Développement, données et cybersécurité. Six travaux, du tableau de bord Looker à l'expérience web 3D Éclosion.">
@@ -13,9 +13,8 @@
 <meta property="og:image" content="https://noatournoy.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://noatournoy.dev/">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/styles/spec.css">
-<!-- provisoire : permutation de caractère pour l'arbitrage (?face=anybody|recursive) -->
-<script>(function(){var q=new URLSearchParams(location.search),f=q.get("face"),v=q.get("vel"),y=q.get("y");if(f)document.documentElement.dataset.face=f;if(v)document.documentElement.style.setProperty("--vel",v);if(y)addEventListener("load",function(){scrollTo(0,+y)});})();</script>
 </head>
 <body>
 
@@ -184,11 +183,9 @@
 </main>
 
 <footer class="colophon">
-  <p>
-    <span data-i18n="colo.face">Composé en</span>
-    <span class="face-note" data-face-note="robotoflex">Roboto&nbsp;Flex — axes <i>opsz</i>, <i>wght</i>, <i>wdth</i>, <i>GRAD</i> — sous-ensemblée latin, 235&nbsp;Ko.</span>
-    <span class="face-note" data-face-note="anybody">Anybody — axes <i>wdth</i>, <i>wght</i> — sous-ensemblée latin, 56&nbsp;Ko.</span>
-    <span class="face-note" data-face-note="recursive">Recursive — axes <i>wght</i>, <i>CASL</i>, <i>MONO</i> — sous-ensemblée latin, 221&nbsp;Ko.</span>
+  <p data-i18n="colo.face">
+    Composé en Roboto&nbsp;Flex — axes <i>opsz</i>, <i>wght</i>, <i>wdth</i> et <i>GRAD</i>,
+    sous-ensemblée latin, 235&nbsp;Ko. Le défilement en tient le curseur.
   </p>
   <p data-i18n="colo.hand">
     Écrit à la main : une page, une feuille de style, deux scripts. Aucune dépendance,

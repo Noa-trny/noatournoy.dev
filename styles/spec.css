@@ -1,23 +1,10 @@
 /* Le Spécimen — feuille unique. Deux valeurs, un caractère, un mécanisme. */
 
 @font-face {
-  font-family: "Face RobotoFlex";
+  font-family: "Roboto Flex";
   src: url("../fonts/RobotoFlex.woff2") format("woff2-variations");
   font-weight: 100 1000;
   font-stretch: 25% 151%;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Face Anybody";
-  src: url("../fonts/Anybody.woff2") format("woff2-variations");
-  font-weight: 100 900;
-  font-stretch: 50% 150%;
-  font-display: swap;
-}
-@font-face {
-  font-family: "Face Recursive";
-  src: url("../fonts/Recursive.woff2") format("woff2-variations");
-  font-weight: 300 1000;
   font-display: swap;
 }
 
@@ -29,9 +16,8 @@
 }
 
 :root {
-  --paper: #edeef0;
-  --ink: #001489;
-  --ink-2: #3f4880;
+  --paper: #ffffff;
+  --ink: #000000;
 
   --fg: var(--ink);
   --bg: var(--paper);
@@ -43,8 +29,6 @@
   --ax-wdth-f: 45;
   --ax-grad: 0;
   --ax-grad-f: 120;
-  --ax-casl: 0;
-  --ax-casl-f: 1;
 
   /* Échelle de spécimen — six degrés réellement distincts. */
   --t-mega: clamp(2.75rem, min(19vw, 30svh), 17rem);
@@ -58,21 +42,7 @@
   --gut: clamp(1.25rem, 4vw, 3.5rem);
   --rule: 1px;
 
-  --face: "Face RobotoFlex", system-ui, sans-serif;
-}
-
-/* Chaque caractère a sa propre chasse : l'échelle et les axes se recalent par face
-   pour que le nom tienne sur une ligne. */
-:root[data-face="anybody"] {
-  --face: "Face Anybody", system-ui, sans-serif;
-  --t-mega: clamp(2.5rem, min(16.5vw, 28svh), 15rem);
-  --ax-wdth: 88;
-  --ax-wdth-f: 52;
-}
-:root[data-face="recursive"] {
-  --face: "Face Recursive", system-ui, sans-serif;
-  --ax-wght: 800;
-  --ax-wght-f: 350;
+  --face: "Roboto Flex", system-ui, sans-serif;
 }
 
 *,
@@ -114,18 +84,6 @@ body {
     "wdth" calc(var(--ax-wdth) + (var(--ax-wdth-f) - var(--ax-wdth)) * var(--vel)),
     "GRAD" calc(var(--ax-grad) + (var(--ax-grad-f) - var(--ax-grad)) * var(--vel));
 }
-:root[data-face="anybody"] .kin {
-  font-variation-settings:
-    "wght" calc(var(--ax-wght) + (var(--ax-wght-f) - var(--ax-wght)) * var(--vel)),
-    "wdth" calc(var(--ax-wdth) + (var(--ax-wdth-f) - var(--ax-wdth)) * var(--vel));
-}
-:root[data-face="recursive"] .kin {
-  font-variation-settings:
-    "MONO" 0,
-    "CASL" calc(var(--ax-casl) + (var(--ax-casl-f) - var(--ax-casl)) * var(--vel)),
-    "wght" calc(var(--ax-wght) + (var(--ax-wght-f) - var(--ax-wght)) * var(--vel));
-}
-
 /* Le corps de texte ne bouge jamais. */
 .identification,
 .statement-body,
@@ -456,10 +414,6 @@ a { color: inherit; }
 
 /* ---------- colophon ---------- */
 
-.face-note { display: none; }
-:root[data-face="robotoflex"] [data-face-note="robotoflex"],
-:root[data-face="anybody"] [data-face-note="anybody"],
-:root[data-face="recursive"] [data-face-note="recursive"] { display: inline; }
 .colophon i { font-style: normal; font-variation-settings: "wght" 700; }
 
 .colophon {
@@ -487,6 +441,20 @@ a { color: inherit; }
       to { opacity: 1; transform: none; }
     }
   }
+}
+
+/* ---------- petits écrans ---------- */
+
+@media (max-width: 40rem) {
+  /* la date passe au-dessus : en colonne étroite, la cascade a besoin de sa largeur */
+  .step {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+  .step-date { letter-spacing: 0.12em; }
+  /* la barre de langue ne doit pas retomber sur le cartouche */
+  .opening { padding-top: 4.5rem; }
+  .cartouche { gap: 0.3rem 1.25rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
