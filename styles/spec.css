@@ -138,6 +138,177 @@ body {
 .inked::before { top: 14px; left: 14px; }
 .inked::after { bottom: 14px; right: 14px; }
 
+/* ---------- la feuille réglée : marge de service + corps ---------- */
+
+.plate.ruled {
+  display: grid;
+  grid-template-columns: minmax(0, 9rem) minmax(0, 1fr);
+  gap: 0 clamp(1.25rem, 3vw, 3rem);
+  align-items: start;
+}
+.marge {
+  position: sticky;
+  top: clamp(1rem, 3vh, 2rem);
+  display: grid;
+  gap: 0.55rem;
+  padding-right: clamp(0.75rem, 2vw, 1.5rem);
+  border-right: var(--rule) solid color-mix(in srgb, var(--fg) 20%, transparent);
+  font-size: var(--t-cart);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variation-settings: normal;
+  color: color-mix(in srgb, var(--fg) 62%, transparent);
+}
+.marge .no {
+  color: var(--fg);
+  font-variation-settings: "wght" 700;
+  letter-spacing: 0.2em;
+}
+.marge .mes { font-variant-numeric: tabular-nums; }
+.corps { min-width: 0; }
+
+@media (max-width: 48rem) {
+  /* une cascade qui coupe les mots en deux ne ressemble pas à un choix */
+  .wf-row {
+    grid-template-columns: 1fr;
+    gap: 0.15rem;
+  }
+  .wf-row .line { white-space: normal; overflow: visible; }
+  .wf-row .spec { justify-self: start; }
+
+  .plate.ruled { grid-template-columns: 1fr; gap: 1.5rem; }
+  .marge {
+    position: static;
+    grid-auto-flow: column;
+    justify-content: start;
+    gap: 0 1.5rem;
+    border-right: 0;
+    border-bottom: var(--rule) solid color-mix(in srgb, var(--fg) 20%, transparent);
+    padding: 0 0 0.9rem;
+  }
+}
+
+/* ---------- relevé d'axes, en pied de premier écran ---------- */
+
+.readout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem clamp(1rem, 3vw, 2.75rem);
+  margin: clamp(1.5rem, 4vh, 2.5rem) 0 0;
+  font-size: var(--t-cart);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variation-settings: normal;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--fg) 70%, transparent);
+}
+.readout span { display: inline-flex; gap: 0.5em; }
+.readout b {
+  min-width: 3.5ch;
+  text-align: right;
+  font-weight: 400;
+  color: var(--fg);
+}
+
+/* ---------- cascade de corps ---------- */
+
+.wf {
+  margin: 0;
+  border-top: var(--rule) solid color-mix(in srgb, var(--fg) 18%, transparent);
+}
+.wf-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.5rem 1.5rem;
+  padding: 0.35rem 0 0.5rem;
+  border-bottom: var(--rule) solid color-mix(in srgb, var(--fg) 18%, transparent);
+}
+.wf-row .spec {
+  font-size: var(--t-cart);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variation-settings: normal;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--fg) 60%, transparent);
+  white-space: nowrap;
+}
+.wf-row .line {
+  line-height: 0.92;
+  letter-spacing: -0.03em;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* ---------- table de glyphes ---------- */
+
+.glyphset {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(2.75rem, 1fr));
+  border-top: var(--rule) solid color-mix(in srgb, var(--fg) 22%, transparent);
+  border-left: var(--rule) solid color-mix(in srgb, var(--fg) 22%, transparent);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.glyphset li {
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-right: var(--rule) solid color-mix(in srgb, var(--fg) 22%, transparent);
+  border-bottom: var(--rule) solid color-mix(in srgb, var(--fg) 22%, transparent);
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  font-variation-settings: "opsz" 40, "wght" 600, "wdth" 100;
+}
+.glyphset li.num { font-variant-numeric: tabular-nums; }
+
+/* ---------- diagramme d'axe ---------- */
+
+.axes {
+  display: grid;
+  gap: clamp(1.75rem, 4vh, 2.75rem);
+  margin: 0;
+}
+.axis { display: grid; gap: 0.3rem; }
+.axis-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: var(--t-cart);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variation-settings: normal;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--fg) 70%, transparent);
+}
+.axis-head b { color: var(--fg); font-weight: 400; }
+.axis-scale {
+  position: relative;
+  height: 0.9rem;
+  border-bottom: var(--rule) solid color-mix(in srgb, var(--fg) 45%, transparent);
+  background:
+    repeating-linear-gradient(
+      to right,
+      color-mix(in srgb, var(--fg) 30%, transparent) 0 1px,
+      transparent 1px 10%
+    ) bottom / 100% 0.45rem no-repeat;
+}
+/* la portion de l'axe que le site utilise réellement */
+.axis-scale::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: var(--from, 0%);
+  width: calc(var(--to, 100%) - var(--from, 0%));
+  border-bottom: 3px solid var(--fg);
+}
+.axis-sample {
+  font-size: clamp(1.5rem, 4.5vw, 2.75rem);
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
 /* ---------- cartouche ---------- */
 
 .cartouche {

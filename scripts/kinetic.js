@@ -29,8 +29,20 @@
     var CEIL = 2600; // px/s correspondant à l'amplitude maximale
     var settle;
 
+    /* le relevé d'axes affiche les valeurs réelles ; les créneaux sont à chasse
+       fixe et en chiffres tabulaires, donc l'affichage ne relayoute rien */
+    var out = {};
+    document.querySelectorAll("[data-readout] [data-ax]").forEach(function (el) {
+      out[el.dataset.ax] = el;
+    });
+    var AX = { wght: [780, 280], wdth: [105, 45], grad: [0, 120] };
+
     function write() {
-      root.style.setProperty("--vel", state.v.toFixed(4));
+      var v = state.v;
+      root.style.setProperty("--vel", v.toFixed(4));
+      for (var k in out) {
+        out[k].textContent = Math.round(AX[k][0] + (AX[k][1] - AX[k][0]) * v);
+      }
     }
 
     var rise = gsap.quickTo(state, "v", {
