@@ -160,6 +160,40 @@ body {
   text-transform: uppercase;
   overflow-wrap: anywhere;
 }
+/* Le volume : seule la rotation suit la vitesse. Au repos elle vaut zéro, donc les
+   faces latérales se projettent derrière la face et le nom reste exactement plat. */
+.wordmark { perspective: 140vw; perspective-origin: 28% 55%; }
+.wordmark .fam { display: inline-block; }
+/* Le mot tourne comme un seul plan : sinon les lettres se rentrent dedans. */
+.wordmark .fam[data-volume] {
+  transform-style: preserve-3d;
+  transform:
+    rotateY(calc(var(--vel) * -15deg))
+    rotateX(calc(var(--vel) * 3.5deg));
+  will-change: transform;
+}
+
+/* et chacune garde juste assez d'écart pour que le bloc ne soit pas rigide */
+.glyph {
+  display: inline-block;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(calc(var(--vel) * var(--i) * 0.9deg));
+  will-change: transform;
+}
+.glyph .face { position: relative; z-index: 1; }
+.glyph .layer {
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: pre;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--fg);
+  /* la profondeur suit la vitesse : à l'arrêt tout se replie sur la face */
+  transform: translateZ(calc(var(--l) * var(--vel) * -0.032em));
+  pointer-events: none;
+}
+
 .wordmark .given {
   display: block;
   font-size: 0.31em;
