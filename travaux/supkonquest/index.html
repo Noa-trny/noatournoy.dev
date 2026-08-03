@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title data-i18n="doc.title">SupKonQuest — Noa Tournoy</title>
-<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="SupKonQuest : jeu de stratégie temps réel isométrique, 2 à 8 joueurs en ligne. Pathfinding, IA à trois niveaux, serveur déployé sur Raspberry Pi. C++, Unreal Engine, Docker.">
+<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="SupKonQuest : jeu de stratégie temps réel multijoueur. Client Godot 4.6, serveur C++20 faisant autorité sur Raspberry Pi 5, protocole TCP binaire, cartes procédurales.">
 <meta name="theme-color" content="#000000">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SupKonQuest — Noa Tournoy">
-<meta property="og:description" content="Stratégie temps réel isométrique, 2 à 8 joueurs en ligne. C++, Unreal Engine, Docker.">
+<meta property="og:description" content="Stratégie temps réel multijoueur. Client Godot, serveur C++20 faisant autorité, protocole TCP binaire.">
 <meta property="og:url" content="https://noatournoy.dev/travaux/supkonquest/">
 <meta property="og:image" content="https://noatournoy.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -35,54 +35,73 @@
   <section class="plate inked" aria-labelledby="titre">
     <p class="cartouche">
       <span class="plate-no" data-i18n="c.a">Pl. 03.3</span>
-      <span data-i18n="c.b">2026, livré</span>
-      <span data-i18n="c.c">C++ · Unreal Engine · Docker</span>
+      <span data-i18n="c.b">2026, sous Carton Studio's</span>
+      <span data-i18n="c.c">Godot 4.6 · C++20 · TCP binaire</span>
     </p>
     <h1 class="fiche-title kin" id="titre">SupKonQuest</h1>
     <p class="fiche-spec" data-i18n="lede">
-      Une version modernisée de Risk, jouée en temps réel : jeu de stratégie isométrique
-      2D et 3D, de deux à huit joueurs, en ligne.
+      Un jeu de stratégie temps réel multijoueur, dans l'esprit de Risk : un client Godot,
+      un serveur C++ qui fait autorité, et rien entre les deux qu'un protocole binaire.
     </p>
   </section>
 
   <section class="plate" aria-labelledby="sujet">
-    <h2 class="lede kin" id="sujet" data-i18n="sujet.t">Le tour par tour, en continu.</h2>
+    <h2 class="lede kin" id="sujet" data-i18n="sujet.t">Le serveur décide, le client affiche.</h2>
     <div class="prose">
       <p data-i18n="sujet.1">
-        Risk se joue par tours ; SupKonQuest supprime l'attente. Les ressources se
-        produisent en continu, les unités se déplacent pendant que l'adversaire décide, et
-        la carte isométrique doit rester lisible à huit joueurs simultanés.
+        L'architecture fait autorité côté serveur : le serveur détient l'état de la partie,
+        le client ne fait que le représenter et transmettre des intentions. C'est le choix
+        qui coûte le plus cher à écrire, et celui qui rend la triche structurellement
+        impossible.
       </p>
       <p data-i18n="sujet.2">
-        Ce changement de régime déplace tout le problème : la gestion des ressources devient
-        un flux à équilibrer, et la micro-gestion des unités demande que la machine sache
-        se déplacer seule sur un terrain contraint.
+        Deux dépôts, deux langages, une seule vérité. Le serveur est en C++20 et vise le
+        Raspberry Pi 5 ; le client est en Godot 4.6. Ils se parlent en TCP par un protocole
+        binaire versionné, écrit pour cette partie plutôt que repris d'une bibliothèque
+        générique.
       </p>
     </div>
   </section>
 
   <section class="plate" aria-labelledby="fait">
-    <p class="cartouche"><span class="plate-no" data-i18n="c2">Ce que j'ai construit</span></p>
+    <p class="cartouche"><span class="plate-no" data-i18n="c2">Ce que ça fait tourner</span></p>
     <h2 class="sr-only" id="fait" data-i18n="h.fait">Réalisation</h2>
     <div class="prose">
-      <h3 data-i18n="f1.t">Le déplacement</h3>
+      <h3 data-i18n="f1.t">Des cartes générées</h3>
       <p data-i18n="f1.p">
-        Implémentation des algorithmes de pathfinding sur la grille isométrique : les unités
-        contournent le relief et les occupations sans qu'on ait à les guider case par case.
+        La carte est produite procéduralement côté serveur, en trois configurations, puis
+        transmise au client. Aucune carte n'est stockée : elles se recalculent.
       </p>
 
-      <h3 data-i18n="f2.t">Trois niveaux d'adversaire</h3>
+      <h3 data-i18n="f2.t">Une partie complète</h3>
       <p data-i18n="f2.p">
-        Une intelligence artificielle déclinée en trois paliers de difficulté, du joueur qui
-        apprend les règles à celui qui cherche une vraie partie. Écrire trois niveaux force
-        à séparer ce qui relève de la stratégie de ce qui relève de la précision d'exécution.
+        Sélection et déplacement d'unités, formations, capture de camps, revenu, sorts,
+        conditions de fin de partie, un adversaire automatique, et un classement accessible
+        depuis le menu. Le jeu se termine, ce qui est la part du travail qu'on sous-estime
+        toujours.
       </p>
 
-      <h3 data-i18n="f3.t">Le serveur</h3>
+      <h3 data-i18n="f3.t">Trois langues</h3>
       <p data-i18n="f3.p">
-        Architecture serveur déployée sur Raspberry Pi, conteneurisée avec Docker. Contrainte
-        salutaire : sur une machine à cette échelle, un protocole bavard ou une boucle
-        gourmande se voit immédiatement.
+        Le client est traduit en français, anglais et espagnol, avec le changement de langue
+        depuis les réglages.
+      </p>
+
+      <h3 data-i18n="f4.t">La contrainte matérielle</h3>
+      <p data-i18n="f4.p">
+        Viser un Raspberry Pi 5 comme cible de déploiement n'est pas une coquetterie : sur
+        une machine de cette taille, une boucle de jeu qui dérive ou un protocole bavard se
+        voient tout de suite. La contrainte fait le travail du profileur.
+      </p>
+    </div>
+  </section>
+
+  <section class="plate" aria-labelledby="acces">
+    <h2 class="sr-only" id="acces" data-i18n="h.acces">Accès au code</h2>
+    <div class="prose">
+      <p data-i18n="acces.p">
+        Les deux dépôts sont privés, sous l'organisation Carton Studio's. J'en parle
+        volontiers en entretien ; je ne peux pas les ouvrir ici.
       </p>
     </div>
   </section>

@@ -15,7 +15,7 @@
   "h.index": "Index of work",
   "w1": "A 3D web experience where scrolling is time. Eight acts, fully procedural, with no models, no textures and no audio files. Solo, end to end. Next.js 15 · React 19 · TypeScript · Three.js · GLSL · WebAudio.",
   "w2": "A dashboard for monitoring the security of digital products, at ADEO. Three-month internship. Looker · LookML · Python · React · BigQuery · Terraform · Kubernetes.",
-  "w3": "Isometric real-time strategy for 2 to 8 players online. Pathfinding, three-tier AI, server deployed on a Raspberry Pi. C++ · Unreal Engine · Docker.",
+  "w3": "Multiplayer real-time strategy. Godot client, authoritative C++20 server on a Raspberry Pi 5, binary TCP protocol, procedural maps. Private repositories.",
   "w4": "A video game catalogue built on the RAWG API: search, filters, persistent favourites. TypeScript · React.",
   "w5": "A tile-laying game in the console, without a single external dependency. C++17.",
   "w6": "Three networked board games: Katerenga, Congress, Isolation. Team of three: interface, art direction and computer opponents. Python · Pygame · sockets.",

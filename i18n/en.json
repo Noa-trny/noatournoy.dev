@@ -10,7 +10,7 @@
   "cue.b": "speed sets the page",
 
   "decl": "I build software that holds up and stays secure.",
-  "decl.1": "Engineering student at SUPINFO, in Lille. In the summer of 2025 at ADEO I built DataSentinel: a dashboard that replaced the manual tracking of digital-product security, along with the full-stack extensions around it. I return there as a cybersecurity apprentice on 1 October 2026.",
+  "decl.1": "Engineering student at SUPINFO, in Lille. In the summer of 2025 at ADEO I built DataSentinel: a dashboard that replaced the manual tracking of digital-product security, along with the full-stack extensions around it. The following summer, at Never2Wait, I worked on product development. I return to ADEO as a cybersecurity apprentice on 1 October 2026.",
   "decl.2": "The rest of the time I write C++ for the constraint, Python for how fast it lets me try things, and shaders for <a href=\"https://eclosion.noatournoy.dev\">Éclosion</a> — a fully procedural 3D web experience where scrolling is time.",
 
   "c2.a": "Pl. 02 — path",
@@ -35,7 +35,7 @@
   "h.travaux": "Works",
   "w1": "TypeScript · Next.js · React Three Fiber · GLSL. A fully procedural 3D web experience in eight acts",
   "w2": "LookML · Python · React · BigQuery · Terraform · Kubernetes. Digital-product security monitoring, at ADEO",
-  "w3": "C++ · Unreal Engine · Docker. Isometric real-time strategy, 2 to 8 players, online",
+  "w3": "Godot 4.6 · C++20 · binary TCP. Multiplayer real-time strategy, authoritative server",
   "w4": "TypeScript · React. A game catalogue on the RAWG API, filters and persistent favourites",
   "w5": "C++17 · console · zero dependencies",
   "w6": "Python · Pygame · sockets. Three networked board games, built by three",
