@@ -51,6 +51,6 @@
   "c5.a": "Pl. 05 — contact",
   "h.contact": "Contact",
 
-  "colo.face": "Set in",
-  "colo.hand": "Written by hand: one page, one stylesheet, two scripts. No dependencies, no third-party requests, no tracker. The text reads without JavaScript."
+  "colo.face": "Set in Roboto&nbsp;Flex, <i>opsz</i>, <i>wght</i>, <i>wdth</i> and <i>GRAD</i> axes, subset to Latin, 235&nbsp;KB. Scrolling holds the slider.",
+  "colo.hand": "Written by hand. One library, GSAP, served from this domain. No third-party requests, no tracker. The text reads without JavaScript."
 }

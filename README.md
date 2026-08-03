@@ -1,7 +1,8 @@
 # noatournoy.dev
 
-Le portfolio de Noa Tournoy. Statique, écrit à la main : pas de build, pas de dépendance,
-aucune requête vers un tiers au runtime.
+Le portfolio de Noa Tournoy. Statique, écrit à la main : pas de build, pas de gestionnaire
+de paquets, aucune requête vers un tiers au runtime. Une seule bibliothèque, GSAP, servie
+depuis le domaine.
 
 ## Structure
 
@@ -12,8 +13,10 @@ savoir-faire/         langages, infrastructure, certifications
 contact/              coordonnées
 404.html              page d'erreur
 styles/spec.css       la feuille unique
-scripts/kinetic.js    le défilement pilote les axes de la fonte variable
+scripts/kinetic.js    le défilement pilote les axes de la fonte, la parallaxe et les entrées
+scripts/volume.js     découpe le nom en lettres extrudées (3D CSS)
 scripts/i18n.js       bascule FR/EN
+scripts/vendor/       GSAP 3.15 + ScrollTrigger, auto-hébergés (licence GSAP standard)
 i18n/*.en.json        les textes anglais, une entrée par page
 fonts/RobotoFlex.woff2  fonte variable, sous-ensemblée latin
 ```
