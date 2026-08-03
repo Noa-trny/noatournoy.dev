@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n="doc.title">SupKonQuest — Noa Tournoy</title>
+<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="SupKonQuest : jeu de stratégie temps réel isométrique, 2 à 8 joueurs en ligne. Pathfinding, IA à trois niveaux, serveur déployé sur Raspberry Pi. C++, Unreal Engine, Docker.">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SupKonQuest — Noa Tournoy">
+<meta property="og:description" content="Stratégie temps réel isométrique, 2 à 8 joueurs en ligne. C++, Unreal Engine, Docker.">
+<meta property="og:url" content="https://noatournoy.dev/travaux/supkonquest/">
+<meta property="og:image" content="https://noatournoy.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://noatournoy.dev/travaux/supkonquest/">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles/spec.css">
+</head>
+<body>
+
+<nav class="lang" data-lang-bar data-dict="/i18n/supkonquest.en.json" aria-label="Langue">
+  <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
+  <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+</nav>
+
+<header class="runhead">
+  <a class="mark kin" href="/">Noa Tournoy</a>
+  <a href="/travaux/" data-i18n="nav.travaux">Travaux</a>
+  <a href="/savoir-faire/" data-i18n="nav.savoir">Savoir-faire</a>
+  <a href="/contact/" data-i18n="nav.contact">Contact</a>
+</header>
+
+<main id="contenu">
+
+  <section class="plate inked" aria-labelledby="titre">
+    <p class="cartouche">
+      <span class="plate-no" data-i18n="c.a">Pl. 03.3</span>
+      <span data-i18n="c.b">2026, livré</span>
+      <span data-i18n="c.c">C++ · Unreal Engine · Docker</span>
+    </p>
+    <h1 class="fiche-title kin" id="titre">SupKonQuest</h1>
+    <p class="fiche-spec" data-i18n="lede">
+      Une version modernisée de Risk, jouée en temps réel : jeu de stratégie isométrique
+      2D et 3D, de deux à huit joueurs, en ligne.
+    </p>
+  </section>
+
+  <section class="plate" aria-labelledby="sujet">
+    <h2 class="lede kin" id="sujet" data-i18n="sujet.t">Le tour par tour, en continu.</h2>
+    <div class="prose">
+      <p data-i18n="sujet.1">
+        Risk se joue par tours ; SupKonQuest supprime l'attente. Les ressources se
+        produisent en continu, les unités se déplacent pendant que l'adversaire décide, et
+        la carte isométrique doit rester lisible à huit joueurs simultanés.
+      </p>
+      <p data-i18n="sujet.2">
+        Ce changement de régime déplace tout le problème : la gestion des ressources devient
+        un flux à équilibrer, et la micro-gestion des unités demande que la machine sache
+        se déplacer seule sur un terrain contraint.
+      </p>
+    </div>
+  </section>
+
+  <section class="plate" aria-labelledby="fait">
+    <p class="cartouche"><span class="plate-no" data-i18n="c2">Ce que j'ai construit</span></p>
+    <h2 class="sr-only" id="fait" data-i18n="h.fait">Réalisation</h2>
+    <div class="prose">
+      <h3 data-i18n="f1.t">Le déplacement</h3>
+      <p data-i18n="f1.p">
+        Implémentation des algorithmes de pathfinding sur la grille isométrique : les unités
+        contournent le relief et les occupations sans qu'on ait à les guider case par case.
+      </p>
+
+      <h3 data-i18n="f2.t">Trois niveaux d'adversaire</h3>
+      <p data-i18n="f2.p">
+        Une intelligence artificielle déclinée en trois paliers de difficulté, du joueur qui
+        apprend les règles à celui qui cherche une vraie partie. Écrire trois niveaux force
+        à séparer ce qui relève de la stratégie de ce qui relève de la précision d'exécution.
+      </p>
+
+      <h3 data-i18n="f3.t">Le serveur</h3>
+      <p data-i18n="f3.p">
+        Architecture serveur déployée sur Raspberry Pi, conteneurisée avec Docker. Contrainte
+        salutaire : sur une machine à cette échelle, un protocole bavard ou une boucle
+        gourmande se voit immédiatement.
+      </p>
+    </div>
+  </section>
+
+  <section class="plate inked" aria-labelledby="suite">
+    <h2 class="sr-only" id="suite" data-i18n="h.suite">Suite</h2>
+    <nav class="next" aria-label="Travaux">
+      <a href="/travaux/datasentinel/"><span class="dir" data-i18n="nav.prev">Planche précédente</span>DataSentinel</a>
+      <a href="/travaux/gamedex/"><span class="dir" data-i18n="nav.next">Planche suivante</span>Gamedex</a>
+    </nav>
+  </section>
+
+</main>
+
+<footer class="colophon">
+  <p data-i18n="colo.face">
+    Composé en Roboto&nbsp;Flex, axes <i>opsz</i>, <i>wght</i>, <i>wdth</i> et <i>GRAD</i>,
+    sous-ensemblée latin, 235&nbsp;Ko. Le défilement en tient le curseur.
+  </p>
+  <p data-i18n="colo.hand">
+    Écrit à la main : aucune dépendance, aucune requête vers un tiers, aucun traceur.
+    Le texte se lit sans JavaScript.
+  </p>
+</footer>
+
+<script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/i18n.js" defer></script>
+</body>
+</html>

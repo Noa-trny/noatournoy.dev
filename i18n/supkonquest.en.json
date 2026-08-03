@@ -1,0 +1,33 @@
+{
+  "doc.title": "SupKonQuest — Noa Tournoy",
+  "doc.desc": "SupKonQuest: an isometric real-time strategy game for 2 to 8 players online. Pathfinding, three-tier AI, server deployed on a Raspberry Pi. C++, Unreal Engine, Docker.",
+
+  "nav.travaux": "Work",
+  "nav.savoir": "Skills",
+  "nav.contact": "Contact",
+
+  "c.a": "Pl. 03.3",
+  "c.b": "2026, delivered",
+  "c.c": "C++ · Unreal Engine · Docker",
+  "lede": "A modernised take on Risk, played in real time: an isometric 2D and 3D strategy game for two to eight players, online.",
+
+  "sujet.t": "Turn-based, made continuous.",
+  "sujet.1": "Risk is played in turns; SupKonQuest removes the waiting. Resources accrue continuously, units move while the opponent is still deciding, and the isometric map has to stay readable with eight simultaneous players.",
+  "sujet.2": "That change of regime moves the whole problem: resource management becomes a flow to balance, and unit micro-management requires the machine to find its own way across constrained ground.",
+
+  "c2": "What I built",
+  "h.fait": "Delivery",
+  "f1.t": "Movement",
+  "f1.p": "Pathfinding algorithms on the isometric grid: units route around terrain and occupied cells without being guided square by square.",
+  "f2.t": "Three tiers of opponent",
+  "f2.p": "An AI in three difficulty tiers, from the player still learning the rules to the one looking for a real game. Writing three tiers forces you to separate what belongs to strategy from what belongs to precision of execution.",
+  "f3.t": "The server",
+  "f3.p": "A server architecture deployed on a Raspberry Pi, containerised with Docker. A healthy constraint: on a machine that size, a chatty protocol or a greedy loop shows up immediately.",
+
+  "h.suite": "Next",
+  "nav.prev": "Previous plate",
+  "nav.next": "Next plate",
+
+  "colo.face": "Set in Roboto&nbsp;Flex, <i>opsz</i>, <i>wght</i>, <i>wdth</i> and <i>GRAD</i> axes, subset to Latin, 235&nbsp;KB. Scrolling holds the slider.",
+  "colo.hand": "Written by hand: no dependencies, no third-party requests, no tracker. The text reads without JavaScript."
+}

@@ -398,6 +398,224 @@ a { color: inherit; }
   color: var(--paper);
 }
 
+/* ---------- en-tête de course (pages intérieures) ---------- */
+
+.runhead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem clamp(1rem, 3vw, 2.5rem);
+  /* la marge droite dégage la barre de langue fixe */
+  padding: 1.1rem clamp(6.5rem, 9vw, 8rem) 1.1rem var(--gut);
+  border-bottom: var(--rule) solid color-mix(in srgb, var(--fg) 22%, transparent);
+  font-size: var(--t-cart);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variation-settings: normal;
+}
+.runhead a {
+  color: inherit;
+  text-decoration: none;
+  padding: 0.35rem 0;
+}
+.runhead a:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+.runhead .mark {
+  --ax-wght: 800;
+  letter-spacing: 0.2em;
+  margin-right: auto;
+}
+.runhead [aria-current="page"] {
+  background: var(--fg);
+  color: var(--bg);
+  padding: 0.35rem 0.5rem;
+  margin: -0.35rem -0.5rem;
+}
+
+/* ---------- tête de fiche ---------- */
+
+.fiche-title {
+  margin: 0;
+  font-size: clamp(2.5rem, 11vw, 8.5rem);
+  line-height: 0.85;
+  letter-spacing: -0.035em;
+  overflow-wrap: anywhere;
+}
+.fiche-spec {
+  margin: clamp(1.5rem, 4vh, 2.5rem) 0 0;
+  max-width: 60ch;
+  font-size: var(--t-3);
+  line-height: 1.4;
+}
+.fiche-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+  margin: clamp(1.5rem, 4vh, 2.25rem) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--t-3);
+  font-variation-settings: normal;
+}
+.fiche-links a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  display: inline-block;
+  padding: 0.35rem 0;
+}
+.fiche-links a:hover { text-decoration-thickness: 2px; }
+
+/* ---------- prose de fiche ---------- */
+
+.prose {
+  max-width: 68ch;
+  font-variation-settings: normal;
+}
+.prose > * + * { margin-top: 1.1em; }
+.prose h3 {
+  margin-top: 2.2em;
+  margin-bottom: 0.5em;
+  font-size: var(--t-3);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  font-variation-settings: "wght" 750;
+}
+.prose ul { padding-left: 1.2em; margin-top: 0.6em; }
+.prose li + li { margin-top: 0.5em; }
+.prose a {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+.prose strong { font-variation-settings: "wght" 750; }
+.lede {
+  max-width: 34ch;
+  margin: 0 0 clamp(1.75rem, 5vh, 3rem);
+  font-size: var(--t-2);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* ---------- table de mesures ---------- */
+
+.measures {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  font-variation-settings: normal;
+  font-size: var(--t-body);
+}
+.measures caption {
+  text-align: left;
+  font-size: var(--t-cart);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+  padding-bottom: 0.75rem;
+}
+.measures th,
+.measures td {
+  text-align: left;
+  padding: 0.7rem 1rem 0.7rem 0;
+  border-bottom: var(--rule) solid color-mix(in srgb, var(--fg) 20%, transparent);
+  vertical-align: baseline;
+}
+.measures thead th {
+  font-size: var(--t-cart);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-variation-settings: "wght" 700;
+}
+.measures td:not(:first-child),
+.measures th:not(:first-child) { text-align: right; padding-right: 0; }
+.measures .after { font-variation-settings: "wght" 800; }
+.measures tbody th { font-variation-settings: "wght" 450; }
+
+/* ---------- figures ---------- */
+
+.figure {
+  margin: 0;
+  max-width: 100%;
+}
+.figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: var(--rule) solid var(--fg);
+}
+.figure figcaption {
+  margin-top: 0.6rem;
+  font-size: var(--t-note);
+  color: color-mix(in srgb, var(--fg) 78%, transparent);
+  font-variation-settings: normal;
+}
+.plates-grid {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+}
+
+/* ---------- pagination entre fiches ---------- */
+
+.next {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  align-items: baseline;
+}
+.next a {
+  color: inherit;
+  text-decoration: none;
+  font-size: clamp(1.5rem, 4.5vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  --ax-wght: 700;
+  --ax-wght-f: 300;
+}
+.next a:hover { text-decoration: underline; text-underline-offset: 0.18em; }
+.next .dir {
+  display: block;
+  font-size: var(--t-cart);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variation-settings: normal;
+  color: color-mix(in srgb, var(--fg) 72%, transparent);
+  margin-bottom: 0.5em;
+}
+
+/* ---------- listes de savoir-faire ---------- */
+
+.kv {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(9rem, 14rem) 1fr;
+  gap: 0 clamp(1rem, 3vw, 2.5rem);
+}
+.kv dt {
+  padding: 0.9rem 0;
+  border-top: var(--rule) solid color-mix(in srgb, var(--fg) 20%, transparent);
+  font-size: var(--t-cart);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-variation-settings: normal;
+  color: color-mix(in srgb, var(--fg) 80%, transparent);
+}
+.kv dd {
+  margin: 0;
+  padding: 0.9rem 0;
+  border-top: var(--rule) solid color-mix(in srgb, var(--fg) 20%, transparent);
+  font-size: clamp(1.05rem, 1.8vw, 1.375rem);
+  line-height: 1.35;
+  --ax-wght: 520;
+  --ax-wght-f: 400;
+}
+@media (max-width: 40rem) {
+  .kv { grid-template-columns: 1fr; }
+  .kv dd { border-top: 0; padding-top: 0; }
+}
+
 /* ---------- utilitaires ---------- */
 
 .sr-only {

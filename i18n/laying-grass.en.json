@@ -1,0 +1,31 @@
+{
+  "doc.title": "laying_grass — Noa Tournoy",
+  "doc.desc": "laying_grass: a tile-laying game in pure C++17 with zero dependencies — standard library only, right down to the hand-written JSON parser. 96 tile shapes, 2 to 9 players.",
+
+  "nav.travaux": "Work",
+  "nav.savoir": "Skills",
+  "nav.contact": "Contact",
+
+  "c.a": "Pl. 03.5",
+  "c.b": "2026, solo",
+  "c.c": "C++17 · console · zero dependencies",
+  "lede": "A tile-laying game inspired by \"The Devil's Plan\", written in pure C++17: standard library only, right down to the JSON parser.",
+  "link.read": "Read the code",
+
+  "sujet.t": "Zero dependencies, literally.",
+  "sujet.1": "The game reads its 96 tile shapes from a JSON file. Pulling in a library to read one file would have been quicker to write; the parser is hand-written instead. That is the decision that sums up the project, and the one that teaches the most.",
+  "sujet.2": "Two to nine players, on a 20 × 20 or 30 × 30 grid depending on the count, nine rounds each. Tiles rotate and flip. The winner is whoever holds the largest filled square at the end; ties are broken by total territory.",
+
+  "c2": "The architecture",
+  "h.archi": "Architecture",
+  "archi.p": "A clean separation between rules, placement validation, algorithms and display. <strong>Game</strong> holds the logic, <strong>Validator</strong> decides whether a move is legal, <strong>Algorithms</strong> carries the largest-square search and the connectivity computation, <strong>Board</strong> manages the grid and territories. RAII, <code>enum class</code>, <code>constexpr</code>, STL: the language's own tools rather than patches.",
+  "archi.p2": "Three bonus mechanics sit on top of placement: exchange coupons, which let you pick from the next five tiles; stones, which block an opponent; and annexation, which takes a cell from the territory across the board.",
+  "archi.p3": "The repository is documented separately: getting started, architecture and implementation decisions, detailed rules, file tree and inter-module dependencies.",
+
+  "h.suite": "Next",
+  "nav.prev": "Previous plate",
+  "nav.next": "Next plate",
+
+  "colo.face": "Set in Roboto&nbsp;Flex, <i>opsz</i>, <i>wght</i>, <i>wdth</i> and <i>GRAD</i> axes, subset to Latin, 235&nbsp;KB. Scrolling holds the slider.",
+  "colo.hand": "Written by hand: no dependencies, no third-party requests, no tracker. The text reads without JavaScript."
+}

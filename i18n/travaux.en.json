@@ -1,0 +1,28 @@
+{
+  "doc.title": "Work — Noa Tournoy",
+  "doc.desc": "Six works by Noa Tournoy: Éclosion, DataSentinel, SupKonQuest, Gamedex, laying_grass and Ludoria. Context, role, technical decisions and measured results.",
+
+  "nav.travaux": "Work",
+  "nav.savoir": "Skills",
+  "nav.contact": "Contact",
+
+  "c.a": "Pl. 03 — work",
+  "c.b": "six plates",
+  "c.c": "2022 → 2026",
+  "h1": "Work",
+  "lede": "Six pieces, from shader to dashboard. Each one says what it is, exactly what I did on it, and what was measured when there was something to measure.",
+
+  "h.index": "Index of work",
+  "w1": "A 3D web experience where scrolling is time. Eight acts, fully procedural, with no models, no textures and no audio files. Solo, end to end. Next.js 15 · React 19 · TypeScript · Three.js · GLSL · WebAudio.",
+  "w2": "A dashboard for monitoring the security of digital products, at ADEO. Three-month internship. Looker · LookML · Python · React · BigQuery · Terraform · Kubernetes.",
+  "w3": "Isometric real-time strategy for 2 to 8 players online. Pathfinding, three-tier AI, server deployed on a Raspberry Pi. C++ · Unreal Engine · Docker.",
+  "w4": "A video game catalogue built on the RAWG API: search, filters, persistent favourites. TypeScript · React.",
+  "w5": "A tile-laying game in the console, without a single external dependency. C++17.",
+  "w6": "Three networked board games: Katerenga, Congress, Isolation. Team of three: interface, art direction and computer opponents. Python · Pygame · sockets.",
+
+  "reste.t": "The rest lives on GitHub.",
+  "reste.p": "Games in C, PHP applications, rendering exercises, coursework: everything without its own plate here stays public and readable at <a href=\"https://github.com/Noa-trny\">github.com/Noa-trny</a>.",
+
+  "colo.face": "Set in Roboto&nbsp;Flex, <i>opsz</i>, <i>wght</i>, <i>wdth</i> and <i>GRAD</i> axes, subset to Latin, 235&nbsp;KB. Scrolling holds the slider.",
+  "colo.hand": "Written by hand: no dependencies, no third-party requests, no tracker. The text reads without JavaScript."
+}

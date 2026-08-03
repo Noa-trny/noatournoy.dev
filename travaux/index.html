@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n="doc.title">Travaux — Noa Tournoy</title>
+<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="Six travaux de Noa Tournoy : Éclosion, DataSentinel, SupKonQuest, Gamedex, laying_grass et Ludoria. Contexte, rôle, décisions techniques et résultats mesurés.">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Travaux — Noa Tournoy">
+<meta property="og:description" content="Six travaux : expérience web 3D, pilotage de sécurité, stratégie temps réel, applications et jeux.">
+<meta property="og:url" content="https://noatournoy.dev/travaux/">
+<meta property="og:image" content="https://noatournoy.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://noatournoy.dev/travaux/">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles/spec.css">
+</head>
+<body>
+
+<nav class="lang" data-lang-bar data-dict="/i18n/travaux.en.json" aria-label="Langue">
+  <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
+  <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+</nav>
+
+<header class="runhead">
+  <a class="mark kin" href="/">Noa Tournoy</a>
+  <a href="/travaux/" aria-current="page" data-i18n="nav.travaux">Travaux</a>
+  <a href="/savoir-faire/" data-i18n="nav.savoir">Savoir-faire</a>
+  <a href="/contact/" data-i18n="nav.contact">Contact</a>
+</header>
+
+<main id="contenu">
+
+  <section class="plate inked" aria-labelledby="titre">
+    <p class="cartouche">
+      <span class="plate-no" data-i18n="c.a">Pl. 03 — travaux</span>
+      <span data-i18n="c.b">six planches</span>
+      <span data-i18n="c.c">2022 → 2026</span>
+    </p>
+    <h1 class="fiche-title kin" id="titre" data-i18n="h1">Travaux</h1>
+    <p class="fiche-spec" data-i18n="lede">
+      Six pièces, du shader au tableau de bord. Chacune dit ce qu'elle est, ce que j'y ai
+      fait exactement, et ce qui a été mesuré quand il y avait quelque chose à mesurer.
+    </p>
+  </section>
+
+  <section class="plate" aria-labelledby="index">
+    <h2 class="sr-only" id="index" data-i18n="h.index">Index des travaux</h2>
+
+    <ul class="works">
+      <li class="work"><a class="work-link" href="/travaux/eclosion/">
+        <span class="work-name kin">Éclosion</span>
+        <span class="work-year">2026</span>
+        <span class="work-spec" data-i18n="w1">Expérience web 3D où le défilement est le temps, huit actes, 100 % procédurale — aucun modèle, aucune texture, aucun fichier audio. Seul, de bout en bout. Next.js 15 · React 19 · TypeScript · Three.js · GLSL · WebAudio.</span>
+      </a></li>
+      <li class="work"><a class="work-link" href="/travaux/datasentinel/">
+        <span class="work-name kin">DataSentinel</span>
+        <span class="work-year">2025</span>
+        <span class="work-spec" data-i18n="w2">Tableau de bord de pilotage de la sécurité des produits digitaux, chez ADEO. Stage de trois mois. Looker · LookML · Python · React · BigQuery · Terraform · Kubernetes.</span>
+      </a></li>
+      <li class="work"><a class="work-link" href="/travaux/supkonquest/">
+        <span class="work-name kin">SupKonQuest</span>
+        <span class="work-year">2026</span>
+        <span class="work-spec" data-i18n="w3">Stratégie temps réel isométrique, 2 à 8 joueurs en ligne. Pathfinding, IA à trois niveaux, serveur déployé sur Raspberry Pi. C++ · Unreal Engine · Docker.</span>
+      </a></li>
+      <li class="work"><a class="work-link" href="/travaux/gamedex/">
+        <span class="work-name kin">Gamedex</span>
+        <span class="work-year">2026</span>
+        <span class="work-spec" data-i18n="w4">Catalogue de jeux vidéo sur l'API RAWG : recherche, filtres, favoris persistants. TypeScript · React.</span>
+      </a></li>
+      <li class="work"><a class="work-link" href="/travaux/laying-grass/">
+        <span class="work-name kin">laying_grass</span>
+        <span class="work-year">2026</span>
+        <span class="work-spec" data-i18n="w5">Jeu de pose de tuiles en console, sans une seule dépendance externe. C++17.</span>
+      </a></li>
+      <li class="work"><a class="work-link" href="/travaux/ludoria/">
+        <span class="work-name kin">Ludoria</span>
+        <span class="work-year">2025</span>
+        <span class="work-spec" data-i18n="w6">Trois jeux de plateau en réseau : Katerenga, Congress, Isolation. Travail d'équipe à trois : interface, direction artistique et opposants automatiques. Python · Pygame · sockets.</span>
+      </a></li>
+    </ul>
+  </section>
+
+  <section class="plate" aria-labelledby="reste">
+    <h2 class="lede kin" id="reste" data-i18n="reste.t">Le reste est sur GitHub.</h2>
+    <div class="prose">
+      <p data-i18n="reste.p">
+        Jeux en C, applications PHP, exercices de rendu, travaux d'école : tout ce qui n'a
+        pas sa planche ici reste public et lisible sur
+        <a href="https://github.com/Noa-trny">github.com/Noa-trny</a>.
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<footer class="colophon">
+  <p data-i18n="colo.face">
+    Composé en Roboto&nbsp;Flex, axes <i>opsz</i>, <i>wght</i>, <i>wdth</i> et <i>GRAD</i>,
+    sous-ensemblée latin, 235&nbsp;Ko. Le défilement en tient le curseur.
+  </p>
+  <p data-i18n="colo.hand">
+    Écrit à la main : aucune dépendance, aucune requête vers un tiers, aucun traceur.
+    Le texte se lit sans JavaScript.
+  </p>
+</footer>
+
+<script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/i18n.js" defer></script>
+</body>
+</html>

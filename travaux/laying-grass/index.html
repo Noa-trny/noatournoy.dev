@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n="doc.title">laying_grass — Noa Tournoy</title>
+<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="laying_grass : jeu de placement de tuiles en C++17 pur, zéro dépendance — bibliothèque standard uniquement, jusqu'au parseur JSON écrit à la main. 96 formes de tuiles, 2 à 9 joueurs.">
+<meta name="theme-color" content="#000000">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laying_grass — Noa Tournoy">
+<meta property="og:description" content="Jeu de placement de tuiles en C++17 pur, zéro dépendance. 96 formes, 2 à 9 joueurs, détection du plus grand carré.">
+<meta property="og:url" content="https://noatournoy.dev/travaux/laying-grass/">
+<meta property="og:image" content="https://noatournoy.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://noatournoy.dev/travaux/laying-grass/">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles/spec.css">
+</head>
+<body>
+
+<nav class="lang" data-lang-bar data-dict="/i18n/laying-grass.en.json" aria-label="Langue">
+  <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
+  <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+</nav>
+
+<header class="runhead">
+  <a class="mark kin" href="/">Noa Tournoy</a>
+  <a href="/travaux/" data-i18n="nav.travaux">Travaux</a>
+  <a href="/savoir-faire/" data-i18n="nav.savoir">Savoir-faire</a>
+  <a href="/contact/" data-i18n="nav.contact">Contact</a>
+</header>
+
+<main id="contenu">
+
+  <section class="plate inked" aria-labelledby="titre">
+    <p class="cartouche">
+      <span class="plate-no" data-i18n="c.a">Pl. 03.5</span>
+      <span data-i18n="c.b">2026, seul</span>
+      <span data-i18n="c.c">C++17 · console · zéro dépendance</span>
+    </p>
+    <h1 class="fiche-title kin" id="titre">laying_grass</h1>
+    <p class="fiche-spec" data-i18n="lede">
+      Un jeu de placement de tuiles inspiré de « The Devil's Plan », écrit en C++17 pur :
+      bibliothèque standard uniquement, jusqu'au parseur JSON.
+    </p>
+    <ul class="fiche-links">
+      <li><a href="https://github.com/Noa-trny/laying_grass_cpp" data-i18n="link.read">Lire le code</a></li>
+    </ul>
+  </section>
+
+  <section class="plate" aria-labelledby="sujet">
+    <h2 class="lede kin" id="sujet" data-i18n="sujet.t">Zéro dépendance, littéralement.</h2>
+    <div class="prose">
+      <p data-i18n="sujet.1">
+        Le jeu lit ses 96 formes de tuiles dans un fichier JSON. Importer une bibliothèque
+        pour lire un seul fichier aurait été plus rapide à écrire ; le parseur est écrit à la
+        main. C'est la décision qui résume l'esprit du projet, et celle qui apprend le plus.
+      </p>
+      <p data-i18n="sujet.2">
+        De deux à neuf joueurs, sur une grille de 20 × 20 ou de 30 × 30 selon l'effectif,
+        neuf tours chacun. Les tuiles tournent et se retournent. Gagne celui qui possède le
+        plus grand carré plein en fin de partie ; à égalité, le plus grand territoire
+        départage.
+      </p>
+    </div>
+  </section>
+
+  <section class="plate" aria-labelledby="archi">
+    <p class="cartouche"><span class="plate-no" data-i18n="c2">L'architecture</span></p>
+    <h2 class="sr-only" id="archi" data-i18n="h.archi">Architecture</h2>
+    <div class="prose">
+      <p data-i18n="archi.p">
+        Une séparation nette entre les règles, la validation des placements, les algorithmes
+        et l'affichage. <strong>Game</strong> tient la logique, <strong>Validator</strong>
+        décide si un coup est légal, <strong>Algorithms</strong> porte la recherche du plus
+        grand carré et le calcul de connexité, <strong>Board</strong> gère la grille et les
+        territoires. RAII, <code>enum class</code>, <code>constexpr</code>, STL : les outils
+        du langage plutôt que des rustines.
+      </p>
+      <p data-i18n="archi.p2">
+        Trois mécaniques de bonus s'ajoutent au placement : les coupons d'échange, qui
+        laissent choisir parmi les cinq tuiles suivantes ; les pierres, qui bloquent un
+        adversaire ; et l'annexion, qui prend une case du territoire d'en face.
+      </p>
+      <p data-i18n="archi.p3">
+        Le dépôt est documenté à part : prise en main, architecture et décisions
+        d'implémentation, règles détaillées, arborescence et dépendances entre modules.
+      </p>
+    </div>
+  </section>
+
+  <section class="plate inked" aria-labelledby="suite">
+    <h2 class="sr-only" id="suite" data-i18n="h.suite">Suite</h2>
+    <nav class="next" aria-label="Travaux">
+      <a href="/travaux/gamedex/"><span class="dir" data-i18n="nav.prev">Planche précédente</span>Gamedex</a>
+      <a href="/travaux/ludoria/"><span class="dir" data-i18n="nav.next">Planche suivante</span>Ludoria</a>
+    </nav>
+  </section>
+
+</main>
+
+<footer class="colophon">
+  <p data-i18n="colo.face">
+    Composé en Roboto&nbsp;Flex, axes <i>opsz</i>, <i>wght</i>, <i>wdth</i> et <i>GRAD</i>,
+    sous-ensemblée latin, 235&nbsp;Ko. Le défilement en tient le curseur.
+  </p>
+  <p data-i18n="colo.hand">
+    Écrit à la main : aucune dépendance, aucune requête vers un tiers, aucun traceur.
+    Le texte se lit sans JavaScript.
+  </p>
+</footer>
+
+<script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/i18n.js" defer></script>
+</body>
+</html>

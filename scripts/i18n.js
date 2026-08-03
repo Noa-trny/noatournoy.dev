@@ -40,7 +40,7 @@
     try { localStorage.setItem(KEY, lang); } catch (e) {}
     if (lang === "fr" || dict) return paint(lang);
 
-    fetch("/i18n/en.json", { cache: "force-cache" })
+    fetch(bar.dataset.dict || "/i18n/en.json", { cache: "force-cache" })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (json) { dict = json; paint("en"); })
       .catch(function () {
