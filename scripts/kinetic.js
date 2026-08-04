@@ -171,6 +171,27 @@
       });
     }
 
+    /* ---- en bref : le mot se remplit au défilement -------------------- */
+
+    /* Chaque mot est écrit deux fois, superposé : une couche éteinte et une
+       couche pleine. Le défilement balaie la couche pleine par-dessus l'autre
+       — c'est un clip-path, donc ni largeur ni disposition ne changent, et le
+       mot reste lu une seule fois par les lecteurs d'écran.
+       Les quatre colonnes étant à la même hauteur, elles partagent un seul
+       déclencheur et se décalent au décalage, de gauche à droite. */
+    var bref = document.querySelector(".bref");
+    if (bref) {
+      gsap.timeline({
+        scrollTrigger: { trigger: bref, start: "top 86%", end: "top 42%", scrub: 0.5 },
+      })
+        .fromTo(bref.querySelectorAll(".bref-rule"), { scaleY: 0 },
+          { scaleY: 1, ease: "none", stagger: 0.08, immediateRender: false }, 0)
+        .fromTo(bref.querySelectorAll(".bref-plein"), { clipPath: "inset(0 100% 0 0)" },
+          { clipPath: "inset(0 0% 0 0)", ease: "none", stagger: 0.12, immediateRender: false }, 0.05)
+        .fromTo(bref.querySelectorAll(".bref-d"), { opacity: 0, y: 14 },
+          { opacity: 1, y: 0, ease: "power2.out", stagger: 0.1, immediateRender: false }, 0.28);
+    }
+
     /* ---- les lignes de la liste entrent une à une --------------------- */
 
     reveal(document.querySelectorAll(".row"), { opacity: 0, y: 26 }, {
@@ -191,8 +212,7 @@
         .from(hero.querySelector(".label"), { opacity: 0, y: 14, duration: 0.5 })
         .from(words, { opacity: 0, yPercent: 135, duration: 0.9, stagger: 0.05 }, "-=0.25")
         .from(hero.querySelector(".hero-sub"), { opacity: 0, y: 18, duration: 0.6 }, "-=0.45")
-        .from(hero.querySelector(".hero-meta"), { opacity: 0, y: 14, duration: 0.5 }, "-=0.4")
-        .from(hero.querySelectorAll(".status > *"), { opacity: 0, y: 22, duration: 0.6, stagger: 0.07 }, "-=0.35");
+        .from(hero.querySelector(".hero-meta"), { opacity: 0, y: 14, duration: 0.5 }, "-=0.4");
 
       /* le titre s'echappe ; l'accroche et la ligne de technos restent lisibles */
       gsap.to(h1, {

@@ -19,6 +19,10 @@
   --dim: #9aa09c;
   --dim-2: #949a97;
   --ghost: #24242a;
+  /* la couche eteinte d'un mot en cours de remplissage : elle reste
+     visible seule si l'on s'arrete en plein balayage, donc elle doit
+     tenir le rapport de 3:1 exige des grands caracteres. */
+  --ghost-mot: #6a716d;
   --acid: #c2f53f;
   --acid-ink: #0a0d05;
 
@@ -484,50 +488,119 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 
 /* ---------- rangée d'état ---------- */
 
-.status {
+/* ---------- en bref : quatre etats, cote a cote ---------- */
+
+/* Les quatre etats tiennent sur une seule ligne, en largeur pleine. Chaque
+   mot reste sur un seul rang : la taille est calee pour que « CERTIFICATIONS »,
+   le plus long, passe sans jamais se couper. */
+.bref {
+  list-style: none;
+  margin: clamp(2rem, 6vh, 4rem) 0 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
-  gap: 1px;
-  margin-top: clamp(2.5rem, 7vh, 4.5rem);
-  background: var(--line-soft);
-  border: 1px solid var(--line-soft);
-  border-radius: var(--r);
-  overflow: hidden;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  border-block: 1px solid var(--line-soft);
 }
-.status a,
-.status div {
-  background: var(--panel);
-  padding: 1.15rem 1.25rem 1.35rem;
-  text-decoration: none;
-  display: grid;
-  gap: 0.35rem;
-  align-content: start;
-  transition: background 0.2s ease;
-}
-.status a:hover { background: var(--panel-2); }
-.status .k {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: var(--t-label);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--dim-2);
-  font-variation-settings: "opsz" 8, "wght" 600, "wdth" 100;
-}
-.status .k i {
-  width: 7px; height: 7px;
-  border-radius: 2px;
-  background: var(--acid);
+
+.bref-row { position: relative; }
+
+/* Le filet se trace de haut en bas au defilement. Il est en fond de colonne,
+   pas en bordure : une bordure ne se laisse pas mettre a l'echelle. */
+.bref-rule {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 1px;
+  background: var(--line);
+  transform-origin: top center;
   display: block;
 }
-.status .v {
+.bref-row:first-child .bref-rule { display: none; }
+
+.bref-in {
+  display: grid;
+  /* La derniere rangee prend le reste : les notes du bas restent alignees
+     d'une colonne a l'autre meme quand une valeur passe sur deux lignes. */
+  grid-template-rows: auto auto 1fr;
+  align-content: start;
+  gap: 0.55rem;
+  min-height: 10.5rem;
+  height: 100%;
+  padding: clamp(1.4rem, 3.6vh, 2.4rem) clamp(0.9rem, 1.8vw, 1.7rem);
+  text-decoration: none;
+  color: inherit;
+}
+.bref-row:first-child .bref-in { padding-left: 0; }
+
+.bref-i {
+  font-size: var(--t-label);
+  letter-spacing: 0.1em;
+  color: var(--dim-2);
+  font-variation-settings: "opsz" 8, "wght" 500, "wdth" 100;
+}
+
+/* Le mot est ecrit deux fois : une couche eteinte toujours lisible, une
+   couche pleine que le defilement balaie par-dessus. Le texte n'est donc
+   jamais absent, meme si le declencheur ne part pas. */
+.bref-k {
+  position: relative;
+  display: block;
+  font-size: clamp(1.05rem, 2.1vw, 1.95rem);
+  line-height: 1.02;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144, "wght" 800, "wdth" 82;
+}
+.bref-fond { color: var(--ghost-mot); display: block; }
+.bref-plein {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  color: var(--fg);
+  transition: color 0.3s ease;
+}
+.bref-in:hover .bref-plein { color: var(--acid); }
+
+.bref-d {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 0.25rem;
+  height: 100%;
+}
+.bref-v {
   font-size: var(--t-3);
   line-height: 1.25;
+  color: var(--fg);
   font-variation-settings: "opsz" 20, "wght" 620, "wdth" 100;
 }
-.status .n { font-size: var(--t-sm); color: var(--dim); }
-.status a .v::after {
+.bref-n {
+  font-size: var(--t-label);
+  letter-spacing: 0.02em;
+  color: var(--dim);
+  align-self: end;
+}
+
+@media (max-width: 62rem) {
+  .bref { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Deux colonnes : la place double, le mot doit repasser devant la valeur
+     qu'il surplombe, sinon la hierarchie s'inverse. */
+  .bref-k { font-size: clamp(1.5rem, 4vw, 2.5rem); }
+  .bref-row:nth-child(3) .bref-rule { display: none; }
+  .bref-row:nth-child(3) .bref-in { padding-left: 0; }
+  .bref-row:nth-child(-n + 2) { border-bottom: 1px solid var(--line-soft); }
+}
+@media (max-width: 34rem) {
+  .bref { grid-template-columns: 1fr; }
+  .bref-k { font-size: clamp(1.9rem, 8.5vw, 2.8rem); }
+  .bref-in { min-height: 0; }
+  .bref-rule { display: none; }
+  .bref-in { padding-inline: 0; }
+  .bref-row:nth-child(3) .bref-in { padding-left: 0; }
+  .bref-row:not(:last-child) { border-bottom: 1px solid var(--line-soft); }
+}
+
+/* Les deux lignes cliquables s'annoncent par une fleche. */
+.bref-in[href] .bref-v::after {
   content: " →";
   color: var(--acid);
   white-space: nowrap;
@@ -1240,7 +1313,6 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .foot-in { align-items: center; }
 .row-title a { display: block; padding-block: 0.35rem; }
 .menu nav a { min-height: 44px; align-content: center; }
-.status a { min-height: 44px; }
 .ghost-items li a { min-height: 44px; display: inline-flex; align-items: center; }
 
 /* ---------- lien d'evitement ---------- */
