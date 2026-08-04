@@ -174,11 +174,11 @@ img { max-width: 100%; display: block; }
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(36rem, 92vw);
+  width: min(48rem, 94vw);
   display: grid;
   grid-template-rows: auto 1fr;
   gap: clamp(2rem, 6vh, 3.5rem);
-  padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1.75rem, 4vw, 3.25rem) clamp(3rem, 8vh, 4.5rem);
+  padding: clamp(1.5rem, 4vh, 2.5rem) clamp(2rem, 5vw, 4rem) clamp(3rem, 8vh, 4.5rem);
   background: #fbfbfc;
   border-left: 1px solid #e6e7ea;
   box-shadow: -30px 0 70px rgba(16, 18, 22, 0.22);
@@ -205,7 +205,7 @@ img { max-width: 100%; display: block; }
 
 .menu nav { display: grid; gap: clamp(0.65rem, 2.2vh, 1.4rem); align-content: center; }
 .menu nav a {
-  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  font-size: clamp(2.3rem, 5.6vw, 4.4rem);
   line-height: 1.05;
   text-transform: uppercase;
   letter-spacing: -0.01em;
