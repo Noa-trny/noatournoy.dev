@@ -20,7 +20,7 @@
 
 <main id="contenu">
 
-  <section class="hero light" aria-labelledby="titre">
+  <section class="hero light band-sec" aria-labelledby="titre">
    <header class="tophead wrap">
      <a class="mark" href="/">Portfolio</a>
      <div class="tophead-right">
@@ -70,9 +70,7 @@
    </div>
   </section>
 
-  <div class="zone-dark">
-
-  <section class="sec band" aria-label="En bref">
+  <section class="sec band-sec dark band" aria-label="En bref">
     <div class="wrap">
 <div class="status">
       <div>
@@ -100,7 +98,7 @@
     </div>
   </section>
 
-  <section class="sec" id="travaux" aria-labelledby="h-travaux">
+  <section class="sec band-sec light" id="travaux" aria-labelledby="h-travaux">
     <div class="wrap">
       <p class="label" data-i18n="l.travaux">Mes travaux</p>
       <h2 class="sec-title" id="h-travaux" data-i18n="t.travaux">Du shader au <em>tableau de bord</em></h2>
@@ -156,7 +154,7 @@
     </div>
   </section>
 
-  <section class="sec" id="parcours" aria-labelledby="h-parcours">
+  <section class="sec band-sec dark" id="parcours" aria-labelledby="h-parcours">
     <div class="wrap">
       <p class="label" data-i18n="l.parcours">Parcours</p>
       <h2 class="sec-title" id="h-parcours" data-i18n="t.parcours">Deux stages menés <em>jusqu'en production</em>.</h2>
@@ -208,7 +206,7 @@
     </div>
   </section>
 
-  <section class="sec" id="stack" aria-labelledby="h-stack">
+  <section class="sec band-sec light" id="stack" aria-labelledby="h-stack">
     <div class="wrap">
       <p class="label" data-i18n="l.stack">Stack</p>
       <h2 class="sec-title" id="h-stack" data-i18n="t.stack">Ce que j'utilise, et <em>où ça a servi</em>.</h2>
@@ -276,7 +274,7 @@
     </div>
   </section>
 
-  <section class="sec" id="certifications" aria-labelledby="h-certs">
+  <section class="sec band-sec dark" id="certifications" aria-labelledby="h-certs">
     <div class="wrap">
       <p class="label" data-i18n="l.certs">Certifications</p>
       <h2 class="sec-title" id="h-certs" data-i18n="t.certs">Quatre titres, <em>tous vérifiables</em>.</h2>
@@ -310,7 +308,7 @@
     </div>
   </section>
 
-  <section class="sec" id="contact" aria-labelledby="h-contact">
+  <section class="sec band-sec light" id="contact" aria-labelledby="h-contact">
     <div class="wrap">
       <div class="cta">
         <p class="label" data-i18n="l.contact">Contact</p>
@@ -324,28 +322,29 @@
     </div>
   </section>
 
-  </div>
 </main>
 
 <div class="menu" id="menu" hidden>
-  <button class="menu-close" type="button" data-i18n="menu.close">Fermer</button>
-  <nav aria-label="Sections">
-    <a href="#travaux" data-i18n="m.travaux">Travaux</a>
-    <a href="#parcours" data-i18n="m.parcours">Parcours</a>
-    <a href="#stack" data-i18n="m.stack">Stack</a>
-    <a href="#certifications" data-i18n="m.certs">Certifications</a>
-    <a href="#contact" data-i18n="m.contact">Contact</a>
-  </nav>
-  <p class="menu-foot">
-    <a href="https://github.com/Noa-trny">GitHub</a>
-    <a href="https://www.linkedin.com/in/noa-tournoy/">LinkedIn</a>
-    <a href="mailto:noa.tournoy@supinfo.com">noa.tournoy@supinfo.com</a>
-  </p>
+  <div class="menu-panel">
+    <button class="menu-close" type="button" data-i18n="menu.close">Fermer</button>
+    <nav aria-label="Sections">
+      <a href="#travaux" data-i18n="m.travaux">Travaux</a>
+      <a href="#parcours" data-i18n="m.parcours">Parcours</a>
+      <a href="#stack" data-i18n="m.stack">Stack</a>
+      <a href="#certifications" data-i18n="m.certs">Certifications</a>
+      <a href="#contact" data-i18n="m.contact">Contact</a>
+    </nav>
+    <p class="menu-foot">
+      <a href="https://github.com/Noa-trny">GitHub</a>
+      <a href="https://www.linkedin.com/in/noa-tournoy/">LinkedIn</a>
+      <a href="mailto:noa.tournoy@supinfo.com">noa.tournoy@supinfo.com</a>
+    </p>
+  </div>
 </div>
 
 <a class="side-mail" href="mailto:noa.tournoy@supinfo.com">noa.tournoy@supinfo.com</a>
 
-<footer class="foot">
+<footer class="foot dark">
   <div class="wrap foot-in">
     <span data-i18n="foot.a">Noa Tournoy — Lille, France</span>
     <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/travaux/" data-i18n="foot.b">Travaux</a> · <a href="/contact/" data-i18n="foot.c">Contact</a></span>

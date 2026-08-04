@@ -8,7 +8,6 @@
   font-display: swap;
 }
 
-@import url("grid.css");
 
 :root {
   --bg: #08080a;
@@ -116,7 +115,7 @@ img { max-width: 100%; display: block; }
 
 /* ---------- en-tête du bloc clair ---------- */
 
-.hero.light { grid-template-rows: auto 1fr; }
+.hero { grid-template-rows: auto 1fr; }
 .hero-in { align-self: center; }
 
 .tophead {
@@ -144,60 +143,72 @@ img { max-width: 100%; display: block; }
   padding: 0.35rem 0.15rem;
   cursor: pointer;
   font-variation-settings: "opsz" 20, "wght" 450, "wdth" 100;
-  position: relative;
+  transition: opacity 0.2s ease;
 }
-.menu-btn::after {
-  content: "";
-  position: absolute;
-  left: 0.15rem;
-  right: 0.15rem;
-  bottom: 0.2rem;
-  height: 1.5px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: 0 50%;
-  transition: transform 0.25s ease;
-}
-.menu-btn:hover::after,
-.menu-btn[aria-expanded="true"]::after { transform: scaleX(1); }
+.menu-btn:hover { opacity: 0.55; }
 
-/* ---------- panneau de menu ---------- */
+/* ---------- tiroir de menu ---------- */
 
 .menu {
   position: fixed;
   inset: 0;
   z-index: 80;
-  display: grid;
-  align-content: center;
-  gap: clamp(2rem, 6vh, 3.5rem);
-  padding: clamp(2rem, 8vw, 6rem);
-  background: #fbfbfc;
-  opacity: 0;
-  transition: opacity 0.28s ease;
+  pointer-events: none;
 }
-.menu.is-open { opacity: 1; }
 .menu[hidden] { display: none; }
-.menu-close {
+
+/* le voile derrière le tiroir */
+.menu::before {
+  content: "";
   position: absolute;
-  top: clamp(1.1rem, 2.5vh, 1.75rem);
-  right: clamp(1.25rem, 5vw, 4.5rem);
+  inset: 0;
+  background: rgba(10, 11, 13, 0.42);
+  opacity: 0;
+  transition: opacity 0.32s ease;
+  pointer-events: auto;
+}
+.menu.is-open::before { opacity: 1; }
+
+.menu-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(26rem, 86vw);
+  display: grid;
+  align-content: start;
+  gap: clamp(1.5rem, 4vh, 2.25rem);
+  padding: clamp(1.5rem, 4vh, 2.25rem) clamp(1.5rem, 4vw, 2.75rem);
+  background: #fbfbfc;
+  border-left: 1px solid #e6e7ea;
+  box-shadow: -30px 0 70px rgba(16, 18, 22, 0.22);
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.22, 0.7, 0.2, 1);
+  pointer-events: auto;
+  overflow-y: auto;
+}
+.menu.is-open .menu-panel { transform: translateX(0); }
+
+.menu-close {
+  justify-self: end;
   font: inherit;
-  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
+  font-size: 1.05rem;
   color: #101216;
   background: none;
   border: 0;
   padding: 0.35rem 0.15rem;
   cursor: pointer;
   font-variation-settings: "opsz" 20, "wght" 450, "wdth" 100;
-  text-decoration: underline;
-  text-underline-offset: 0.3em;
+  transition: opacity 0.2s ease;
 }
-.menu nav { display: grid; gap: clamp(0.15rem, 1vh, 0.6rem); }
+.menu-close:hover { opacity: 0.55; }
+
+.menu nav { display: grid; gap: 0.15rem; }
 .menu nav a {
-  font-size: clamp(2.2rem, 7vw, 5rem);
-  line-height: 1.12;
+  font-size: clamp(1.5rem, 3.2vw, 2.1rem);
+  line-height: 1.25;
   text-transform: uppercase;
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
   text-decoration: none;
   color: #101216;
   font-variation-settings: "opsz" 144, "wght" 800, "wdth" 82;
@@ -206,14 +217,13 @@ img { max-width: 100%; display: block; }
 }
 .menu nav a:hover { color: #4d7a06; }
 .menu-foot {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem 2rem;
+  display: grid;
+  gap: 0.4rem;
   margin: 0;
   font-size: 0.9375rem;
   color: #5a5f66;
 }
-.menu-foot a { color: inherit; }
+.menu-foot a { color: inherit; width: max-content; }
 html.menu-open, html.menu-open body { overflow: hidden; }
 
 /* ---------- étiquette de section ---------- */
@@ -265,16 +275,13 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   text-decoration: none;
   transition: color 0.2s ease;
 }
-.side-mail { color: #6b7075; }
-.side-mail:hover { color: #101216; }
-body.past-hero .side-mail { color: var(--dim); }
-body.past-hero .side-mail:hover { color: var(--acid); }
+/* fixes au-dessus de bandes alternees : la difference les inverse d'elle-meme */
+.side-mail { color: #8c8c8c; mix-blend-mode: difference; }
+.side-mail:hover { color: #c2f53f; }
 @media (max-width: 68rem) { .side-mail { display: none; } }
 
 /* ---------- jauge verticale, bord droit ---------- */
 
-body.past-hero .progress { background: color-mix(in srgb, var(--fg) 12%, transparent); }
-body.past-hero .progress i { background: var(--acid); }
 .progress {
   position: fixed;
   right: 0.9rem;
@@ -282,19 +289,18 @@ body.past-hero .progress i { background: var(--acid); }
   width: 3px;
   height: 56vh;
   z-index: 60;
-  background: rgba(16, 18, 22, 0.14);
+  background: rgba(120, 120, 120, 0.5);
   border-radius: 2px;
   pointer-events: none;
-  transition: background 0.3s ease;
+  mix-blend-mode: difference;
 }
 .progress i {
   display: block;
   width: 100%;
   height: 22%;
   border-radius: 2px;
-  background: #101216;
+  background: #c2f53f;
   transform: translateY(0);
-  transition: background 0.3s ease;
   will-change: transform;
 }
 @media (max-width: 48rem) { .progress { display: none; } }
@@ -405,74 +411,77 @@ body.past-hero .progress i { background: var(--acid); }
 }
 
 
-/* ---------- zone claire du premier écran ---------- */
+/* ---------- alternance des bandes : une claire, une sombre ---------- */
 
-.hero.light {
-  --fg: #101216;
-  --dim: #5a5f66;
-  --dim-2: #7c828a;
-  --line: #e2e3e7;
-  --line-soft: #eceef1;
+/* Une bande claire ne fait que redefinir les variables : tous les composants
+   suivent. Seuls le vert acide et le bouton plein demandent un traitement a
+   part, le vert d'origine etant illisible sur blanc. */
+.light {
+  --bg: #fbfbfc;
   --panel: #ffffff;
-  --panel-2: #f6f7f9;
-  /* le vert acide est illisible sur blanc : sa version encre pour le texte */
-  --acid-text: #4d7a06;
+  --panel-2: #f4f5f7;
+  --fg: #101216;
+  --dim: #55595f;
+  --dim-2: #82878d;
+  --line: #e2e3e7;
+  --line-soft: #ebecef;
+  --ghost: #dfe1e5;
+  --acid: #4d7a06;
+  --acid-ink: #ffffff;
 
-  position: relative;
-  background: #fbfbfc;
+  background: var(--bg);
   color: var(--fg);
-  min-height: 100svh;
-  display: grid;
-  align-items: center;
-  padding-block: clamp(4rem, 10vh, 7rem);
 }
-/* la grille de points, en sombre sur le clair */
-.hero.light::before {
+.dark {
+  background: #08080a;
+  color: #e7e9e7;
+}
+
+.band-sec { position: relative; }
+/* la grille de points, dans la teinte de la bande */
+.band-sec::before {
   content: "";
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image:
-    radial-gradient(circle 1px at 1px 1px, rgba(20, 22, 28, 0.16) 0 1px, transparent 1px);
   background-size: 26px 26px;
 }
-.hero.light > * { position: relative; }
+.light.band-sec::before {
+  background-image:
+    radial-gradient(circle 1px at 1px 1px, rgba(20, 22, 28, 0.16) 0 1px, transparent 1px);
+}
+.dark.band-sec::before {
+  background-image:
+    radial-gradient(circle 1px at 1px 1px, rgba(233, 236, 234, 0.16) 0 1px, transparent 1px);
+}
+.band-sec > * { position: relative; }
 
-.hero.light .label { color: var(--fg); }
-.hero.light .label::before { color: var(--acid-text); }
-.hero.light .hero-sub { color: #3d424a; }
-.hero.light .hero-sub b { color: var(--acid-text); }
-
-/* le bouton plein passe en encre, comme la reference */
-.hero.light .btn {
+/* le bouton plein reste encre sur clair, comme la reference */
+.light .btn {
   background: #101216;
   color: #ffffff;
-  box-shadow: 0 10px 26px rgba(16, 18, 22, 0.25);
+  box-shadow: 0 10px 26px rgba(16, 18, 22, 0.22);
 }
-.hero.light .icon-btn {
-  background: #ffffff;
-  border-color: #e2e3e7;
-  box-shadow: 0 8px 20px rgba(16, 18, 22, 0.12);
+.light .btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.light .btn.ghost:hover { border-color: var(--fg); color: var(--fg); }
+.light .icon-btn { background: #ffffff; box-shadow: 0 8px 20px rgba(16, 18, 22, 0.12); }
+.light .icon-btn:hover { border-color: #101216; }
+.light .icon-btn svg { stroke: #101216; }
+.light .icon-btn img[src$="github.svg"] { filter: invert(1) brightness(0.2); }
+
+.light .hero-card { box-shadow: 0 30px 70px rgba(16, 18, 22, 0.18); }
+.light .cta { background: var(--panel); }
+.light .peek { box-shadow: 0 20px 50px rgba(16, 18, 22, 0.18); }
+
+/* ---------- premier écran ---------- */
+
+.hero {
+  min-height: 100svh;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  padding-block: 0 clamp(3rem, 8vh, 5rem);
 }
-.hero.light .icon-btn:hover { border-color: #101216; }
-.hero.light .icon-btn svg { stroke: #101216; }
-.hero.light .icon-btn img[src$="github.svg"] { filter: invert(1) brightness(0.2); }
-
-.hero.light .hero-card {
-  background: #ffffff;
-  border-color: #e6e7ea;
-  box-shadow: 0 30px 70px rgba(16, 18, 22, 0.18);
-}
-.hero.light .hero-card figcaption a { color: #101216; }
-.hero.light .hero-card figcaption a:hover { color: var(--acid-text); }
-.hero.light .hero-card-k { color: #8b9098; }
-.hero.light .hero-card-n { color: #5a5f66; }
-
-/* ---------- coupure franche vers le sombre ---------- */
-
-.zone-dark { background: var(--bg); position: relative; }
-.sec.band { padding-block: clamp(2.5rem, 6vh, 4rem); }
-.zone-dark .sec.band + .sec { border-top: 0; }
+.hero-in { align-self: center; }
 
 /* ---------- rangée d'état ---------- */
 

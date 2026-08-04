@@ -16,7 +16,7 @@
     if (state) {
       panel.hidden = false;
       requestAnimationFrame(function () { panel.classList.add("is-open"); });
-      var first = panel.querySelector("a");
+      var first = panel.querySelector(".menu-close");
       if (first) first.focus();
     } else {
       panel.classList.remove("is-open");
@@ -32,7 +32,10 @@
   btn.addEventListener("click", function () { set(!open); });
 
   panel.addEventListener("click", function (e) {
-    if (e.target.closest("a") || e.target.closest(".menu-close")) set(false);
+    /* un lien, le bouton Fermer, ou le voile lui-meme */
+    if (e.target === panel || e.target.closest("a") || e.target.closest(".menu-close")) {
+      set(false);
+    }
   });
 
   document.addEventListener("keydown", function (e) {
