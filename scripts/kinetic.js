@@ -125,20 +125,28 @@
 
     /* ---- la vignette suit le curseur sur la liste --------------------- */
 
-    var rows = document.querySelectorAll(".row");
-    if (rows.length && window.matchMedia("(hover: hover)").matches) {
+    var wrap = document.querySelector(".rows-wrap");
+    var list = document.querySelector(".rows");
+    var rows = list ? list.querySelectorAll(".row") : [];
+    if (wrap && rows.length && window.matchMedia("(hover: hover)").matches) {
       var peek = document.createElement("div");
       peek.className = "peek";
       peek.setAttribute("aria-hidden", "true");
-      document.body.appendChild(peek);
+      wrap.appendChild(peek);
+      gsap.set(peek, { yPercent: -50, scale: 0.96 });
 
-      var px = gsap.quickTo(peek, "x", { duration: 0.5, ease: "power3.out" });
-      var py = gsap.quickTo(peek, "y", { duration: 0.5, ease: "power3.out" });
+      /* la vignette s'ancre à droite et glisse d'une ligne à l'autre */
+      var slide = gsap.quickTo(peek, "top", {
+        duration: 0.45,
+        ease: "power3.out",
+        unit: "px",
+      });
       var shown = null;
 
       rows.forEach(function (row) {
         row.addEventListener("pointerenter", function () {
           if (shown === row) return;
+          var first = shown === null;
           shown = row;
           var shot = row.dataset.shot;
           peek.innerHTML = shot
@@ -146,16 +154,16 @@
             : '<div class="none"><b>' +
               row.querySelector(".row-title").textContent.trim() +
               "</b><span>" + (row.dataset.none || "") + "</span></div>";
-          gsap.to(peek, { opacity: 1, scale: 1, duration: 0.35, ease: "power3.out" });
+          var centre = row.offsetTop + row.offsetHeight / 2;
+          if (first) gsap.set(peek, { top: centre });
+          else slide(centre);
+          gsap.to(peek, { opacity: 1, scale: 1, yPercent: -50, duration: 0.35, ease: "power3.out" });
         });
-        row.addEventListener("pointerleave", function () {
-          shown = null;
-          gsap.to(peek, { opacity: 0, scale: 0.9, duration: 0.28, ease: "power2.out" });
-        });
-        row.addEventListener("pointermove", function (e) {
-          px(e.clientX);
-          py(e.clientY);
-        });
+      });
+
+      wrap.addEventListener("pointerleave", function () {
+        shown = null;
+        gsap.to(peek, { opacity: 0, scale: 0.96, yPercent: -50, duration: 0.28, ease: "power2.out" });
       });
     }
 

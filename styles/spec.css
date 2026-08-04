@@ -335,6 +335,7 @@ img { max-width: 100%; display: block; }
 
 /* ---------- liste numérotée de travaux ---------- */
 
+.rows-wrap { position: relative; }
 .rows { margin: 0; padding: 0; list-style: none; }
 .row {
   position: relative;
@@ -352,6 +353,9 @@ img { max-width: 100%; display: block; }
   color: var(--dim-2);
   padding-top: 0.9em;
   font-variation-settings: "opsz" 8, "wght" 500, "wdth" 100;
+}
+@media (min-width: 68rem) {
+  .row > div { max-width: calc(100% - 26rem); }
 }
 .row-title {
   margin: 0;
@@ -381,13 +385,13 @@ img { max-width: 100%; display: block; }
 }
 .row-tags span:last-child::after { display: none; }
 
-/* la vignette suit le curseur */
+/* la vignette s'ancre a droite de la ligne survolee */
 .peek {
-  position: fixed;
+  position: absolute;
   top: 0;
-  left: 0;
-  z-index: 50;
-  width: 22rem;
+  right: 0;
+  z-index: 5;
+  width: 24rem;
   aspect-ratio: 16 / 9;
   border-radius: 12px;
   overflow: hidden;
@@ -395,7 +399,9 @@ img { max-width: 100%; display: block; }
   background: var(--panel);
   pointer-events: none;
   opacity: 0;
-  transform: translate(-50%, -50%) scale(0.9);
+  /* le centrage vertical est tenu par GSAP (yPercent), pas ici :
+     GSAP reecrit tout le transform des qu il touche a scale */
+  transform: translateY(-50%) scale(0.96);
   will-change: transform, opacity;
 }
 .peek img { width: 100%; height: 100%; object-fit: cover; }
@@ -413,7 +419,7 @@ img { max-width: 100%; display: block; }
   text-transform: uppercase;
   color: var(--dim-2);
 }
-@media (max-width: 62rem) { .peek { display: none; } }
+@media (max-width: 68rem) { .peek { display: none; } }
 
 /* ---------- mots de catégorie fantômes ---------- */
 
