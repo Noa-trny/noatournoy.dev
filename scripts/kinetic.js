@@ -65,28 +65,6 @@
       gsap.fromTo(list, from, to);
     }
 
-    /* ---- bandeau défilant, la vitesse suit le défilement -------------- */
-
-    var track = document.querySelector(".marquee-track");
-    if (track) {
-      var items = Array.prototype.slice.call(track.children);
-      items.forEach(function (n) { track.appendChild(n.cloneNode(true)); });
-      var half = track.scrollWidth / 2;
-      var loop = gsap.to(track, {
-        x: -half,
-        duration: 26,
-        ease: "none",
-        repeat: -1,
-        modifiers: { x: gsap.utils.unitize(function (x) { return parseFloat(x) % half; }) },
-      });
-      ScrollTrigger.create({
-        onUpdate: function (self) {
-          var v = gsap.utils.clamp(0.6, 5, 1 + Math.abs(self.getVelocity()) / 900);
-          gsap.to(loop, { timeScale: self.direction === -1 ? -v : v, duration: 0.3, overwrite: true });
-        },
-      });
-    }
-
     /* ---- projecteur au curseur ---------------------------------------- */
 
     document.querySelectorAll(".cert").forEach(function (c) {

@@ -712,41 +712,6 @@ img { max-width: 100%; display: block; }
   align-self: end;
 }
 
-/* ---------- bandeau défilant ---------- */
-
-.marquee {
-  overflow: hidden;
-  border-block: 1px solid var(--line-soft);
-  padding-block: 1.15rem;
-  margin-top: clamp(2.5rem, 7vh, 4rem);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  gap: clamp(1.5rem, 3vw, 2.75rem);
-  align-items: center;
-  will-change: transform;
-}
-.marquee-track span {
-  font-size: clamp(1rem, 1.7vw, 1.35rem);
-  letter-spacing: -0.01em;
-  color: var(--dim);
-  font-variation-settings: "opsz" 20, "wght" 620, "wdth" 100;
-  white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  gap: clamp(1.5rem, 3vw, 2.75rem);
-}
-.marquee-track span::after {
-  content: "";
-  width: 6px; height: 6px;
-  border-radius: 2px;
-  background: var(--acid);
-  opacity: 0.7;
-}
-
 /* ---------- projecteur au curseur ---------- */
 
 .work,
