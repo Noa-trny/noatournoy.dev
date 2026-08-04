@@ -87,67 +87,33 @@ img { max-width: 100%; display: block; }
   white-space: nowrap; border: 0;
 }
 
-/* ---------- barre du haut ---------- */
-
-.topbar {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid var(--line-soft);
-}
-.topbar-in {
-  display: flex;
-  align-items: center;
-  gap: clamp(0.75rem, 2vw, 2rem);
-  min-height: 60px;
-}
-.brand {
-  font-size: var(--t-sm);
-  letter-spacing: 0.02em;
-  text-decoration: none;
-  font-variation-settings: "opsz" 14, "wght" 700, "wdth" 100;
-  margin-right: auto;
-  white-space: nowrap;
-}
-.brand .dot {
-  display: inline-block;
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--acid);
-  margin-right: 0.55rem;
-  vertical-align: 0.05em;
-}
-.topnav {
-  display: flex;
-  gap: clamp(0.5rem, 1.6vw, 1.5rem);
-  font-size: var(--t-sm);
-}
-.topnav a {
-  text-decoration: none;
-  color: var(--dim);
-  padding: 0.4rem 0;
-  transition: color 0.18s ease;
-}
-.topnav a:hover,
-.topnav a[aria-current="page"] { color: var(--fg); }
-@media (max-width: 34rem) { .topnav { display: none; } }
-
 .lang {
+  position: fixed;
+  top: clamp(0.9rem, 2.5vh, 1.6rem);
+  right: clamp(0.9rem, 2.5vw, 2rem);
+  z-index: 60;
   display: flex;
-  border: 1px solid var(--line);
+  border: 1px solid #d9dbdf;
   border-radius: 999px;
   overflow: hidden;
   margin: 0;
   padding: 0;
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 22px rgba(16, 18, 22, 0.12);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+body.past-hero .lang {
+  border-color: var(--line);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.45);
 }
 .lang button {
   font: inherit;
   font-size: var(--t-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--dim);
+  color: #5a5f66;
   background: transparent;
   border: 0;
   padding: 0.5rem 0.7rem;
@@ -155,8 +121,11 @@ img { max-width: 100%; display: block; }
   cursor: pointer;
   transition: color 0.18s ease, background 0.18s ease;
 }
-.lang button:hover { color: var(--fg); }
-.lang button[aria-pressed="true"] { background: var(--acid); color: var(--acid-ink); }
+.lang button:hover { color: #101216; }
+.lang button[aria-pressed="true"] { background: #101216; color: #ffffff; }
+body.past-hero .lang button { color: var(--dim); }
+body.past-hero .lang button:hover { color: var(--fg); }
+body.past-hero .lang button[aria-pressed="true"] { background: var(--acid); color: var(--acid-ink); }
 
 /* ---------- étiquette de section ---------- */
 
@@ -220,7 +189,7 @@ body.past-hero .progress i { background: var(--acid); }
 .progress {
   position: fixed;
   right: 0.9rem;
-  top: 22vh;
+  top: 26vh;
   width: 3px;
   height: 56vh;
   z-index: 60;
@@ -428,31 +397,6 @@ body.past-hero .progress i { background: var(--acid); }
 .zone-dark { background: var(--bg); position: relative; }
 .sec.band { padding-block: clamp(2.5rem, 6vh, 4rem); }
 .zone-dark .sec.band + .sec { border-top: 0; }
-
-/* ---------- la barre du haut change de camp ---------- */
-
-.topbar {
-  background: color-mix(in srgb, #fbfbfc 82%, transparent);
-  border-bottom-color: #e6e7ea;
-  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
-}
-.topbar .brand { color: #101216; }
-.topbar .topnav a { color: #5a5f66; }
-.topbar .topnav a:hover { color: #101216; }
-.topbar .lang { border-color: #d9dbdf; }
-.topbar .lang button { color: #5a5f66; }
-.topbar .lang button:hover { color: #101216; }
-
-body.past-hero .topbar {
-  background: color-mix(in srgb, var(--bg) 82%, transparent);
-  border-bottom-color: var(--line-soft);
-}
-body.past-hero .topbar .brand { color: var(--fg); }
-body.past-hero .topbar .topnav a { color: var(--dim); }
-body.past-hero .topbar .topnav a:hover { color: var(--fg); }
-body.past-hero .topbar .lang { border-color: var(--line); }
-body.past-hero .topbar .lang button { color: var(--dim); }
-body.past-hero .topbar .lang button:hover { color: var(--fg); }
 
 /* ---------- rangée d'état ---------- */
 

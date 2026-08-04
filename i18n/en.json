@@ -1,19 +1,12 @@
 {
   "doc.title": "Noa Tournoy — software engineering, development and cybersecurity",
   "doc.desc": "Noa Tournoy, engineering student in Lille, France. Full-stack development, data and cybersecurity. Two internships taken through to production; joining ADEO as a cybersecurity apprentice in October 2026.",
-
-  "nav.travaux": "Work",
-  "nav.parcours": "Path",
-  "nav.stack": "Stack",
-  "nav.contact": "Contact",
-
   "hero.label": "Lille, France · Available",
   "hero.h1": "Noa Tournoy",
   "hero.sub": "Software engineering student focused on <b>cybersecurity</b> and solid across the full stack — <b>Python</b>, <b>TypeScript</b>, <b>Docker</b>. Two internships taken through to production, and an apprenticeship at <b>ADEO</b> from October 2026.",
   "hero.cta": "See my work",
   "hero.card.k": "Latest work",
   "hero.card.n": "A 3D web experience, fully procedural",
-
   "st1.k": "Right now",
   "st1.v": "Engineering degree",
   "st1.n": "SUPINFO, 2024 → 2029",
@@ -25,11 +18,9 @@
   "st3.n": "Looker · LookML · AWS · CCNA",
   "st4.k": "Get in touch",
   "st4.v": "Write to me",
-
   "l.travaux": "My work",
   "t.travaux": "From shader to <em>dashboard</em>",
   "travaux.more": "Every project in detail",
-
   "l.parcours": "Path",
   "t.parcours": "Two internships taken <em>through to production</em>.",
   "tl0.w": "Oct. 2026",
@@ -50,7 +41,6 @@
   "tl5.w": "2021 → 2024",
   "tl5.t": "Baccalauréat <span class=\"where\">— Institut de Genech</span>",
   "tl5.n": "Passed with honours. Mathematics and computer science majors.",
-
   "l.stack": "Stack",
   "t.stack": "What I use, and <em>where it served</em>.",
   "s1.w": "Languages",
@@ -60,7 +50,6 @@
   "s5.w": "Games &amp; networks",
   "s6.w": "Spoken",
   "stack.link": "Skills in detail",
-
   "l.certs": "Certifications",
   "t.certs": "Four credentials, <em>all verifiable</em>.",
   "c1.n": "Data modelling and exploration",
@@ -68,10 +57,8 @@
   "c3.n": "Graduate — cloud fundamentals",
   "c3.w": "Training badge",
   "c4.n": "Networking, addressing and switching",
-
   "l.contact": "Contact",
   "t.contact": "A technical question, a collaboration,<br>or just one of the projects that stopped you?",
-
   "foot.a": "Noa Tournoy — Lille, France",
   "foot.b": "Work",
   "foot.c": "Contact"

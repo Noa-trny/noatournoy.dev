@@ -118,8 +118,7 @@
     /* ---- le ciel derive avec le defilement ----------------------------- */
 
     var heroLight = document.querySelector(".hero.light");
-    var topbar = document.querySelector(".topbar");
-    if (heroLight && topbar) {
+    if (heroLight) {
       ScrollTrigger.create({
         trigger: heroLight,
         start: "bottom 60px",
