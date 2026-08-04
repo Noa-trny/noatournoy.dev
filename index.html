@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title data-i18n="doc.title">Noa Tournoy — ingénieur logiciel, développement et sécurité</title>
-<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="Noa Tournoy, étudiant ingénieur à Lille. Développement, données et cybersécurité. Six travaux, du tableau de bord Looker à l'expérience web 3D Éclosion.">
-<meta name="theme-color" content="#000000">
+<title data-i18n="doc.title">Noa Tournoy — ingénieur logiciel, développement et cybersécurité</title>
+<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="Noa Tournoy, étudiant ingénieur à Lille. Développement full-stack, données et cybersécurité. Deux stages menés jusqu'en production, alternance cybersécurité chez ADEO à partir d'octobre 2026.">
+<meta name="theme-color" content="#08090a">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Noa Tournoy — ingénieur logiciel, développement et sécurité">
-<meta property="og:description" content="Développement, données et cybersécurité. Six travaux, du tableau de bord Looker à l'expérience web 3D Éclosion.">
+<meta property="og:title" content="Noa Tournoy — ingénieur logiciel, développement et cybersécurité">
+<meta property="og:description" content="Développement full-stack, données et cybersécurité. Six travaux, du tableau de bord Looker à l'expérience web 3D Éclosion.">
 <meta property="og:url" content="https://noatournoy.dev/">
 <meta property="og:image" content="https://noatournoy.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
@@ -18,254 +18,311 @@
 </head>
 <body>
 
-<nav class="lang" data-lang-bar aria-label="Langue">
-  <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
-  <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
-</nav>
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <a class="brand" href="/"><span class="dot"></span>Noa Tournoy</a>
+    <nav class="topnav" aria-label="Sections">
+      <a href="#travaux" data-i18n="nav.travaux">Travaux</a>
+      <a href="#parcours" data-i18n="nav.parcours">Parcours</a>
+      <a href="#stack" data-i18n="nav.stack">Stack</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+    </nav>
+    <div class="lang" data-lang-bar role="group" aria-label="Langue">
+      <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+    </div>
+  </div>
+</header>
 
 <main id="contenu">
 
-  <section class="plate opening inked" aria-labelledby="nom">
-    <p class="cartouche">
-      <span data-i18n="c1.a">Spécimen</span>
-      <span class="plate-no" data-i18n="c1.b">Pl. 01 — le caractère</span>
-      <span data-i18n="c1.c">Lille, France</span>
+  <section class="wrap hero" aria-labelledby="titre">
+    <p class="label" data-i18n="hero.label">Lille, France · Disponible</p>
+    <h1 id="titre" data-i18n="hero.h1">
+      Ingénieur logiciel,<br>orienté <em>cybersécurité</em>.
+    </h1>
+    <p class="hero-sub" data-i18n="hero.sub">
+      Étudiant ingénieur à SUPINFO, solide en développement full-stack. Deux stages menés
+      jusqu'en production : le pilotage de la sécurité chez ADEO, puis le développement
+      produit chez Never2Wait.
+    </p>
+    <p class="hero-meta">
+      <span data-i18n="hero.m1">Python · TypeScript · C++ · SQL</span>
+      <span data-i18n="hero.m2">Docker · Kubernetes · Terraform · GCP</span>
     </p>
 
-    <h1 class="wordmark kin" id="nom"><span class="given">Noa</span><span class="fam">Tournoy</span></h1>
-
-    <p class="identification" data-i18n="id">
-      Ingénieur logiciel en formation. Développement, données, sécurité.
-      Alternant en cybersécurité chez ADEO à partir du 1<sup>er</sup> octobre 2026.
-    </p>
-
-    <p class="readout" data-readout aria-hidden="true">
-      <span>opsz <b>144</b></span>
-      <span>wght <b data-ax="wght">780</b></span>
-      <span>wdth <b data-ax="wdth">105</b></span>
-      <span>GRAD <b data-ax="grad">0</b></span>
-    </p>
-
-    <p class="scroll-cue">
-      <span data-i18n="cue.a">Défiler</span>
-      <span data-i18n="cue.b">la vitesse compose la page</span>
-    </p>
-  </section>
-
-  <section class="plate ruled" aria-labelledby="decl">
-    <div class="marge">
-      <span class="no" data-i18n="m2.no">Pl. 02</span>
-      <span data-i18n="m2.a">Déclaration</span>
-      <span class="mes">66 ch</span>
-    </div>
-    <div class="corps">
-      <h2 class="statement kin" id="decl" data-i18n="decl">
-        Je conçois des logiciels fiables et sécurisés.
-      </h2>
-      <p class="statement-body" data-i18n="decl.1">
-        Étudiant ingénieur à SUPINFO, à Lille. À l'été 2025 chez ADEO, j'ai construit
-        DataSentinel : un tableau de bord qui a remplacé le suivi manuel de la sécurité des
-        produits digitaux, et les extensions full-stack qui vont avec. L'été suivant, chez
-        Never2Wait, j'étais sur le développement produit. J'y retourne, chez ADEO, en
-        alternance cybersécurité le 1<sup>er</sup> octobre 2026.
-      </p>
-      <p class="statement-body" data-i18n="decl.2">
-        Le reste du temps, j'écris du C++ pour la contrainte, du Python pour la vitesse
-        d'essai, et des shaders pour <a href="https://eclosion.noatournoy.dev">Éclosion</a>,
-        une expérience web 3D entièrement procédurale où le défilement est le temps.
-      </p>
+    <div class="status">
+      <div>
+        <span class="k"><i></i><span data-i18n="st1.k">Maintenant</span></span>
+        <span class="v" data-i18n="st1.v">Cycle ingénieur</span>
+        <span class="n" data-i18n="st1.n">SUPINFO, 2024 → 2029</span>
+      </div>
+      <div>
+        <span class="k"><i></i><span data-i18n="st2.k">Octobre 2026</span></span>
+        <span class="v" data-i18n="st2.v">Alternance cybersécurité</span>
+        <span class="n" data-i18n="st2.n">ADEO, Ronchin</span>
+      </div>
+      <a href="#travaux">
+        <span class="k"><i></i><span data-i18n="st3.k">Dernier travail</span></span>
+        <span class="v">Éclosion</span>
+        <span class="n" data-i18n="st3.n">Expérience web 3D procédurale</span>
+      </a>
+      <a href="#contact">
+        <span class="k"><i></i><span data-i18n="st4.k">Écrire</span></span>
+        <span class="v" data-i18n="st4.v">Me contacter</span>
+        <span class="n">noa.tournoy@supinfo.com</span>
+      </a>
     </div>
   </section>
 
-  <section class="plate ruled" aria-labelledby="parcours">
-    <div class="marge">
-      <span class="no" data-i18n="m3.no">Pl. 03</span>
-      <span data-i18n="m3.a">Parcours</span>
-      <span class="mes">2021 → 2026</span>
-    </div>
-    <div class="corps">
-      <h2 class="sr-only" id="parcours" data-i18n="h.parcours">Parcours</h2>
+  <section class="sec" id="travaux" aria-labelledby="h-travaux">
+    <div class="wrap">
+      <p class="label" data-i18n="l.travaux">Travaux sélectionnés</p>
+      <h2 class="sec-title" id="h-travaux" data-i18n="t.travaux">Six pièces, du shader au <em>tableau de bord</em>.</h2>
 
-      <ol class="wf">
-        <li class="wf-row">
-          <span class="line" style="font-size: clamp(1.15rem, 2.4vw, 1.6rem)" data-i18n="p1.t">Baccalauréat, Institut de Genech</span>
-          <span class="spec">2021 → 2024</span>
-        </li>
-        <li class="wf-row">
-          <span class="line" style="font-size: clamp(1.3rem, 3vw, 2.05rem)" data-i18n="p2.t">Stage d'observation, Proges Plus</span>
-          <span class="spec">2022</span>
-        </li>
-        <li class="wf-row">
-          <span class="line" style="font-size: clamp(1.5rem, 3.8vw, 2.6rem)" data-i18n="p3.t">Master of Engineering, SUPINFO</span>
-          <span class="spec">2024 → 2029</span>
-        </li>
-        <li class="wf-row">
-          <span class="line" style="font-size: clamp(1.7rem, 4.7vw, 3.3rem)" data-i18n="p4.t">Stage : DataSentinel, ADEO</span>
-          <span class="spec">2025</span>
-        </li>
-        <li class="wf-row">
-          <span class="line" style="font-size: clamp(1.95rem, 5.8vw, 4.15rem)" data-i18n="p45.t">Stage développement, Never2Wait</span>
-          <span class="spec">2026</span>
-        </li>
-        <li class="wf-row">
-          <span class="line" style="font-size: clamp(2.2rem, 7vw, 5.2rem)" data-i18n="p5.t">Alternance cybersécurité, ADEO</span>
-          <span class="spec" data-i18n="p5.d">Oct. 2026</span>
-        </li>
-      </ol>
+      <div class="works">
 
-      <p class="step-note" data-i18n="parcours.note">
-        Mention bien au baccalauréat, spécialités mathématiques et NSI. Chez ADEO :
-        Looker et LookML, extensions full-stack Python et React, BigQuery, Terraform,
-        Kubernetes, et les certifications Google Looker et LookML. Chez Never2Wait :
-        Python, TypeScript, React et Next.js, React Native.
-      </p>
+        <article class="work">
+          <figure class="work-shot">
+            <picture>
+              <source type="image/webp" srcset="/travaux/eclosion/img/dawn-700.webp 700w, /travaux/eclosion/img/dawn-1400.webp 1400w" sizes="(min-width: 56rem) 40rem, 100vw">
+              <img src="/travaux/eclosion/img/dawn.jpg" alt="L'aube d'Éclosion : le soleil affleure l'horizon au-dessus d'un relief procédural." width="1400" height="788" loading="lazy" decoding="async">
+            </picture>
+          </figure>
+          <div class="work-body">
+            <h3 class="work-title"><a href="/travaux/eclosion/">Éclosion</a></h3>
+            <p class="work-desc" data-i18n="k1.d">Une expérience web 3D où le défilement est le temps : huit actes, du Néant à l'Aube. Cent pour cent procédurale, aucun modèle ni texture ni fichier audio.</p>
+            <ul class="work-points">
+              <li data-i18n="k1.p1">Charge de première visite réduite de 19 %, gel de 617 ms éliminé</li>
+              <li data-i18n="k1.p2">Zéro render React à 60 images par seconde, un seul registre d'uniforms</li>
+              <li data-i18n="k1.p3">Repli complet sans WebGL, rendu côté serveur, bilingue</li>
+            </ul>
+            <ul class="pills">
+              <li class="on">Next.js</li><li>React Three Fiber</li><li>GLSL</li><li>TypeScript</li><li>WebAudio</li>
+            </ul>
+            <a class="more" href="/travaux/eclosion/" data-i18n="more">Lire l'étude de cas</a>
+          </div>
+        </article>
+
+        <article class="work">
+          <figure class="work-shot empty">
+            <b>DataSentinel</b>
+            <span data-i18n="k2.conf">Confidentiel — ADEO</span>
+          </figure>
+          <div class="work-body">
+            <h3 class="work-title"><a href="/travaux/datasentinel/">DataSentinel</a></h3>
+            <p class="work-desc" data-i18n="k2.d">Un tableau de bord qui a remplacé le suivi manuel de la sécurité des produits digitaux, et les extensions full-stack qui le rendent utilisable au quotidien.</p>
+            <ul class="work-points">
+              <li data-i18n="k2.p1">Modélisation LookML sur BigQuery, requêtes SQL complexes</li>
+              <li data-i18n="k2.p2">Extensions Looker full-stack, backend Python et frontend React</li>
+              <li data-i18n="k2.p3">Certifications Google Looker et LookML obtenues</li>
+            </ul>
+            <ul class="pills">
+              <li class="on">Looker</li><li>LookML</li><li>Python</li><li>React</li><li>BigQuery</li><li>Terraform</li><li>Kubernetes</li>
+            </ul>
+            <a class="more" href="/travaux/datasentinel/" data-i18n="more2">Voir la fiche</a>
+          </div>
+        </article>
+
+        <article class="work">
+          <figure class="work-shot empty">
+            <b>SupKonQuest</b>
+            <span data-i18n="k3.conf">Dépôts privés — Carton Studio's</span>
+          </figure>
+          <div class="work-body">
+            <h3 class="work-title"><a href="/travaux/supkonquest/">SupKonQuest</a></h3>
+            <p class="work-desc" data-i18n="k3.d">Un jeu de stratégie temps réel multijoueur dans l'esprit de Risk : un client Godot, un serveur C++ qui fait autorité, et rien entre les deux qu'un protocole binaire.</p>
+            <ul class="work-points">
+              <li data-i18n="k3.p1">Serveur faisant autorité, la triche devient structurellement impossible</li>
+              <li data-i18n="k3.p2">Cartes générées procéduralement, transmises au client</li>
+              <li data-i18n="k3.p3">Déployé sur Raspberry Pi 5, traduit en trois langues</li>
+            </ul>
+            <ul class="pills">
+              <li class="on">Godot 4.6</li><li>C++20</li><li>TCP binaire</li><li>Docker</li>
+            </ul>
+            <a class="more" href="/travaux/supkonquest/" data-i18n="more2">Voir la fiche</a>
+          </div>
+        </article>
+
+        <article class="work">
+          <figure class="work-shot">
+            <picture>
+              <source type="image/webp" srcset="/travaux/ludoria/img/ludoria-katerenga-700.webp 700w, /travaux/ludoria/img/ludoria-katerenga.webp 1280w" sizes="(min-width: 56rem) 40rem, 100vw">
+              <img src="/travaux/ludoria/img/ludoria-katerenga.webp" alt="Le plateau de Katerenga dans Ludoria : cases de terrain colorées et pions sur fond de décor." width="1280" height="720" loading="lazy" decoding="async">
+            </picture>
+          </figure>
+          <div class="work-body">
+            <h3 class="work-title"><a href="/travaux/ludoria/">Ludoria</a></h3>
+            <p class="work-desc" data-i18n="k4.d">Trois jeux de plateau — Katerenga, Congress, Isolation — qui partagent un plateau mais pas leurs règles, réunis sous une seule interface, en local comme en réseau.</p>
+            <ul class="work-points">
+              <li data-i18n="k4.p1">Interface et direction artistique : trois jeux, un seul produit</li>
+              <li data-i18n="k4.p2">Moteurs de jeu, gestion des tours, conditions de victoire</li>
+              <li data-i18n="k4.p3">Travail d'équipe à trois, contributions vérifiables au commit près</li>
+            </ul>
+            <ul class="pills">
+              <li class="on">Python</li><li>Pygame</li><li>Pillow</li><li>sockets</li>
+            </ul>
+            <a class="more" href="/travaux/ludoria/" data-i18n="more2">Voir la fiche</a>
+          </div>
+        </article>
+
+        <article class="work">
+          <figure class="work-shot">
+            <img src="/travaux/laying-grass/img/console.webp" alt="Le jeu laying_grass en console : plateau 20 sur 20, tuiles posées, légende et menu d'actions." width="1280" height="720" loading="lazy" decoding="async">
+          </figure>
+          <div class="work-body">
+            <h3 class="work-title"><a href="/travaux/laying-grass/">laying_grass</a></h3>
+            <p class="work-desc" data-i18n="k5.d">Un jeu de placement de tuiles en C++17 pur : bibliothèque standard uniquement, jusqu'au parseur JSON écrit à la main pour lire les 96 formes.</p>
+            <ul class="work-points">
+              <li data-i18n="k5.p1">De deux à neuf joueurs, grille 20 × 20 ou 30 × 30, neuf tours chacun</li>
+              <li data-i18n="k5.p2">Recherche du plus grand carré plein et calcul de connexité</li>
+              <li data-i18n="k5.p3">Règles, validation, algorithmes et affichage nettement séparés</li>
+            </ul>
+            <ul class="pills">
+              <li class="on">C++17</li><li>STL</li><li>Zéro dépendance</li>
+            </ul>
+            <a class="more" href="/travaux/laying-grass/" data-i18n="more2">Voir la fiche</a>
+          </div>
+        </article>
+
+        <article class="work">
+          <figure class="work-shot empty">
+            <b>Gamedex</b>
+            <span data-i18n="k6.conf">TypeScript · React</span>
+          </figure>
+          <div class="work-body">
+            <h3 class="work-title"><a href="/travaux/gamedex/">Gamedex</a></h3>
+            <p class="work-desc" data-i18n="k6.d">Un catalogue de jeux vidéo bâti sur l'API RAWG : recherche, filtres par plateforme et par boutique, défilement infini, et des favoris qui survivent au rechargement.</p>
+            <ul class="work-points">
+              <li data-i18n="k6.p1">Cinq routes réelles, jusqu'à la page d'erreur qui ramène quelque part</li>
+              <li data-i18n="k6.p2">Favoris en contexte React adossé au stockage local</li>
+              <li data-i18n="k6.p3">Projet en binôme, parcours de bout en bout sous Cypress</li>
+            </ul>
+            <ul class="pills">
+              <li class="on">React</li><li>TypeScript</li><li>Vite</li><li>Cypress</li>
+            </ul>
+            <a class="more" href="/travaux/gamedex/" data-i18n="more2">Voir la fiche</a>
+          </div>
+        </article>
+
+      </div>
     </div>
   </section>
 
-  <section class="plate ruled" aria-labelledby="travaux">
-    <div class="marge">
-      <span class="no" data-i18n="m4.no">Pl. 04</span>
-      <span data-i18n="m4.a">Travaux</span>
-      <span class="mes" data-i18n="m4.b">Six planches</span>
-    </div>
-    <div class="corps">
-      <h2 class="sr-only" id="travaux" data-i18n="h.travaux">Travaux</h2>
+  <section class="sec" id="parcours" aria-labelledby="h-parcours">
+    <div class="wrap">
+      <p class="label" data-i18n="l.parcours">Parcours</p>
+      <h2 class="sec-title" id="h-parcours" data-i18n="t.parcours">Deux stages menés <em>jusqu'en production</em>.</h2>
 
-      <ul class="works">
-        <li class="work"><a class="work-link" href="/travaux/eclosion/">
-          <span class="work-name kin">Éclosion</span>
-          <span class="work-year">2026</span>
-          <span class="work-spec" data-i18n="w1">TypeScript · Next.js · React Three Fiber · GLSL. Expérience web 3D entièrement procédurale, huit actes</span>
-        </a></li>
-        <li class="work"><a class="work-link" href="/travaux/datasentinel/">
-          <span class="work-name kin">DataSentinel</span>
-          <span class="work-year">2025</span>
-          <span class="work-spec" data-i18n="w2">LookML · Python · React · BigQuery · Terraform · Kubernetes. Pilotage de la sécurité des produits digitaux, chez ADEO</span>
-        </a></li>
-        <li class="work"><a class="work-link" href="/travaux/supkonquest/">
-          <span class="work-name kin">SupKonQuest</span>
-          <span class="work-year">2026</span>
-          <span class="work-spec" data-i18n="w3">Godot 4.6 · C++20 · TCP binaire. Stratégie temps réel multijoueur, serveur faisant autorité</span>
-        </a></li>
-        <li class="work"><a class="work-link" href="/travaux/gamedex/">
-          <span class="work-name kin">Gamedex</span>
-          <span class="work-year">2026</span>
-          <span class="work-spec" data-i18n="w4">TypeScript · React. Catalogue de jeux sur l'API RAWG, filtres et favoris persistants</span>
-        </a></li>
-        <li class="work"><a class="work-link" href="/travaux/laying-grass/">
-          <span class="work-name kin">laying_grass</span>
-          <span class="work-year">2026</span>
-          <span class="work-spec" data-i18n="w5">C++17 · console · zéro dépendance</span>
-        </a></li>
-        <li class="work"><a class="work-link" href="/travaux/ludoria/">
-          <span class="work-name kin">Ludoria</span>
-          <span class="work-year">2025</span>
-          <span class="work-spec" data-i18n="w6">Python · Pygame · sockets. Trois jeux de plateau en réseau, à trois</span>
-        </a></li>
+      <ul class="time">
+        <li class="now">
+          <span class="when" data-i18n="tl0.w">Oct. 2026</span>
+          <div>
+            <p class="what" data-i18n="tl0.t">Alternance cybersécurité <span class="where">— ADEO, Ronchin</span></p>
+            <p class="note" data-i18n="tl0.n">En parallèle du cycle ingénieur à SUPINFO.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when" data-i18n="tl1.w">Juin → août 2026</span>
+          <div>
+            <p class="what" data-i18n="tl1.t">Stage développement <span class="where">— Never2Wait, Tournai</span></p>
+            <p class="note" data-i18n="tl1.n">Développement produit. Python, TypeScript, React et Next.js, React Native.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when" data-i18n="tl2.w">Juin → août 2025</span>
+          <div>
+            <p class="what" data-i18n="tl2.t">Stage — DataSentinel <span class="where">— ADEO, Ronchin</span></p>
+            <p class="note" data-i18n="tl2.n">Tableau de bord de pilotage de la sécurité des produits digitaux. Looker, LookML, Python, React, BigQuery, Terraform, Kubernetes. Certifications Google Looker et LookML.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when" data-i18n="tl3.w">2024 → 2029</span>
+          <div>
+            <p class="what" data-i18n="tl3.t">Master of Engineering <span class="where">— SUPINFO International University</span></p>
+            <p class="note" data-i18n="tl3.n">Cycle ingénieur informatique, en cours.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when" data-i18n="tl4.w">2022</span>
+          <div>
+            <p class="what" data-i18n="tl4.t">Stage d'observation <span class="where">— Proges Plus, Willems</span></p>
+            <p class="note" data-i18n="tl4.n">Une semaine. L'interface d'un site de gestion RH en HTML et CSS, d'après les maquettes du designer.</p>
+          </div>
+        </li>
+        <li>
+          <span class="when" data-i18n="tl5.w">2021 → 2024</span>
+          <div>
+            <p class="what" data-i18n="tl5.t">Baccalauréat <span class="where">— Institut de Genech</span></p>
+            <p class="note" data-i18n="tl5.n">Mention bien. Spécialités mathématiques et NSI.</p>
+          </div>
+        </li>
       </ul>
-      <p class="step-note"><a href="/travaux/" data-i18n="travaux.link">L'index complet des travaux, avec le contexte et les mesures</a></p>
     </div>
   </section>
 
-  <section class="plate ruled" aria-labelledby="jeu">
-    <div class="marge">
-      <span class="no" data-i18n="m5.no">Pl. 05</span>
-      <span data-i18n="m5.a">Jeu de caractères</span>
-      <span class="mes">70</span>
-    </div>
-    <div class="corps">
-      <h2 class="sr-only" id="jeu" data-i18n="h.jeu">Jeu de caractères</h2>
-      <ul class="glyphset" aria-hidden="true">
-        <li>A</li><li>B</li><li>C</li><li>D</li><li>E</li><li>F</li><li>G</li><li>H</li><li>I</li><li>J</li><li>K</li><li>L</li><li>M</li>
-        <li>N</li><li>O</li><li>P</li><li>Q</li><li>R</li><li>S</li><li>T</li><li>U</li><li>V</li><li>W</li><li>X</li><li>Y</li><li>Z</li>
-        <li>a</li><li>b</li><li>c</li><li>d</li><li>e</li><li>f</li><li>g</li><li>h</li><li>i</li><li>j</li><li>k</li><li>l</li><li>m</li>
-        <li>n</li><li>o</li><li>p</li><li>q</li><li>r</li><li>s</li><li>t</li><li>u</li><li>v</li><li>w</li><li>x</li><li>y</li><li>z</li>
-        <li class="num">0</li><li class="num">1</li><li class="num">2</li><li class="num">3</li><li class="num">4</li>
-        <li class="num">5</li><li class="num">6</li><li class="num">7</li><li class="num">8</li><li class="num">9</li>
-        <li>É</li><li>È</li><li>Ê</li><li>À</li><li>Â</li><li>Ç</li><li>Ù</li><li>Œ</li>
+  <section class="sec" id="stack" aria-labelledby="h-stack">
+    <div class="wrap">
+      <p class="label" data-i18n="l.stack">Stack</p>
+      <h2 class="sec-title" id="h-stack" data-i18n="t.stack">Ce que j'utilise, et <em>où ça a servi</em>.</h2>
+
+      <ul class="time">
+        <li>
+          <span class="when" data-i18n="s1.w">Langages</span>
+          <div><p class="what">Python · TypeScript · JavaScript · SQL · C · C++ · Java · LookML</p></div>
+        </li>
+        <li>
+          <span class="when" data-i18n="s2.w">Web</span>
+          <div><p class="what">React · Next.js · React Native / Expo · Node.js · Three.js · GLSL · Electron</p></div>
+        </li>
+        <li>
+          <span class="when" data-i18n="s3.w">Infra</span>
+          <div><p class="what">Docker · Kubernetes · Terraform · GitHub Actions · Vercel</p></div>
+        </li>
+        <li>
+          <span class="when" data-i18n="s4.w">Données</span>
+          <div><p class="what">BigQuery · Looker · PostgreSQL · Google Cloud Platform</p></div>
+        </li>
+        <li>
+          <span class="when" data-i18n="s5.w">Certifications</span>
+          <div><p class="what">Google Looker · LookML</p><p class="note" data-i18n="s5.n">Obtenues pendant le stage ADEO 2025.</p></div>
+        </li>
+        <li>
+          <span class="when" data-i18n="s6.w">Langues</span>
+          <div><p class="what">Français · Anglais · Espagnol</p><p class="note" data-i18n="s6.n">Maternelle, professionnel, débutant.</p></div>
+        </li>
       </ul>
-      <p class="step-note" data-i18n="jeu.note">
-        Le sous-ensemble latin embarqué, en corps de lecture. Le reste de la fonte, y
-        compris ce que ce site n'affiche jamais, a été retiré du fichier.
-      </p>
+
+      <p style="margin-top:1.5rem"><a class="more" href="/savoir-faire/" data-i18n="stack.link">Le détail du savoir-faire</a></p>
     </div>
   </section>
 
-  <section class="plate ruled" aria-labelledby="axes">
-    <div class="marge">
-      <span class="no" data-i18n="m6.no">Pl. 06</span>
-      <span data-i18n="m6.a">Axes</span>
-      <span class="mes">4</span>
-    </div>
-    <div class="corps">
-      <h2 class="sr-only" id="axes" data-i18n="h.axes">Axes variables</h2>
-
-      <div class="axes">
-        <div class="axis">
-          <p class="axis-head"><span data-i18n="ax1">Graisse · wght</span><span>100 <b>280 → 780</b> 1000</span></p>
-          <div class="axis-scale" style="--from: 20%; --to: 75.6%"></div>
-          <p class="axis-sample" style="font-variation-settings: 'opsz' 144, 'wght' 280, 'wdth' 100">Tournoy</p>
-        </div>
-        <div class="axis">
-          <p class="axis-head"><span data-i18n="ax2">Chasse · wdth</span><span>25 <b>45 → 105</b> 151</span></p>
-          <div class="axis-scale" style="--from: 15.9%; --to: 63.5%"></div>
-          <p class="axis-sample" style="font-variation-settings: 'opsz' 144, 'wght' 780, 'wdth' 45">Tournoy</p>
-        </div>
-        <div class="axis">
-          <p class="axis-head"><span data-i18n="ax3">Densité optique · GRAD</span><span>−200 <b>0 → 120</b> 150</span></p>
-          <div class="axis-scale" style="--from: 57.1%; --to: 91.4%"></div>
-          <p class="axis-sample" style="font-variation-settings: 'opsz' 144, 'wght' 780, 'wdth' 105, 'GRAD' 120">Tournoy</p>
-        </div>
-        <div class="axis">
-          <p class="axis-head"><span data-i18n="ax4">Taille optique · opsz</span><span>8 <b>144</b> 144</span></p>
-          <div class="axis-scale" style="--from: 100%; --to: 100%"></div>
-          <p class="axis-sample" style="font-variation-settings: 'opsz' 8, 'wght' 780, 'wdth' 105">Tournoy</p>
+  <section class="sec" id="contact" aria-labelledby="h-contact">
+    <div class="wrap">
+      <div class="cta">
+        <p class="label" data-i18n="l.contact">Contact</p>
+        <h2 id="h-contact" data-i18n="t.contact">Une question technique, une collaboration,<br>ou juste un des travaux qui vous a arrêté ?</h2>
+        <div class="cta-links">
+          <a class="btn" href="mailto:noa.tournoy@supinfo.com">noa.tournoy@supinfo.com</a>
+          <a class="btn ghost" href="https://www.linkedin.com/in/noa-tournoy/">LinkedIn</a>
+          <a class="btn ghost" href="https://github.com/Noa-trny">GitHub</a>
         </div>
       </div>
-
-      <p class="step-note" data-i18n="axes.note">
-        Le trait épais marque la portion de chaque axe que ce site parcourt réellement.
-        Sur le nom du premier écran, la vitesse de défilement s'y promène ; partout
-        ailleurs les valeurs sont fixes, parce qu'un texte dont la chasse varie se
-        recompose sous l'œil qui le lit.
-      </p>
     </div>
-  </section>
-
-  <section class="plate inked" aria-labelledby="contact">
-    <p class="cartouche">
-      <span class="plate-no" data-i18n="c5.a">Pl. 07 — contact</span>
-    </p>
-    <h2 class="sr-only" id="contact" data-i18n="h.contact">Contact</h2>
-
-    <a class="contact-line kin" href="mailto:noa.tournoy@supinfo.com">noa.tournoy@supinfo.com</a>
-
-    <ul class="elsewhere">
-      <li><a href="https://www.linkedin.com/in/noa-tournoy/">LinkedIn</a></li>
-      <li><a href="https://github.com/Noa-trny">GitHub</a></li>
-      <li><a href="https://eclosion.noatournoy.dev">Éclosion</a></li>
-      <li><a href="/savoir-faire/" data-i18n="savoir.link">Savoir-faire</a></li>
-      <li><a href="/contact/" data-i18n="contact.link">Page de contact</a></li>
-    </ul>
   </section>
 
 </main>
 
-<footer class="colophon">
-  <p data-i18n="colo.face">
-    Composé en Roboto&nbsp;Flex, axes <i>opsz</i>, <i>wght</i>, <i>wdth</i> et <i>GRAD</i>,
-    sous-ensemblée latin, 235&nbsp;Ko. Le défilement en tient le curseur.
-  </p>
-  <p data-i18n="colo.hand">
-    Écrit à la main. Une seule bibliothèque, GSAP, servie depuis ce domaine.
-    Aucune requête vers un tiers, aucun traceur. Le texte se lit sans JavaScript.
-  </p>
+<footer class="foot">
+  <div class="wrap foot-in">
+    <span data-i18n="foot.a">Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/travaux/" data-i18n="foot.b">Travaux</a> · <a href="/contact/" data-i18n="foot.c">Contact</a></span>
+  </div>
 </footer>
 
 <script src="/scripts/vendor/gsap.min.js" defer></script>
 <script src="/scripts/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/scripts/kinetic.js" defer></script>
-<script src="/scripts/volume.js" defer></script>
 <script src="/scripts/i18n.js" defer></script>
 </body>
 </html>
