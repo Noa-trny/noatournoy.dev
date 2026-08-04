@@ -11,15 +11,15 @@
 @import url("grid.css");
 
 :root {
-  --bg: #232426;
-  --panel: #292a2c;
-  --panel-2: #303133;
-  --line: #3a3c3e;
-  --line-soft: #313335;
+  --bg: #08080a;
+  --panel: #101013;
+  --panel-2: #17171b;
+  --line: #26262c;
+  --line-soft: #1b1b20;
   --fg: #e7e9e7;
   --dim: #9aa09c;
-  --dim-2: #6f7573;
-  --ghost: #3c3e40;
+  --dim-2: #6b706e;
+  --ghost: #24242a;
   --acid: #c2f53f;
   --acid-ink: #0a0d05;
 
