@@ -8,7 +8,7 @@
   font-display: swap;
 }
 
-@import url("stars.css");
+@import url("grid.css");
 
 :root {
   --bg: #232426;
@@ -207,11 +207,16 @@ img { max-width: 100%; display: block; }
   text-decoration: none;
   transition: color 0.2s ease;
 }
-.side-mail:hover { color: var(--acid); }
+.side-mail { color: #6b7075; }
+.side-mail:hover { color: #101216; }
+body.past-hero .side-mail { color: var(--dim); }
+body.past-hero .side-mail:hover { color: var(--acid); }
 @media (max-width: 68rem) { .side-mail { display: none; } }
 
 /* ---------- jauge verticale, bord droit ---------- */
 
+body.past-hero .progress { background: color-mix(in srgb, var(--fg) 12%, transparent); }
+body.past-hero .progress i { background: var(--acid); }
 .progress {
   position: fixed;
   right: 0.9rem;
@@ -219,17 +224,19 @@ img { max-width: 100%; display: block; }
   width: 3px;
   height: 56vh;
   z-index: 60;
-  background: color-mix(in srgb, var(--fg) 12%, transparent);
+  background: rgba(16, 18, 22, 0.14);
   border-radius: 2px;
   pointer-events: none;
+  transition: background 0.3s ease;
 }
 .progress i {
   display: block;
   width: 100%;
   height: 22%;
   border-radius: 2px;
-  background: var(--acid);
+  background: #101216;
   transform: translateY(0);
+  transition: background 0.3s ease;
   will-change: transform;
 }
 @media (max-width: 48rem) { .progress { display: none; } }
@@ -354,6 +361,98 @@ img { max-width: 100%; display: block; }
 }
 .hero-card figcaption a:hover { color: var(--acid); }
 .hero-card-n { font-size: var(--t-sm); color: var(--dim); }
+
+
+/* ---------- zone claire du premier écran ---------- */
+
+.hero.light {
+  --fg: #101216;
+  --dim: #5a5f66;
+  --dim-2: #7c828a;
+  --line: #e2e3e7;
+  --line-soft: #eceef1;
+  --panel: #ffffff;
+  --panel-2: #f6f7f9;
+  /* le vert acide est illisible sur blanc : sa version encre pour le texte */
+  --acid-text: #4d7a06;
+
+  position: relative;
+  background: #fbfbfc;
+  color: var(--fg);
+  padding-block: clamp(3rem, 9vh, 6rem) clamp(3.5rem, 10vh, 7rem);
+}
+/* la grille de points, en sombre sur le clair */
+.hero.light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle 1px at 1px 1px, rgba(20, 22, 28, 0.16) 0 1px, transparent 1px);
+  background-size: 26px 26px;
+}
+.hero.light > * { position: relative; }
+
+.hero.light .label { color: var(--fg); }
+.hero.light .label::before { color: var(--acid-text); }
+.hero.light .hero-sub { color: #3d424a; }
+.hero.light .hero-sub b { color: var(--acid-text); }
+
+/* le bouton plein passe en encre, comme la reference */
+.hero.light .btn {
+  background: #101216;
+  color: #ffffff;
+  box-shadow: 0 10px 26px rgba(16, 18, 22, 0.25);
+}
+.hero.light .icon-btn {
+  background: #ffffff;
+  border-color: #e2e3e7;
+  box-shadow: 0 8px 20px rgba(16, 18, 22, 0.12);
+}
+.hero.light .icon-btn:hover { border-color: #101216; }
+.hero.light .icon-btn svg { stroke: #101216; }
+.hero.light .icon-btn img[src$="github.svg"] { filter: invert(1) brightness(0.2); }
+
+.hero.light .hero-card {
+  background: #ffffff;
+  border-color: #e6e7ea;
+  box-shadow: 0 30px 70px rgba(16, 18, 22, 0.18);
+}
+.hero.light .hero-card figcaption a { color: #101216; }
+.hero.light .hero-card figcaption a:hover { color: var(--acid-text); }
+.hero.light .hero-card-k { color: #8b9098; }
+.hero.light .hero-card-n { color: #5a5f66; }
+
+/* ---------- coupure franche vers le sombre ---------- */
+
+.zone-dark { background: var(--bg); position: relative; }
+.sec.band { padding-block: clamp(2.5rem, 6vh, 4rem); }
+.zone-dark .sec.band + .sec { border-top: 0; }
+
+/* ---------- la barre du haut change de camp ---------- */
+
+.topbar {
+  background: color-mix(in srgb, #fbfbfc 82%, transparent);
+  border-bottom-color: #e6e7ea;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.topbar .brand { color: #101216; }
+.topbar .topnav a { color: #5a5f66; }
+.topbar .topnav a:hover { color: #101216; }
+.topbar .lang { border-color: #d9dbdf; }
+.topbar .lang button { color: #5a5f66; }
+.topbar .lang button:hover { color: #101216; }
+
+body.past-hero .topbar {
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  border-bottom-color: var(--line-soft);
+}
+body.past-hero .topbar .brand { color: var(--fg); }
+body.past-hero .topbar .topnav a { color: var(--dim); }
+body.past-hero .topbar .topnav a:hover { color: var(--fg); }
+body.past-hero .topbar .lang { border-color: var(--line); }
+body.past-hero .topbar .lang button { color: var(--dim); }
+body.past-hero .topbar .lang button:hover { color: var(--fg); }
 
 /* ---------- rangée d'état ---------- */
 

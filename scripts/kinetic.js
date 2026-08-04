@@ -117,11 +117,16 @@
 
     /* ---- le ciel derive avec le defilement ----------------------------- */
 
-    gsap.to(document.documentElement, {
-      "--sky": 90,
-      ease: "none",
-      scrollTrigger: { start: 0, end: "max", scrub: 1.2 },
-    });
+    var heroLight = document.querySelector(".hero.light");
+    var topbar = document.querySelector(".topbar");
+    if (heroLight && topbar) {
+      ScrollTrigger.create({
+        trigger: heroLight,
+        start: "bottom 60px",
+        onEnter: function () { document.body.classList.add("past-hero"); },
+        onLeaveBack: function () { document.body.classList.remove("past-hero"); },
+      });
+    }
 
     /* ---- la vignette suit le curseur sur la liste --------------------- */
 
