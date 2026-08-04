@@ -256,7 +256,7 @@ img { max-width: 100%; display: block; }
 
 .hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   gap: clamp(2rem, 5vw, 4.5rem);
   align-items: center;
 }
@@ -266,24 +266,25 @@ img { max-width: 100%; display: block; }
 
 .hero h1 {
   margin: 0.35rem 0 0;
-  font-size: clamp(2.9rem, 7.5vw, 6.5rem);
-  line-height: 1.1;
-  letter-spacing: -0.005em;
-  font-variation-settings: "opsz" 144, "wght" 800, "wdth" 74;
+  font-size: clamp(2.3rem, 5.3vw, 4.8rem);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  font-variation-settings: "opsz" 144, "wght" 800, "wdth" 108;
   text-transform: uppercase;
 }
 
 .hero-sub {
-  max-width: 44ch;
-  margin: clamp(1.1rem, 3vh, 1.75rem) 0 0;
-  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
-  line-height: 1.6;
-  color: #cdd2ce;
+  max-width: 40ch;
+  margin: clamp(1.25rem, 3vh, 1.9rem) 0 0;
+  font-size: clamp(1.15rem, 1.6vw, 1.45rem);
+  line-height: 1.5;
+  color: #d6dad7;
+  font-variation-settings: "opsz" 20, "wght" 560, "wdth" 100;
 }
 /* les technologies clés se détachent dans la phrase, pas dans une ligne à part */
 .hero-sub b {
   color: var(--acid);
-  font-variation-settings: "opsz" 20, "wght" 650, "wdth" 100;
+  font-variation-settings: "opsz" 20, "wght" 700, "wdth" 100;
 }
 
 .hero-actions {
@@ -296,8 +297,9 @@ img { max-width: 100%; display: block; }
 .icon-btn {
   display: inline-grid;
   place-items: center;
-  width: 46px;
-  height: 46px;
+  width: 54px;
+  height: 54px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
   border-radius: 50%;
   border: 1px solid var(--line);
   background: var(--panel);
@@ -314,18 +316,19 @@ img { max-width: 100%; display: block; }
 
 .hero-card {
   margin: 0;
+  padding: 0.85rem;
   border: 1px solid var(--line);
-  border-radius: var(--r);
+  border-radius: 22px;
   background: var(--panel);
-  overflow: hidden;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
 }
 /* le rapport se pose sur le conteneur : un <picture> en ligne ne donne pas de
    bloc de reference a l'image, et aspect-ratio y reste sans effet */
 .hero-card picture {
   display: block;
-  aspect-ratio: 16 / 10;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
+  border-radius: 14px;
 }
 .hero-card img {
   width: 100%;
@@ -335,8 +338,7 @@ img { max-width: 100%; display: block; }
 .hero-card figcaption {
   display: grid;
   gap: 0.25rem;
-  padding: 1rem 1.15rem 1.2rem;
-  border-top: 1px solid var(--line-soft);
+  padding: 0.95rem 0.4rem 0.35rem;
 }
 .hero-card-k {
   font-size: var(--t-label);
