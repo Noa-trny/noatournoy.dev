@@ -197,7 +197,8 @@ img { max-width: 100%; display: block; }
 .side-mail {
   position: fixed;
   left: 1.1rem;
-  bottom: 2.5rem;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 30;
   writing-mode: vertical-rl;
   font-size: 0.8125rem;
