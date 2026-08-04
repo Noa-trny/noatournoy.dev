@@ -13,12 +13,16 @@
 <meta property="og:image" content="https://noatournoy.dev/og.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="canonical" href="https://noatournoy.dev/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/styles/spec.css">
 </head>
 <body>
+<a class="skip" href="#contenu" data-i18n="skip">Aller au contenu</a>
 
-<main id="contenu">
+<main>
 
   <section class="hero light band-sec" aria-labelledby="titre">
    <header class="tophead wrap">
@@ -32,7 +36,7 @@
      </div>
    </header>
 
-   <div class="wrap hero-in">
+   <div class="wrap hero-in" id="contenu" tabindex="-1">
     <div class="hero-grid">
       <div class="hero-text">
         <h1 id="titre" data-i18n="hero.h1">Noa Tournoy</h1>
