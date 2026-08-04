@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="fr">
-<head>
+<head><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title data-i18n="doc.title">Gamedex — Noa Tournoy</title>
 <meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="Gamedex : catalogue de jeux vidéo sur l'API RAWG. React, TypeScript, Vite. Recherche, filtres, tri, défilement infini, favoris persistants, tests Cypress. Projet en binôme.">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#fbfbfc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Gamedex — Noa Tournoy">
 <meta property="og:description" content="Catalogue de jeux vidéo sur l'API RAWG : recherche, filtres, favoris persistants. React et TypeScript.">
@@ -18,28 +18,30 @@
 </head>
 <body>
 
-<nav class="lang" data-lang-bar data-dict="/i18n/gamedex.en.json" aria-label="Langue">
-  <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
-  <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
-</nav>
-
-<header class="runhead">
-  <a class="mark kin" href="/">Noa Tournoy</a>
-  <a href="/travaux/" data-i18n="nav.travaux">Travaux</a>
-  <a href="/savoir-faire/" data-i18n="nav.savoir">Savoir-faire</a>
-  <a href="/contact/" data-i18n="nav.contact">Contact</a>
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/">Portfolio</a>
+  <div class="tophead-right">
+    <div class="lang" data-lang-bar data-dict="/i18n/gamedex.en.json" role="group" aria-label="Langue">
+      <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+    </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-i18n="menu">Menu</button>
+  </div>
 </header>
+</div>
 
 <main id="contenu">
 
-  <section class="plate inked" aria-labelledby="titre">
-    <p class="cartouche">
-      <span class="plate-no" data-i18n="c.a">Pl. 03.4</span>
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label">
+      <span data-i18n="c.a"></span>
       <span data-i18n="c.b">2026, binôme, module 2WEBD</span>
       <span data-i18n="c.c">React · TypeScript · Vite · Cypress</span>
     </p>
-    <h1 class="fiche-title kin" id="titre">Gamedex</h1>
-    <p class="fiche-spec" data-i18n="lede">
+    <h1 class="fiche-title" id="titre">Gamedex</h1>
+    <p class="hero-sub" data-i18n="lede">
       Un catalogue de jeux vidéo bâti sur l'API RAWG : recherche, filtres par plateforme et
       par boutique, tri, défilement infini, fiches détaillées et favoris qui survivent au
       rechargement.
@@ -47,10 +49,12 @@
     <ul class="fiche-links">
       <li><a href="https://github.com/Noa-trny/Gamedex" data-i18n="link.read">Lire le code</a></li>
     </ul>
+  </div>
   </section>
 
-  <section class="plate" aria-labelledby="sujet">
-    <h2 class="lede kin" id="sujet" data-i18n="sujet.t">Une vraie application, pas une démonstration.</h2>
+  <section class="sec band-sec dark" aria-labelledby="sujet">
+    <div class="wrap">
+    <h2 class="sec-title" id="sujet" data-i18n="sujet.t">Une vraie application, pas une démonstration.</h2>
     <div class="prose">
       <p data-i18n="sujet.1">
         Cinq routes réelles : la liste des jeux avec recherche, filtres et défilement infini ;
@@ -69,32 +73,44 @@
         sous Cypress font partie des scripts du dépôt.
       </p>
     </div>
+  </div>
   </section>
 
-  <section class="plate inked" aria-labelledby="suite">
+  <section class="sec band-sec light" aria-labelledby="suite">
+    <div class="wrap">
     <h2 class="sr-only" id="suite" data-i18n="h.suite">Suite</h2>
     <nav class="next" aria-label="Travaux">
       <a href="/travaux/supkonquest/"><span class="dir" data-i18n="nav.prev">Planche précédente</span>SupKonQuest</a>
       <a href="/travaux/laying-grass/"><span class="dir" data-i18n="nav.next">Planche suivante</span>laying_grass</a>
     </nav>
+  </div>
   </section>
 
 </main>
 
-<footer class="colophon">
-  <p data-i18n="colo.face">
-    Composé en Roboto&nbsp;Flex, axes <i>opsz</i>, <i>wght</i>, <i>wdth</i> et <i>GRAD</i>,
-    sous-ensemblée latin, 235&nbsp;Ko. Le défilement en tient le curseur.
-  </p>
-  <p data-i18n="colo.hand">
-    Écrit à la main. Une seule bibliothèque, GSAP, servie depuis ce domaine.
-    Aucune requête vers un tiers, aucun traceur. Le texte se lit sans JavaScript.
-  </p>
+<div class="menu" id="menu" hidden>
+  <button class="menu-close" type="button" data-i18n="menu.close">Fermer</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/travaux/" data-i18n="m.travaux">Travaux</a>
+      <a href="/savoir-faire/" data-i18n="m.stack">Savoir-faire</a>
+      <a href="/contact/" data-i18n="m.contact">Contact</a>
+      <a href="/" data-i18n="m.accueil">Accueil</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/travaux/">Travaux</a> · <a href="/contact/">Contact</a></span>
+  </div>
 </footer>
 
 <script src="/scripts/vendor/gsap.min.js" defer></script>
 <script src="/scripts/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/menu.js" defer></script>
 <script src="/scripts/i18n.js" defer></script>
 </body>
 </html>

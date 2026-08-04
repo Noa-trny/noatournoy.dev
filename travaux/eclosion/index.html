@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="fr">
-<head>
+<head><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title data-i18n="doc.title">Éclosion — Noa Tournoy</title>
 <meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="Éclosion : expérience web 3D où le défilement est le temps. Huit actes, 100 % procédurale. Charge de première visite réduite de 19 %, gel de 617 ms éliminé.">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#fbfbfc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Éclosion — Noa Tournoy">
 <meta property="og:description" content="Expérience web 3D où le défilement est le temps. Huit actes, 100 % procédurale, aucun modèle ni texture ni fichier audio.">
@@ -18,28 +18,30 @@
 </head>
 <body>
 
-<nav class="lang" data-lang-bar data-dict="/i18n/eclosion.en.json" aria-label="Langue">
-  <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
-  <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
-</nav>
-
-<header class="runhead">
-  <a class="mark kin" href="/">Noa Tournoy</a>
-  <a href="/travaux/" data-i18n="nav.travaux">Travaux</a>
-  <a href="/savoir-faire/" data-i18n="nav.savoir">Savoir-faire</a>
-  <a href="/contact/" data-i18n="nav.contact">Contact</a>
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/">Portfolio</a>
+  <div class="tophead-right">
+    <div class="lang" data-lang-bar data-dict="/i18n/eclosion.en.json" role="group" aria-label="Langue">
+      <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+    </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-i18n="menu">Menu</button>
+  </div>
 </header>
+</div>
 
 <main id="contenu">
 
-  <section class="plate inked" aria-labelledby="titre">
-    <p class="cartouche">
-      <span class="plate-no" data-i18n="c.a">Pl. 03.1</span>
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label">
+      <span data-i18n="c.a"></span>
       <span data-i18n="c.b">2026, seul, de bout en bout</span>
       <span data-i18n="c.c">Next.js · React Three Fiber · GLSL · WebAudio</span>
     </p>
-    <h1 class="fiche-title kin" id="titre">Éclosion</h1>
-    <p class="fiche-spec" data-i18n="lede">
+    <h1 class="fiche-title" id="titre">Éclosion</h1>
+    <p class="hero-sub" data-i18n="lede">
       Une expérience web 3D où le défilement est le temps : huit actes, du Néant à l'Aube,
       traversés à la molette, du premier battement d'une graine jusqu'au premier lever de
       soleil du monde.
@@ -48,10 +50,12 @@
       <li><a href="https://eclosion.noatournoy.dev" data-i18n="link.see">Voir l'expérience</a></li>
       <li><a href="https://github.com/Noa-trny/eclosion" data-i18n="link.read">Lire le code</a></li>
     </ul>
+  </div>
   </section>
 
-  <section class="plate" aria-labelledby="sujet">
-    <h2 class="lede kin" id="sujet" data-i18n="sujet.t">Cent pour cent procédurale.</h2>
+  <section class="sec band-sec dark" aria-labelledby="sujet">
+    <div class="wrap">
+    <h2 class="sec-title" id="sujet" data-i18n="sujet.t">Cent pour cent procédurale.</h2>
     <div class="prose">
       <p data-i18n="sujet.1">
         Aucun modèle 3D, aucune texture, aucun fichier audio, aucune requête externe au
@@ -72,10 +76,12 @@
       </picture>
       <figcaption data-i18n="fig.dawn">L'Aube, dernier acte. Le disque solaire ignore le brouillard pour passer le seuil du bloom.</figcaption>
     </figure>
+  </div>
   </section>
 
-  <section class="plate" aria-labelledby="choix">
-    <p class="cartouche"><span class="plate-no" data-i18n="c2">Trois choix qui structurent tout</span></p>
+  <section class="sec band-sec light" aria-labelledby="choix">
+    <div class="wrap">
+    <p class="label"><span data-i18n="c2">Trois choix qui structurent tout</span></p>
     <h2 class="sr-only" id="choix" data-i18n="h.choix">Décisions techniques</h2>
 
     <div class="prose">
@@ -105,10 +111,12 @@
         niveau de qualité maximal ; changer de palier ne fait que déplacer un setDrawRange.
       </p>
     </div>
+  </div>
   </section>
 
-  <section class="plate" aria-labelledby="mesures">
-    <p class="cartouche"><span class="plate-no" data-i18n="c3">L'ingénierie, chiffrée</span></p>
+  <section class="sec band-sec dark" aria-labelledby="mesures">
+    <div class="wrap">
+    <p class="label"><span data-i18n="c3">L'ingénierie, chiffrée</span></p>
     <h2 class="sr-only" id="mesures" data-i18n="h.mesures">Mesures</h2>
 
     <table class="measures">
@@ -167,10 +175,12 @@
         brouillard de la scène. Aucun changement visuel, frontières fluides.
       </p>
     </div>
+  </div>
   </section>
 
-  <section class="plate" aria-labelledby="debug">
-    <h2 class="lede kin" id="debug" data-i18n="dbg.t">Rien ne se corrige sans être vu.</h2>
+  <section class="sec band-sec light" aria-labelledby="debug">
+    <div class="wrap">
+    <h2 class="sec-title" id="debug" data-i18n="dbg.t">Rien ne se corrige sans être vu.</h2>
     <div class="prose">
       <p data-i18n="dbg.p">
         Un harnais CDP pilote un vrai Chrome : entrée dans l'expérience, saut à un instant
@@ -229,10 +239,12 @@
         <figcaption data-i18n="fig.ocean">L'Océan, nappe de Gerstner et fûts de lumière sous la surface.</figcaption>
       </figure>
     </div>
+  </div>
   </section>
 
-  <section class="plate" aria-labelledby="qualite">
-    <p class="cartouche"><span class="plate-no" data-i18n="c4">Tenir la qualité dans le temps</span></p>
+  <section class="sec band-sec dark" aria-labelledby="qualite">
+    <div class="wrap">
+    <p class="label"><span data-i18n="c4">Tenir la qualité dans le temps</span></p>
     <h2 class="sr-only" id="qualite" data-i18n="h.qualite">Qualité et accessibilité</h2>
     <div class="prose">
       <ul>
@@ -242,32 +254,44 @@
         <li data-i18n="q4"><strong>Mouvement réduit</strong> : défilement natif, particules à 4 %, aucune secousse, son coupé. Annonces <code>aria-live</code> à chaque acte, parcours clavier complet, focus visible partout.</li>
       </ul>
     </div>
+  </div>
   </section>
 
-  <section class="plate inked" aria-labelledby="suite">
+  <section class="sec band-sec light" aria-labelledby="suite">
+    <div class="wrap">
     <h2 class="sr-only" id="suite" data-i18n="h.suite">Suite</h2>
     <nav class="next" aria-label="Travaux">
       <a href="/travaux/"><span class="dir" data-i18n="nav.up">Retour</span><span data-i18n="nav.up2">Tous les travaux</span></a>
       <a href="/travaux/datasentinel/"><span class="dir" data-i18n="nav.next">Planche suivante</span>DataSentinel</a>
     </nav>
+  </div>
   </section>
 
 </main>
 
-<footer class="colophon">
-  <p data-i18n="colo.face">
-    Composé en Roboto&nbsp;Flex, axes <i>opsz</i>, <i>wght</i>, <i>wdth</i> et <i>GRAD</i>,
-    sous-ensemblée latin, 235&nbsp;Ko. Le défilement en tient le curseur.
-  </p>
-  <p data-i18n="colo.hand">
-    Écrit à la main. Une seule bibliothèque, GSAP, servie depuis ce domaine.
-    Aucune requête vers un tiers, aucun traceur. Le texte se lit sans JavaScript.
-  </p>
+<div class="menu" id="menu" hidden>
+  <button class="menu-close" type="button" data-i18n="menu.close">Fermer</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/travaux/" data-i18n="m.travaux">Travaux</a>
+      <a href="/savoir-faire/" data-i18n="m.stack">Savoir-faire</a>
+      <a href="/contact/" data-i18n="m.contact">Contact</a>
+      <a href="/" data-i18n="m.accueil">Accueil</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/travaux/">Travaux</a> · <a href="/contact/">Contact</a></span>
+  </div>
 </footer>
 
 <script src="/scripts/vendor/gsap.min.js" defer></script>
 <script src="/scripts/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/menu.js" defer></script>
 <script src="/scripts/i18n.js" defer></script>
 </body>
 </html>

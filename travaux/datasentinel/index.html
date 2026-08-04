@@ -1,11 +1,11 @@
 <!doctype html>
 <html lang="fr">
-<head>
+<head><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title data-i18n="doc.title">DataSentinel — Noa Tournoy</title>
 <meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="DataSentinel : tableau de bord de pilotage de la sécurité des produits digitaux, construit pendant un stage de trois mois chez ADEO. Looker, LookML, Python, React, BigQuery, Terraform, Kubernetes.">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#fbfbfc">
 <meta property="og:type" content="article">
 <meta property="og:title" content="DataSentinel — Noa Tournoy">
 <meta property="og:description" content="Un tableau de bord qui a remplacé le suivi manuel de la sécurité des produits digitaux, chez ADEO.">
@@ -18,35 +18,39 @@
 </head>
 <body>
 
-<nav class="lang" data-lang-bar data-dict="/i18n/datasentinel.en.json" aria-label="Langue">
-  <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
-  <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
-</nav>
-
-<header class="runhead">
-  <a class="mark kin" href="/">Noa Tournoy</a>
-  <a href="/travaux/" data-i18n="nav.travaux">Travaux</a>
-  <a href="/savoir-faire/" data-i18n="nav.savoir">Savoir-faire</a>
-  <a href="/contact/" data-i18n="nav.contact">Contact</a>
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/">Portfolio</a>
+  <div class="tophead-right">
+    <div class="lang" data-lang-bar data-dict="/i18n/datasentinel.en.json" role="group" aria-label="Langue">
+      <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+    </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-i18n="menu">Menu</button>
+  </div>
 </header>
+</div>
 
 <main id="contenu">
 
-  <section class="plate inked" aria-labelledby="titre">
-    <p class="cartouche">
-      <span class="plate-no" data-i18n="c.a">Pl. 03.2</span>
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label">
+      <span data-i18n="c.a"></span>
       <span data-i18n="c.b">Juin → août 2025, stage ADEO Ronchin</span>
       <span data-i18n="c.c">Looker · LookML · Python · React · BigQuery · Terraform</span>
     </p>
-    <h1 class="fiche-title kin" id="titre">DataSentinel</h1>
-    <p class="fiche-spec" data-i18n="lede">
+    <h1 class="fiche-title" id="titre">DataSentinel</h1>
+    <p class="hero-sub" data-i18n="lede">
       Un tableau de bord qui a remplacé le suivi manuel de la sécurité des produits
       digitaux, et les extensions full-stack qui le rendent utilisable au quotidien.
     </p>
+  </div>
   </section>
 
-  <section class="plate" aria-labelledby="sujet">
-    <h2 class="lede kin" id="sujet" data-i18n="sujet.t">Des tableurs vers une source unique.</h2>
+  <section class="sec band-sec dark" aria-labelledby="sujet">
+    <div class="wrap">
+    <h2 class="sec-title" id="sujet" data-i18n="sujet.t">Des tableurs vers une source unique.</h2>
     <div class="prose">
       <p data-i18n="sujet.1">
         Le suivi de la sécurité des produits digitaux vivait dans des feuilles de calcul
@@ -60,10 +64,12 @@
         n'y a plus de version intermédiaire à maintenir.
       </p>
     </div>
+  </div>
   </section>
 
-  <section class="plate" aria-labelledby="fait">
-    <p class="cartouche"><span class="plate-no" data-i18n="c2">Ce que j'ai construit</span></p>
+  <section class="sec band-sec light" aria-labelledby="fait">
+    <div class="wrap">
+    <p class="label"><span data-i18n="c2">Ce que j'ai construit</span></p>
     <h2 class="sr-only" id="fait" data-i18n="h.fait">Réalisation</h2>
     <div class="prose">
       <h3 data-i18n="f1.t">La modélisation</h3>
@@ -95,9 +101,11 @@
         dans la définition de la donnée qu'il affiche.
       </p>
     </div>
+  </div>
   </section>
 
-  <section class="plate" aria-labelledby="confid">
+  <section class="sec band-sec dark" aria-labelledby="confid">
+    <div class="wrap">
     <h2 class="sr-only" id="confid" data-i18n="h.confid">Confidentialité</h2>
     <div class="prose">
       <p data-i18n="confid.p">
@@ -106,32 +114,44 @@
         propre travail.
       </p>
     </div>
+  </div>
   </section>
 
-  <section class="plate inked" aria-labelledby="suite">
+  <section class="sec band-sec light" aria-labelledby="suite">
+    <div class="wrap">
     <h2 class="sr-only" id="suite" data-i18n="h.suite">Suite</h2>
     <nav class="next" aria-label="Travaux">
       <a href="/travaux/eclosion/"><span class="dir" data-i18n="nav.prev">Planche précédente</span>Éclosion</a>
       <a href="/travaux/supkonquest/"><span class="dir" data-i18n="nav.next">Planche suivante</span>SupKonQuest</a>
     </nav>
+  </div>
   </section>
 
 </main>
 
-<footer class="colophon">
-  <p data-i18n="colo.face">
-    Composé en Roboto&nbsp;Flex, axes <i>opsz</i>, <i>wght</i>, <i>wdth</i> et <i>GRAD</i>,
-    sous-ensemblée latin, 235&nbsp;Ko. Le défilement en tient le curseur.
-  </p>
-  <p data-i18n="colo.hand">
-    Écrit à la main. Une seule bibliothèque, GSAP, servie depuis ce domaine.
-    Aucune requête vers un tiers, aucun traceur. Le texte se lit sans JavaScript.
-  </p>
+<div class="menu" id="menu" hidden>
+  <button class="menu-close" type="button" data-i18n="menu.close">Fermer</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/travaux/" data-i18n="m.travaux">Travaux</a>
+      <a href="/savoir-faire/" data-i18n="m.stack">Savoir-faire</a>
+      <a href="/contact/" data-i18n="m.contact">Contact</a>
+      <a href="/" data-i18n="m.accueil">Accueil</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/travaux/">Travaux</a> · <a href="/contact/">Contact</a></span>
+  </div>
 </footer>
 
 <script src="/scripts/vendor/gsap.min.js" defer></script>
 <script src="/scripts/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/menu.js" defer></script>
 <script src="/scripts/i18n.js" defer></script>
 </body>
 </html>

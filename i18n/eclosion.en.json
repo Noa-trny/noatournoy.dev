@@ -1,23 +1,16 @@
 {
   "doc.title": "Éclosion — Noa Tournoy",
   "doc.desc": "Éclosion: a 3D web experience where scrolling is time. Eight acts, fully procedural. First-visit payload cut by 19%, a 617 ms freeze eliminated.",
-
-  "nav.travaux": "Work",
-  "nav.savoir": "Skills",
-  "nav.contact": "Contact",
-
-  "c.a": "Pl. 03.1",
+  "c.a": "",
   "c.b": "2026, solo, end to end",
   "c.c": "Next.js · React Three Fiber · GLSL · WebAudio",
   "lede": "A 3D web experience where scrolling is time: eight acts, from the Void to the Dawn, travelled with the wheel, from a seed's first beat to the world's first sunrise.",
   "link.see": "See the experience",
   "link.read": "Read the code",
-
   "sujet.t": "One hundred per cent procedural.",
   "sujet.1": "No 3D models, no textures, no audio files, no external requests at runtime. Geometry, materials (noise and FBM in GLSL), over a hundred thousand particles and the music itself (pure WebAudio synthesis) are produced by the code. One deliberate exception: the typeface, committed to the repository.",
   "sujet.2": "Roughly 11,600 lines across 195 files. Next.js 15, React 19, strict TypeScript, Three.js and React Three Fiber, GSAP ScrollTrigger, Lenis, zustand, WebAudio.",
   "fig.dawn": "The Dawn, final act. The solar disc ignores the fog so it can clear the bloom threshold.",
-
   "c2": "Three decisions that shape everything",
   "h.choix": "Technical decisions",
   "ch1.t": "The scroll contract: zero React renders at 60 frames per second",
@@ -26,7 +19,6 @@
   "ch2.p": "An analytic function <strong>groundHeight(x, z)</strong> generates the visible terrain, constrains walking in free-roam, bounces the physics and bounds the birds' flight. What you see is exactly what you touch. Same logic for the camera: a single continuous CatmullRom curve, each act travelling to the first point of the next. No cut across the whole film.",
   "ch3.t": "Stateless particles",
   "ch3.p": "Every behaviour (rain, curl-noise fireflies, embers, the final vortex) is a closed function of (seed, time) evaluated in the vertex shader. No simulation to maintain, no GPU round trip. Buffers are allocated once at the highest quality level; changing tier only moves a setDrawRange.",
-
   "c3": "The engineering, in numbers",
   "h.mesures": "Measurements",
   "tab.cap": "Integrated-GPU bench forced to the highest tier, the worst measurable case.",
@@ -45,7 +37,6 @@
   "m2.l2": "<strong>the link wait</strong>: an act would draw as soon as the camera swept it, ready or not;",
   "m2.l3": "<strong>the driver's deferred reflection</strong>: even linked, a program pays for its first introspection, about 180 ms each on an integrated GPU.",
   "m2.p2": "The answer: each act mounts invisible, compiles under the composer's state, gets one program introspected per frame, then reveals itself, all of it covered by the scene's fog. No visual change, smooth boundaries.",
-
   "dbg.t": "Nothing gets fixed without being seen.",
   "dbg.p": "A CDP harness drives a real Chrome: enter the experience, jump to a precise beat, capture, before and after, for every rendering change. Speed-linked effects have to be captured mid-scroll; a still capture shows nothing. The GPU tier is forced by injecting the renderer string.",
   "dbg1.t": "The sun that wouldn't ignite",
@@ -56,19 +47,20 @@
   "fig.storm": "The Storm, captured mid-scroll, the only way to see the speed blur.",
   "fig.forest": "The Forest, 630 trees across five InstancedMesh, at unchanged frame cost.",
   "fig.ocean": "The Ocean, a Gerstner sheet and light shafts below the surface.",
-
   "c4": "Holding quality over time",
   "h.qualite": "Quality and accessibility",
   "q1": "<strong>Continuous integration on every push</strong>: strict linting (the <code>any</code> type is banned), strict TypeScript, 16 unit tests (act tiling, seeded pseudo-random generator, analytic ground, FR/EN text parity), build.",
   "q2": "<strong>One end-to-end test</strong> plays the whole film (boot, entry, every act, the emergence from the water, the fallback, in both languages) and requires zero console errors. It caught a real race the day it went live: a dispose during a shader link.",
   "q3": "<strong>Without WebGL2</strong>: a fallback page serves the complete narrative as server-rendered HTML, without JavaScript, in both languages.",
   "q4": "<strong>Reduced motion</strong>: native scrolling, particles at 4%, no shake, sound off. <code>aria-live</code> announcements on each act, full keyboard navigation, visible focus throughout.",
-
   "h.suite": "Next",
   "nav.up": "Back",
   "nav.up2": "All work",
   "nav.next": "Next plate",
-
-  "colo.face": "Set in Roboto&nbsp;Flex, <i>opsz</i>, <i>wght</i>, <i>wdth</i> and <i>GRAD</i> axes, subset to Latin, 235&nbsp;KB. Scrolling holds the slider.",
-  "colo.hand": "Written by hand. One library, GSAP, served from this domain. No third-party requests, no tracker. The text reads without JavaScript."
+  "menu": "Menu",
+  "menu.close": "Close",
+  "m.travaux": "Work",
+  "m.stack": "Skills",
+  "m.contact": "Contact",
+  "m.accueil": "Home"
 }

@@ -1,19 +1,16 @@
 {
   "doc.title": "Contact — Noa Tournoy",
   "doc.desc": "Write to Noa Tournoy: noa.tournoy@supinfo.com. LinkedIn and GitHub. Based in Lille, France; joining ADEO as a cybersecurity apprentice in October 2026.",
-
-  "nav.travaux": "Work",
-  "nav.savoir": "Skills",
-  "nav.contact": "Contact",
-
-  "c.a": "Pl. 05 — contact",
+  "c.a": "contact",
   "c.b": "Lille, France",
   "h1": "Contact",
-
   "quoi.t": "What's worth a message.",
   "quoi.p": "From 1 October 2026 I am a cybersecurity apprentice at ADEO, alongside the engineering programme at SUPINFO. Write for a technical question, a proposal to work together, or simply because one of the pieces stopped you. I answer.",
   "quoi.p2": "Email is the surest channel. LinkedIn works too.",
-
-  "colo.face": "Set in Roboto&nbsp;Flex, <i>opsz</i>, <i>wght</i>, <i>wdth</i> and <i>GRAD</i> axes, subset to Latin, 235&nbsp;KB. Scrolling holds the slider.",
-  "colo.hand": "Written by hand. One library, GSAP, served from this domain. No third-party requests, no tracker. The text reads without JavaScript."
+  "menu": "Menu",
+  "menu.close": "Close",
+  "m.travaux": "Work",
+  "m.stack": "Skills",
+  "m.contact": "Contact",
+  "m.accueil": "Home"
 }

@@ -1,20 +1,13 @@
 {
   "doc.title": "DataSentinel — Noa Tournoy",
   "doc.desc": "DataSentinel: a dashboard for monitoring the security of digital products, built during a three-month internship at ADEO. Looker, LookML, Python, React, BigQuery, Terraform, Kubernetes.",
-
-  "nav.travaux": "Work",
-  "nav.savoir": "Skills",
-  "nav.contact": "Contact",
-
-  "c.a": "Pl. 03.2",
+  "c.a": "",
   "c.b": "June → August 2025, internship at ADEO Ronchin",
   "c.c": "Looker · LookML · Python · React · BigQuery · Terraform",
   "lede": "A dashboard that replaced the manual tracking of digital-product security, and the full-stack extensions that make it usable day to day.",
-
   "sujet.t": "From spreadsheets to a single source.",
   "sujet.1": "Security tracking for digital products lived in hand-maintained spreadsheets: vulnerability status, compliance, penetration-test progress. Every cross-check was copy work, and nobody held the same version of the number.",
   "sujet.2": "DataSentinel centralises that monitoring in a Looker dashboard wired straight to the data. The number on screen is the number at the source; there is no intermediate version left to maintain.",
-
   "c2": "What I built",
   "h.fait": "Delivery",
   "f1.t": "The modelling",
@@ -25,14 +18,15 @@
   "f3.p": "A continuous integration and delivery pipeline, and infrastructure described as code: Terraform, GitHub Actions, Docker, Kubernetes. The tool redeploys without a manual step.",
   "f4.t": "What I took away",
   "f4.p": "The <strong>Google Looker</strong> and <strong>LookML</strong> certifications, and one conviction: on a security subject, the value is not in the chart but in the definition of the data it displays.",
-
   "h.confid": "Confidentiality",
   "confid.p": "No screenshots, no data, no product names: the contents of the tool belong to ADEO. What is described here is limited to what I can say about my own work.",
-
   "h.suite": "Next",
   "nav.prev": "Previous plate",
   "nav.next": "Next plate",
-
-  "colo.face": "Set in Roboto&nbsp;Flex, <i>opsz</i>, <i>wght</i>, <i>wdth</i> and <i>GRAD</i> axes, subset to Latin, 235&nbsp;KB. Scrolling holds the slider.",
-  "colo.hand": "Written by hand. One library, GSAP, served from this domain. No third-party requests, no tracker. The text reads without JavaScript."
+  "menu": "Menu",
+  "menu.close": "Close",
+  "m.travaux": "Work",
+  "m.stack": "Skills",
+  "m.contact": "Contact",
+  "m.accueil": "Home"
 }

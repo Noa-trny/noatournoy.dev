@@ -17,7 +17,7 @@
   --line-soft: #1b1b20;
   --fg: #e7e9e7;
   --dim: #9aa09c;
-  --dim-2: #6b706e;
+  --dim-2: #949a97;
   --ghost: #24242a;
   --acid: #c2f53f;
   --acid-ink: #0a0d05;
@@ -259,6 +259,9 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 
 .side-mail {
   position: fixed;
+  padding-inline: 0.85rem;
+  min-width: 44px;
+  text-align: center;
   left: 1.1rem;
   top: 50%;
   transform: translateY(-50%);
@@ -271,8 +274,8 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   transition: color 0.2s ease;
 }
 /* fixes au-dessus de bandes alternees : la difference les inverse d'elle-meme */
-.side-mail { color: #8c8c8c; mix-blend-mode: difference; }
-.side-mail:hover { color: #c2f53f; }
+.side-mail { color: var(--dim); }
+.side-mail:hover { color: var(--acid); }
 @media (max-width: 68rem) { .side-mail { display: none; } }
 
 /* ---------- jauge verticale, bord droit ---------- */
@@ -284,10 +287,9 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   width: 3px;
   height: 56vh;
   z-index: 60;
-  background: rgba(120, 120, 120, 0.5);
+  background: color-mix(in srgb, var(--fg) 16%, transparent);
   border-radius: 2px;
   pointer-events: none;
-  mix-blend-mode: difference;
 }
 .progress i {
   display: block;
@@ -974,8 +976,265 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .work-shot { transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
 .work:hover .work-shot { transform: scale(1.015); }
 
+
+/* ---------- pages intérieures ---------- */
+
+/* l'en-tête des pages intérieures vit sur une bande claire */
+.head-band {
+  background: #fbfbfc;
+  border-bottom: 1px solid #ececef;
+}
+.head-band .mark,
+.head-band .menu-btn { color: #101216; }
+
+.fiche-title {
+  margin: 0.4rem 0 0;
+  font-size: clamp(2.4rem, 6.5vw, 5.2rem);
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+  text-transform: uppercase;
+  font-variation-settings: "opsz" 144, "wght" 800, "wdth" 88;
+  overflow-wrap: anywhere;
+}
+
+.fiche-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: clamp(1.25rem, 3vh, 2rem) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.fiche-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.7rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  text-decoration: none;
+  font-size: var(--t-sm);
+  font-variation-settings: "opsz" 14, "wght" 620, "wdth" 100;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.fiche-links a:hover { border-color: var(--acid); color: var(--acid); }
+
+/* ---------- prose ---------- */
+
+.prose { max-width: 66ch; }
+.prose > * + * { margin-top: 1.05em; }
+.prose p { color: var(--dim); margin: 0; }
+.prose h3 {
+  margin: 2.1em 0 0.5em;
+  font-size: var(--t-3);
+  line-height: 1.25;
+  color: var(--fg);
+  font-variation-settings: "opsz" 20, "wght" 700, "wdth" 100;
+}
+.prose ul { margin: 0.6em 0 0; padding: 0; list-style: none; display: grid; gap: 0.55em; }
+/* En grille, chaque noeud de texte devient une cellule et la phrase
+   se casse mot par mot. La puce se pose donc en absolu. */
+.prose li {
+  position: relative;
+  padding-left: 1.7rem;
+  color: var(--dim);
+}
+.prose li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--acid);
+}
+.prose strong { color: var(--fg); font-variation-settings: "opsz" 14, "wght" 700, "wdth" 100; }
+.prose code {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 0.92em;
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+  background: var(--panel-2);
+}
+.prose a {
+  color: var(--fg);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+.prose a:hover { color: var(--acid); }
+
+/* ---------- table de mesures ---------- */
+
+.measures {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+.measures caption {
+  text-align: left;
+  padding-bottom: 0.9rem;
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim-2);
+}
+.measures th,
+.measures td {
+  text-align: left;
+  padding: 0.85rem 1rem 0.85rem 0;
+  border-bottom: 1px solid var(--line-soft);
+  vertical-align: baseline;
+  color: var(--dim);
+}
+.measures thead th {
+  font-size: var(--t-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim-2);
+}
+.measures tbody th { color: var(--fg); font-variation-settings: "opsz" 14, "wght" 560, "wdth" 100; }
+.measures td:not(:first-child),
+.measures th:not(:first-child) { text-align: right; padding-right: 0; }
+.measures .after { color: var(--acid); font-variation-settings: "opsz" 14, "wght" 750, "wdth" 100; }
+
+/* ---------- figures ---------- */
+
+.figure { margin: 0; }
+.figure picture { display: block; border-radius: var(--r-sm); overflow: hidden; }
+.figure img {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+}
+.figure figcaption { margin-top: 0.7rem; font-size: var(--t-sm); color: var(--dim); }
+.plates-grid {
+  display: grid;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 21rem), 1fr));
+}
+
+/* ---------- pagination entre fiches ---------- */
+
+.next {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.25rem 2rem;
+}
+.next a {
+  display: grid;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0.5rem 0;
+  text-decoration: none;
+  font-size: clamp(1.4rem, 3.4vw, 2.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144, "wght" 780, "wdth" 88;
+  text-transform: uppercase;
+}
+.next a:hover { color: var(--acid); }
+.next .dir {
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim-2);
+  font-variation-settings: "opsz" 8, "wght" 600, "wdth" 100;
+}
+
+/* ---------- listes clé / valeur ---------- */
+
+.kv {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(9rem, 15rem) 1fr;
+  gap: 0 clamp(1rem, 3vw, 2.5rem);
+}
+.kv dt,
+.kv dd {
+  padding: 1rem 0;
+  border-top: 1px solid var(--line-soft);
+  margin: 0;
+}
+.kv dt {
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim-2);
+}
+.kv dd {
+  font-size: var(--t-3);
+  line-height: 1.4;
+  color: var(--fg);
+}
+@media (max-width: 44rem) {
+  .kv { grid-template-columns: 1fr; }
+  .kv dd { border-top: 0; padding-top: 0; }
+}
+
+/* ---------- contact ---------- */
+
+.contact-line {
+  display: inline-block;
+  margin: 0 0 clamp(1.5rem, 4vh, 2.25rem);
+  font-size: clamp(1.4rem, 4.6vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+  font-variation-settings: "opsz" 144, "wght" 780, "wdth" 92;
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 0.1em;
+}
+.contact-line:hover { color: var(--acid); border-bottom-color: var(--acid); }
+
+.elsewhere {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.elsewhere a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.7rem 1.25rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  text-decoration: none;
+  font-size: var(--t-sm);
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.elsewhere a:hover { border-color: var(--acid); color: var(--acid); }
+
 /* ---------- entrées ---------- */
 
+/* Reduire, pas supprimer : une coupure globale detruit aussi les retours
+   d'etat utiles, et empeche transitionend de se produire. */
 @media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.12s !important;
+    scroll-behavior: auto !important;
+  }
+  .zone-dark::after, .band-sec::after { animation: none !important; }
 }
+
+/* ---------- cibles tactiles ---------- */
+
+/* WCAG 2.5.8 demande 24 px, la bonne pratique 44 : on vise 44 partout. */
+.lang button { min-width: 48px; min-height: 44px; }
+.menu-btn, .menu-close { min-height: 44px; padding-inline: 0.5rem; }
+.tophead .mark { display: inline-flex; align-items: center; min-height: 44px; }
+.more { min-height: 44px; align-items: center; }
+.foot a { display: inline-block; padding-block: 0.75rem; }
+.foot-in { align-items: center; }
+.row-title a { display: block; padding-block: 0.35rem; }
+.menu nav a { min-height: 44px; align-content: center; }
+.status a { min-height: 44px; }
+.ghost-items li a { min-height: 44px; display: inline-flex; align-items: center; }

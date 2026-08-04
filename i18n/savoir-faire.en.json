@@ -1,16 +1,10 @@
 {
   "doc.title": "Skills — Noa Tournoy",
   "doc.desc": "Languages, front end, data and BI, infrastructure, Google Looker and LookML certifications, spoken languages. Every line points to a piece of work where it was used.",
-
-  "nav.travaux": "Work",
-  "nav.savoir": "Skills",
-  "nav.contact": "Contact",
-
-  "c.a": "Pl. 04 — character set",
+  "c.a": "character set",
   "c.b": "languages, infrastructure, certifications",
   "h1": "Skills",
   "lede": "A list is only worth something if every line has been used somewhere. The ones below point to the work where they were.",
-
   "h.tech": "Technical",
   "k1": "Languages",
   "v1": "Python, TypeScript, JavaScript, SQL, C, C++, Java, PHP, LookML",
@@ -23,8 +17,7 @@
   "k5": "Tools",
   "v5": "Git and GitHub, PostgreSQL, Auth0, Godot, Visual Studio Code, Cisco Packet Tracer, Notion, Trello",
   "k6": "Certifications",
-  "v6": "Google Looker · LookML, obtained during the 2025 ADEO internship",
-
+  "v6": "Google Looker · LookML, during the 2025 ADEO internship · AWS Academy Cloud Foundations · CCNA Introduction to Networks",
   "ou.t": "Where it was used.",
   "ou1": "<strong>Looker, LookML, BigQuery, Terraform, Kubernetes</strong>: <a href=\"/travaux/datasentinel/\">DataSentinel</a>, the security monitoring dashboard at ADEO.",
   "ou2": "<strong>TypeScript, React, Three.js, GLSL, WebAudio</strong>: <a href=\"/travaux/eclosion/\">Éclosion</a>, a fully procedural 3D web experience.",
@@ -32,15 +25,17 @@
   "ou4": "<strong>C++17 with no dependencies</strong>: <a href=\"/travaux/laying-grass/\">laying_grass</a>, down to the hand-written JSON parser.",
   "ou5": "<strong>Python, Pygame, sockets</strong>: <a href=\"/travaux/ludoria/\">Ludoria</a>, three networked board games.",
   "ou6": "<strong>React, TypeScript, Cypress</strong>: <a href=\"/travaux/gamedex/\">Gamedex</a>, a game catalogue on the RAWG API.",
-
   "h.autres": "Languages and method",
   "k7": "Spoken languages",
-  "v7": "French, native · English, professional · Spanish, beginner",
+  "v7": "French, native · English, professional",
   "k8": "Method",
   "v8": "Measure before fixing. Verify every visual change with a capture. Isolate before accusing. Encode each lesson paid for as a test or an invariant, so it only costs once.",
   "k9": "Away from the code",
   "v9": "Weight training, video games, fashion",
-
-  "colo.face": "Set in Roboto&nbsp;Flex, <i>opsz</i>, <i>wght</i>, <i>wdth</i> and <i>GRAD</i> axes, subset to Latin, 235&nbsp;KB. Scrolling holds the slider.",
-  "colo.hand": "Written by hand. One library, GSAP, served from this domain. No third-party requests, no tracker. The text reads without JavaScript."
+  "menu": "Menu",
+  "menu.close": "Close",
+  "m.travaux": "Work",
+  "m.stack": "Skills",
+  "m.contact": "Contact",
+  "m.accueil": "Home"
 }

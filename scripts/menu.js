@@ -20,10 +20,18 @@
       if (first) first.focus();
     } else {
       panel.classList.remove("is-open");
+      /* Sans repli, un mouvement reduit supprime la transition, transitionend
+         ne se produit jamais, le panneau reste affiche et son voile intercepte
+         tous les clics de la page. */
+      var fini = false;
       var done = function () {
+        if (fini) return;
+        fini = true;
         panel.hidden = true;
         panel.removeEventListener("transitionend", done);
+        clearTimeout(secours);
       };
+      var secours = setTimeout(done, 500);
       panel.addEventListener("transitionend", done);
       btn.focus();
     }

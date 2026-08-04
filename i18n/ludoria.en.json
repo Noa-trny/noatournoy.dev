@@ -1,21 +1,14 @@
 {
   "doc.title": "Ludoria — Noa Tournoy",
   "doc.desc": "Ludoria: three networked board games: Katerenga, Congress, Isolation. Python, Pygame, sockets. A team of three; interface, art direction and computer opponents.",
-
-  "nav.travaux": "Work",
-  "nav.savoir": "Skills",
-  "nav.contact": "Contact",
-
-  "c.a": "Pl. 03.6",
+  "c.a": "",
   "c.b": "2025, team of three",
   "c.c": "Python · Pygame · Pillow · sockets",
   "lede": "A platform bringing together three board games (Katerenga, Congress and Isolation) playable locally and online, under a single interface.",
   "link.read": "Read the code",
-
   "sujet.t": "Three games, one experience.",
   "sujet.1": "Three games that share a board but not their rules. The point of the project was not writing one of them, but making them cohabit: one interface, one vocabulary of gestures, without the player having to relearn where to click each time the game changes.",
   "sujet.2": "<strong>A team of three.</strong> The original repository lives at <a href=\"https://github.com/simonpotel/Ludoria\">simonpotel</a>; my contributions are verifiable commit by commit.",
-
   "c2": "My part",
   "h.part": "Contribution",
   "p1.t": "Interface and art direction",
@@ -24,12 +17,14 @@
   "p2.p": "Game engines, turn handling, victory conditions: each game has its own, on a shared base.",
   "p3.t": "Computer opponents",
   "p3.p": "Building the bot algorithms, so a game is playable without a human opponent at hand.",
-
   "h.suite": "Next",
   "nav.prev": "Previous plate",
   "nav.up": "Back",
   "nav.up2": "All work",
-
-  "colo.face": "Set in Roboto&nbsp;Flex, <i>opsz</i>, <i>wght</i>, <i>wdth</i> and <i>GRAD</i> axes, subset to Latin, 235&nbsp;KB. Scrolling holds the slider.",
-  "colo.hand": "Written by hand. One library, GSAP, served from this domain. No third-party requests, no tracker. The text reads without JavaScript."
+  "menu": "Menu",
+  "menu.close": "Close",
+  "m.travaux": "Work",
+  "m.stack": "Skills",
+  "m.contact": "Contact",
+  "m.accueil": "Home"
 }

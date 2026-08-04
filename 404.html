@@ -1,37 +1,61 @@
 <!doctype html>
 <html lang="fr">
-<head>
+<head><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Planche introuvable — Noa Tournoy</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#fbfbfc">
 <link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/styles/spec.css">
 </head>
 <body>
 
-<header class="runhead">
-  <a class="mark kin" href="/">Noa Tournoy</a>
-  <a href="/travaux/">Travaux</a>
-  <a href="/savoir-faire/">Savoir-faire</a>
-  <a href="/contact/">Contact</a>
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/">Portfolio</a>
+  <div class="tophead-right">
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+  </div>
 </header>
+</div>
 
 <main id="contenu">
-  <section class="plate inked" aria-labelledby="titre">
-    <p class="cartouche"><span class="plate-no">Erreur 404</span></p>
-    <h1 class="fiche-title kin" id="titre">Planche<br>introuvable</h1>
-    <p class="fiche-spec" lang="en">This plate does not exist.</p>
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label"><span>Erreur 404</span></p>
+    <h1 class="fiche-title" id="titre">Planche<br>introuvable</h1>
+    <p class="hero-sub" lang="en">This plate does not exist.</p>
     <ul class="fiche-links">
       <li><a href="/">Retour à l'accueil</a></li>
       <li><a href="/travaux/">Voir les travaux</a></li>
     </ul>
+  </div>
   </section>
 </main>
+
+<div class="menu" id="menu" hidden>
+  <button class="menu-close" type="button">Fermer</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/travaux/">Travaux</a>
+      <a href="/savoir-faire/">Savoir-faire</a>
+      <a href="/contact/">Contact</a>
+      <a href="/">Accueil</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/travaux/">Travaux</a> · <a href="/contact/">Contact</a></span>
+  </div>
+</footer>
 
 <script src="/scripts/vendor/gsap.min.js" defer></script>
 <script src="/scripts/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/menu.js" defer></script>
 </body>
 </html>
