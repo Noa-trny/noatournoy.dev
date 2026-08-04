@@ -157,31 +157,27 @@ img { max-width: 100%; display: block; }
 }
 .menu[hidden] { display: none; }
 
-/* le voile derrière le tiroir */
+/* pas de voile : la page reste visible derriere, comme la reference.
+   La zone laissee libre reste cliquable pour fermer. */
 .menu::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(10, 11, 13, 0.42);
-  opacity: 0;
-  transition: opacity 0.32s ease;
   pointer-events: auto;
 }
-.menu.is-open::before { opacity: 1; }
 
 .menu-panel {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
-  width: calc(100vw - clamp(2.5rem, 6vw, 5.5rem));
+  width: min(34rem, 92vw);
   display: grid;
-  grid-template-rows: auto 1fr;
-  gap: clamp(2rem, 6vh, 3.5rem);
-  padding: clamp(1.5rem, 4vh, 2.5rem) clamp(2rem, 5vw, 4rem) clamp(3rem, 8vh, 4.5rem);
+  align-content: center;
+  /* le texte colle au bord du panneau */
+  padding: clamp(4.5rem, 12vh, 7rem) clamp(1.1rem, 2vw, 1.9rem);
   background: #fbfbfc;
-  border-left: 1px solid #e6e7ea;
-  box-shadow: -30px 0 70px rgba(16, 18, 22, 0.22);
+  border-left: 1px solid #ececef;
   transform: translateX(100%);
   transition: transform 0.4s cubic-bezier(0.22, 0.7, 0.2, 1);
   pointer-events: auto;
@@ -189,10 +185,14 @@ img { max-width: 100%; display: block; }
 }
 .menu.is-open .menu-panel { transform: translateX(0); }
 
+/* Fermer prend la place exacte de Menu, en haut a droite de l'ecran */
 .menu-close {
-  justify-self: end;
+  position: fixed;
+  top: clamp(1.1rem, 2.5vh, 1.75rem);
+  right: clamp(1.25rem, 5vw, 4.5rem);
+  z-index: 90;
   font: inherit;
-  font-size: 1.05rem;
+  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
   color: #101216;
   background: none;
   border: 0;
@@ -200,18 +200,21 @@ img { max-width: 100%; display: block; }
   cursor: pointer;
   font-variation-settings: "opsz" 20, "wght" 450, "wdth" 100;
   transition: opacity 0.2s ease;
+  opacity: 0;
+  pointer-events: none;
 }
+.menu.is-open .menu-close { opacity: 1; pointer-events: auto; }
 .menu-close:hover { opacity: 0.55; }
 
-.menu nav { display: grid; gap: clamp(0.5rem, 1.8vh, 1.2rem); align-content: center; }
+.menu nav { display: grid; gap: clamp(0.75rem, 2.4vh, 1.5rem); }
 .menu nav a {
-  font-size: clamp(2.6rem, 7.5vw, 6.5rem);
-  line-height: 1.05;
+  font-size: clamp(2.1rem, 4.4vw, 3.6rem);
+  line-height: 1.02;
   text-transform: uppercase;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
   text-decoration: none;
   color: #101216;
-  font-variation-settings: "opsz" 144, "wght" 800, "wdth" 82;
+  font-variation-settings: "opsz" 144, "wght" 800, "wdth" 88;
   transition: color 0.2s ease;
   width: max-content;
 }
