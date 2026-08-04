@@ -30,11 +30,16 @@
       node.textContent.split(/(\s+)/).forEach(function (chunk) {
         if (!chunk) return;
         if (/^\s+$/.test(chunk)) return frag.appendChild(document.createTextNode(chunk));
-        var s = document.createElement("span");
-        s.style.display = "inline-block";
-        s.textContent = chunk;
-        frag.appendChild(s);
-        out.push(s);
+        /* chaque mot monte derrière son propre masque : plus de chevauchement
+           d'une ligne sur l'autre pendant la montée */
+        var mask = document.createElement("span");
+        mask.className = "w";
+        var inner = document.createElement("span");
+        inner.className = "wi";
+        inner.textContent = chunk;
+        mask.appendChild(inner);
+        frag.appendChild(mask);
+        out.push(inner);
       });
       node.parentNode.replaceChild(frag, node);
     });
@@ -132,6 +137,14 @@
       scrollTrigger: { start: 0, end: "max", scrub: 0.25 },
     });
 
+    /* ---- le ciel derive avec le defilement ----------------------------- */
+
+    gsap.to(document.documentElement, {
+      "--sky": 90,
+      ease: "none",
+      scrollTrigger: { start: 0, end: "max", scrub: 1.2 },
+    });
+
     /* ---- la vignette suit le curseur sur la liste --------------------- */
 
     var rows = document.querySelectorAll(".row");
@@ -186,14 +199,14 @@
       var words = splitWords(h1);
       gsap.timeline({ defaults: { ease: "power3.out" } })
         .from(hero.querySelector(".label"), { opacity: 0, y: 14, duration: 0.5 })
-        .from(words, { opacity: 0, yPercent: 110, duration: 0.85, stagger: 0.045 }, "-=0.25")
+        .from(words, { opacity: 0, yPercent: 135, duration: 0.9, stagger: 0.05 }, "-=0.25")
         .from(hero.querySelector(".hero-sub"), { opacity: 0, y: 18, duration: 0.6 }, "-=0.45")
         .from(hero.querySelector(".hero-meta"), { opacity: 0, y: 14, duration: 0.5 }, "-=0.4")
         .from(hero.querySelectorAll(".status > *"), { opacity: 0, y: 22, duration: 0.6, stagger: 0.07 }, "-=0.35");
 
-      gsap.to([h1, hero.querySelector(".hero-sub"), hero.querySelector(".hero-meta")], {
-        yPercent: -18,
-        opacity: 0.15,
+      /* le titre s'echappe ; l'accroche et la ligne de technos restent lisibles */
+      gsap.to(h1, {
+        yPercent: -14,
         ease: "none",
         scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.5 },
       });
@@ -202,8 +215,8 @@
     /* ---- titres et étiquettes ----------------------------------------- */
 
     gsap.utils.toArray(".sec-title").forEach(function (title) {
-      reveal(splitWords(title), { opacity: 0, yPercent: 105 }, {
-        trigger: title, duration: 0.8, stagger: 0.035, ease: "power3.out",
+      reveal(splitWords(title), { opacity: 0, yPercent: 135 }, {
+        trigger: title, duration: 0.85, stagger: 0.04, ease: "power3.out",
       });
     });
 

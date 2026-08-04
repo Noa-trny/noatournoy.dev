@@ -3,7 +3,7 @@
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  inset: -18%;
   z-index: -1;
   pointer-events: none;
   background-image:
@@ -55,5 +55,18 @@ body::before {
     radial-gradient(circle 1px at 90.83% 35.57%, rgba(255,255,255,0.27) 0 1px, transparent 1px);
   background-size: 900px 900px;
   background-repeat: repeat;
-  opacity: 0.55;
+  opacity: 0.5;
+  animation: derive 300s linear infinite;
+  transform: translate3d(0, calc(var(--sky, 0) * -1px), 0);
+  will-change: transform;
+}
+
+/* une derive imperceptible : un tour complet en cinq minutes */
+@keyframes derive {
+  from { background-position: 0 0; }
+  to { background-position: 900px 450px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none; transform: none; }
 }
