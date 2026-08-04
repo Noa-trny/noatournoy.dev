@@ -250,7 +250,7 @@ body.past-hero .progress i { background: var(--acid); }
 }
 
 .hero-sub {
-  max-width: 40ch;
+  max-width: 36ch;
   margin: clamp(1.25rem, 3vh, 1.9rem) 0 0;
   font-size: clamp(1.15rem, 1.6vw, 1.45rem);
   line-height: 1.5;
@@ -291,45 +291,29 @@ body.past-hero .progress i { background: var(--acid); }
 /* ---------- carte du premier écran ---------- */
 
 .hero-card {
+  display: block;
   margin: 0;
-  padding: 0.85rem;
+  padding: 0.75rem;
   border: 1px solid var(--line);
-  border-radius: 22px;
+  border-radius: 26px;
   background: var(--panel);
   box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), box-shadow 0.35s ease;
 }
+.hero-card:hover { transform: translateY(-4px); }
 /* le rapport se pose sur le conteneur : un <picture> en ligne ne donne pas de
    bloc de reference a l'image, et aspect-ratio y reste sans effet */
 .hero-card picture {
   display: block;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
-  border-radius: 14px;
+  border-radius: 18px;
 }
 .hero-card img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.hero-card figcaption {
-  display: grid;
-  gap: 0.25rem;
-  padding: 0.95rem 0.4rem 0.35rem;
-}
-.hero-card-k {
-  font-size: var(--t-label);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: var(--dim-2);
-  font-variation-settings: "opsz" 8, "wght" 600, "wdth" 100;
-}
-.hero-card figcaption a {
-  font-size: 1.25rem;
-  text-decoration: none;
-  font-variation-settings: "opsz" 20, "wght" 700, "wdth" 100;
-}
-.hero-card figcaption a:hover { color: var(--acid); }
-.hero-card-n { font-size: var(--t-sm); color: var(--dim); }
 
 
 /* ---------- zone claire du premier écran ---------- */
@@ -348,7 +332,10 @@ body.past-hero .progress i { background: var(--acid); }
   position: relative;
   background: #fbfbfc;
   color: var(--fg);
-  padding-block: clamp(3rem, 9vh, 6rem) clamp(3.5rem, 10vh, 7rem);
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  padding-block: clamp(4rem, 10vh, 7rem);
 }
 /* la grille de points, en sombre sur le clair */
 .hero.light::before {

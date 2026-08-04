@@ -1,12 +1,9 @@
 {
   "doc.title": "Noa Tournoy — software engineering, development and cybersecurity",
   "doc.desc": "Noa Tournoy, engineering student in Lille, France. Full-stack development, data and cybersecurity. Two internships taken through to production; joining ADEO as a cybersecurity apprentice in October 2026.",
-  "hero.label": "Lille, France · Available",
   "hero.h1": "Noa Tournoy",
   "hero.sub": "Software engineering student focused on <b>cybersecurity</b> and solid across the full stack — <b>Python</b>, <b>TypeScript</b>, <b>Docker</b>. Two internships taken through to production, and an apprenticeship at <b>ADEO</b> from October 2026.",
   "hero.cta": "See my work",
-  "hero.card.k": "Latest work",
-  "hero.card.n": "A 3D web experience, fully procedural",
   "st1.k": "Right now",
   "st1.v": "Engineering degree",
   "st1.n": "SUPINFO, 2024 → 2029",
