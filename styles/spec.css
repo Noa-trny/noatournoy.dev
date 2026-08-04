@@ -443,6 +443,46 @@ img { max-width: 100%; display: block; }
 .foot-in { display: flex; flex-wrap: wrap; gap: 0.75rem 2rem; justify-content: space-between; }
 .foot a { color: var(--dim); }
 
+.pills.big li {
+  font-size: var(--t-sm);
+  letter-spacing: 0.02em;
+  text-transform: none;
+  padding: 0.4rem 0.8rem;
+}
+
+/* ---------- jauge de progression ---------- */
+
+.progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 2px;
+  z-index: 60;
+  background: var(--acid);
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+/* ---------- rail de la frise ---------- */
+
+.time { position: relative; }
+.time-rail {
+  position: absolute;
+  left: -1.25rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--acid);
+  transform: scaleY(0);
+  transform-origin: 50% 0;
+  opacity: 0.85;
+}
+@media (max-width: 40rem) { .time-rail { display: none; } }
+
+/* la capture respire dans son cadre */
+.work-shot { overflow: hidden; }
+.work-shot img { will-change: transform; }
+
 /* ---------- entrées ---------- */
 
 @media (prefers-reduced-motion: reduce) {

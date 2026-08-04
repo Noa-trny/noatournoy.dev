@@ -1,6 +1,10 @@
-/* Les entrées. Uniquement transform et opacity : rien qui change une largeur,
-   donc rien qui relayoute pendant le défilement.
-   Sans JavaScript, tout est déjà en place et visible. */
+/* Les animations de défilement.
+   Deux règles qui ne se négocient pas :
+   1. uniquement transform et opacity — rien qui change une largeur, donc rien
+      qui relayoute pendant qu'on lit ;
+   2. tout ce qui dépend du défilement passe par fromTo sans rendu immédiat —
+      un déclencheur muet laisse le contenu à son état normal, jamais invisible.
+   Sans JavaScript, la page est déjà complète. */
 (function () {
   "use strict";
 
@@ -13,47 +17,150 @@
     document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
   }
 
+  /* découpe un titre en mots sans altérer le texte lu à voix haute */
+  function splitWords(el) {
+    if (!el || el.dataset.split) return [];
+    var out = [];
+    Array.prototype.slice.call(el.childNodes).forEach(function (node) {
+      if (node.nodeType !== 3) {
+        if (node.nodeType === 1) out.push(node);
+        return;
+      }
+      var frag = document.createDocumentFragment();
+      node.textContent.split(/(\s+)/).forEach(function (chunk) {
+        if (!chunk) return;
+        if (/^\s+$/.test(chunk)) return frag.appendChild(document.createTextNode(chunk));
+        var s = document.createElement("span");
+        s.style.display = "inline-block";
+        s.textContent = chunk;
+        frag.appendChild(s);
+        out.push(s);
+      });
+      node.parentNode.replaceChild(frag, node);
+    });
+    el.dataset.split = "1";
+    return out;
+  }
+
   gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", function () {
-    function enter(targets, trigger, stagger) {
-      if (!targets || !targets.length) return;
-      gsap.fromTo(
-        targets,
-        { opacity: 0, y: 22 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.65,
-          stagger: stagger,
-          ease: "power2.out",
-          immediateRender: false,
-          scrollTrigger: { trigger: trigger, start: "top 88%", once: true },
-        }
-      );
+    /* révélation sûre : l'état de départ n'est pose qu'au moment du déclenchement */
+    function reveal(targets, from, opts) {
+      var list = targets && targets.length ? targets : null;
+      if (!list) return;
+      var to = { opacity: 1, x: 0, y: 0, yPercent: 0, scale: 1 };
+      to.duration = opts.duration || 0.65;
+      to.stagger = opts.stagger || 0;
+      to.ease = opts.ease || "power2.out";
+      to.immediateRender = false;
+      to.scrollTrigger = {
+        trigger: opts.trigger,
+        start: opts.start || "top 88%",
+        once: true,
+      };
+      gsap.fromTo(list, from, to);
     }
+
+    /* ---- jauge de progression ---------------------------------------- */
+
+    var bar = document.createElement("div");
+    bar.className = "progress";
+    document.body.appendChild(bar);
+    gsap.to(bar, {
+      scaleX: 1,
+      ease: "none",
+      scrollTrigger: { start: 0, end: "max", scrub: 0.2 },
+    });
+
+    /* ---- premier écran ------------------------------------------------ */
+    /* joue au chargement, sans déclencheur : from est sûr ici */
 
     var hero = document.querySelector(".hero");
     if (hero) {
-      gsap.from(hero.children, {
-        opacity: 0,
-        y: 26,
-        duration: 0.7,
-        stagger: 0.09,
-        ease: "power2.out",
+      var h1 = hero.querySelector("h1");
+      var words = splitWords(h1);
+      gsap.timeline({ defaults: { ease: "power3.out" } })
+        .from(hero.querySelector(".label"), { opacity: 0, y: 14, duration: 0.5 })
+        .from(words, { opacity: 0, yPercent: 110, duration: 0.85, stagger: 0.045 }, "-=0.25")
+        .from(hero.querySelector(".hero-sub"), { opacity: 0, y: 18, duration: 0.6 }, "-=0.45")
+        .from(hero.querySelector(".hero-meta"), { opacity: 0, y: 14, duration: 0.5 }, "-=0.4")
+        .from(hero.querySelectorAll(".status > *"), { opacity: 0, y: 22, duration: 0.6, stagger: 0.07 }, "-=0.35");
+
+      gsap.to([h1, hero.querySelector(".hero-sub"), hero.querySelector(".hero-meta")], {
+        yPercent: -18,
+        opacity: 0.15,
+        ease: "none",
+        scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: 0.5 },
       });
     }
 
-    gsap.utils.toArray(".work").forEach(function (card) {
-      enter([card], card, 0);
+    /* ---- titres et étiquettes ----------------------------------------- */
+
+    gsap.utils.toArray(".sec-title").forEach(function (title) {
+      reveal(splitWords(title), { opacity: 0, yPercent: 105 }, {
+        trigger: title, duration: 0.8, stagger: 0.035, ease: "power3.out",
+      });
     });
 
-    gsap.utils.toArray(".sec").forEach(function (sec) {
-      var head = sec.querySelectorAll(".label, .sec-title");
-      enter(head, sec, 0.08);
-      var rows = sec.querySelectorAll(".time > li");
-      if (rows.length) enter(rows, sec.querySelector(".time"), 0.05);
+    gsap.utils.toArray(".label").forEach(function (l) {
+      if (l.closest(".hero")) return;
+      reveal([l], { opacity: 0, x: -12 }, { trigger: l, duration: 0.5, start: "top 92%" });
     });
+
+    /* ---- cartes de travaux -------------------------------------------- */
+
+    gsap.utils.toArray(".work").forEach(function (card) {
+      reveal([card], { opacity: 0, y: 40 }, { trigger: card, duration: 0.75, start: "top 90%" });
+
+      /* la capture dérive dans son cadre pendant qu'on la dépasse */
+      var img = card.querySelector(".work-shot img");
+      if (img) {
+        gsap.fromTo(
+          img,
+          { yPercent: -6, scale: 1.12 },
+          {
+            yPercent: 6,
+            scale: 1.12,
+            ease: "none",
+            scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 0.6 },
+          }
+        );
+      }
+
+      reveal(card.querySelectorAll(".work-points li"), { opacity: 0, x: -10 }, {
+        trigger: card, duration: 0.45, stagger: 0.06, start: "top 82%",
+      });
+      reveal(card.querySelectorAll(".pills li"), { opacity: 0, y: 10 }, {
+        trigger: card, duration: 0.4, stagger: 0.035, start: "top 78%",
+      });
+    });
+
+    /* ---- frises : le rail se trace, les lignes suivent ---------------- */
+
+    gsap.utils.toArray(".time").forEach(function (list) {
+      var rail = document.createElement("span");
+      rail.className = "time-rail";
+      rail.setAttribute("aria-hidden", "true");
+      list.appendChild(rail);
+
+      gsap.to(rail, {
+        scaleY: 1,
+        ease: "none",
+        scrollTrigger: { trigger: list, start: "top 80%", end: "bottom 60%", scrub: 0.4 },
+      });
+
+      reveal(list.querySelectorAll(":scope > li"), { opacity: 0, x: 18 }, {
+        trigger: list, duration: 0.55, stagger: 0.08, start: "top 85%",
+      });
+    });
+
+    /* ---- appel final --------------------------------------------------- */
 
     var cta = document.querySelector(".cta");
-    if (cta) enter([cta], cta, 0);
+    if (cta) {
+      reveal([cta], { opacity: 0, y: 36 }, { trigger: cta, duration: 0.7 });
+      reveal(cta.querySelectorAll(".btn"), { opacity: 0, y: 14 }, {
+        trigger: cta, duration: 0.45, stagger: 0.08, start: "top 80%",
+      });
+    }
   });
 })();
