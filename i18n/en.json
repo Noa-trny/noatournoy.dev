@@ -58,5 +58,12 @@
   "t.contact": "A technical question, a collaboration,<br>or just one of the projects that stopped you?",
   "foot.a": "Noa Tournoy — Lille, France",
   "foot.b": "Work",
-  "foot.c": "Contact"
+  "foot.c": "Contact",
+  "menu": "Menu",
+  "m.travaux": "Work",
+  "m.parcours": "Path",
+  "m.stack": "Stack",
+  "m.certs": "Certifications",
+  "m.contact": "Contact",
+  "menu.close": "Close"
 }

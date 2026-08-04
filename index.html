@@ -18,15 +18,21 @@
 </head>
 <body>
 
-<div class="lang" data-lang-bar role="group" aria-label="Langue">
-  <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
-  <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
-</div>
-
 <main id="contenu">
 
   <section class="hero light" aria-labelledby="titre">
-   <div class="wrap">
+   <header class="tophead wrap">
+     <a class="mark" href="/">Portfolio</a>
+     <div class="tophead-right">
+       <div class="lang" data-lang-bar role="group" aria-label="Langue">
+         <button type="button" data-lang="fr" aria-pressed="true" lang="fr">FR</button>
+         <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+       </div>
+       <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-i18n="menu">Menu</button>
+     </div>
+   </header>
+
+   <div class="wrap hero-in">
     <div class="hero-grid">
       <div class="hero-text">
         <h1 id="titre" data-i18n="hero.h1">Noa Tournoy</h1>
@@ -321,6 +327,22 @@
   </div>
 </main>
 
+<div class="menu" id="menu" hidden>
+  <button class="menu-close" type="button" data-i18n="menu.close">Fermer</button>
+  <nav aria-label="Sections">
+    <a href="#travaux" data-i18n="m.travaux">Travaux</a>
+    <a href="#parcours" data-i18n="m.parcours">Parcours</a>
+    <a href="#stack" data-i18n="m.stack">Stack</a>
+    <a href="#certifications" data-i18n="m.certs">Certifications</a>
+    <a href="#contact" data-i18n="m.contact">Contact</a>
+  </nav>
+  <p class="menu-foot">
+    <a href="https://github.com/Noa-trny">GitHub</a>
+    <a href="https://www.linkedin.com/in/noa-tournoy/">LinkedIn</a>
+    <a href="mailto:noa.tournoy@supinfo.com">noa.tournoy@supinfo.com</a>
+  </p>
+</div>
+
 <a class="side-mail" href="mailto:noa.tournoy@supinfo.com">noa.tournoy@supinfo.com</a>
 
 <footer class="foot">
@@ -333,6 +355,7 @@
 <script src="/scripts/vendor/gsap.min.js" defer></script>
 <script src="/scripts/vendor/ScrollTrigger.min.js" defer></script>
 <script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/menu.js" defer></script>
 <script src="/scripts/i18n.js" defer></script>
 </body>
 </html>
