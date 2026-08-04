@@ -62,10 +62,27 @@
       to.immediateRender = false;
       to.scrollTrigger = {
         trigger: opts.trigger,
-        start: opts.start || "top 88%",
+        /* Toujours au bas du cadre. Avec un rendu differe, GSAP ne pose
+           l'etat de depart qu'au moment ou le declencheur part : si ce
+           moment arrive alors que l'element est deja visible, on le voit
+           disparaitre d'un coup avant de reapparaitre. Declencher sous la
+           ligne de flottaison met ce saut hors champ. */
+        start: opts.start || "top bottom",
         once: true,
       };
       gsap.fromTo(list, from, to);
+    }
+
+    /* Sur une liste haute, declencher sur le conteneur fait jouer les
+       dernieres lignes bien avant qu'on les atteigne. Chacune porte donc
+       son propre declencheur. */
+    function revelerChacun(sel, from, opts) {
+      gsap.utils.toArray(sel).forEach(function (el) {
+        var o = { trigger: el };
+        for (var k in opts) if (opts[k] !== undefined) o[k] = opts[k];
+        o.stagger = 0;
+        reveal([el], from, o);
+      });
     }
 
     /* ---- projecteur au curseur ---------------------------------------- */
@@ -203,12 +220,8 @@
 
     /* ---- les lignes de la liste entrent une à une --------------------- */
 
-    reveal(document.querySelectorAll(".row"), { opacity: 0, y: 26 }, {
-      trigger: document.querySelector(".rows"), duration: 0.6, stagger: 0.07,
-    });
-    reveal(document.querySelectorAll(".ghost-row"), { opacity: 0, x: -22 }, {
-      trigger: document.querySelector(".ghosts"), duration: 0.6, stagger: 0.07,
-    });
+    revelerChacun(".row", { opacity: 0, y: 26 }, { duration: 0.6 });
+    revelerChacun(".ghost-row", { opacity: 0, x: -22 }, { duration: 0.6 });
 
     /* ---- premier écran ------------------------------------------------ */
     /* joue au chargement, sans déclencheur : from est sûr ici */
@@ -241,7 +254,7 @@
 
     gsap.utils.toArray(".label").forEach(function (l) {
       if (l.closest(".hero")) return;
-      reveal([l], { opacity: 0, x: -12 }, { trigger: l, duration: 0.5, start: "top 92%" });
+      reveal([l], { opacity: 0, x: -12 }, { trigger: l, duration: 0.5 });
     });
 
     /* ---- cartes de travaux -------------------------------------------- */
@@ -260,9 +273,8 @@
         scrollTrigger: { trigger: list, start: "top 80%", end: "bottom 60%", scrub: 0.4 },
       });
 
-      reveal(list.querySelectorAll(":scope > li"), { opacity: 0, x: 18 }, {
-        trigger: list, duration: 0.55, stagger: 0.08, start: "top 85%",
-      });
+      revelerChacun(list.querySelectorAll(":scope > li"), { opacity: 0, x: 18 },
+        { duration: 0.55 });
     });
 
     /* ---- appel final --------------------------------------------------- */
@@ -271,7 +283,7 @@
     if (cta) {
       reveal([cta], { opacity: 0, y: 36 }, { trigger: cta, duration: 0.7 });
       reveal(cta.querySelectorAll(".btn"), { opacity: 0, y: 14 }, {
-        trigger: cta, duration: 0.45, stagger: 0.08, start: "top 80%",
+        trigger: cta, duration: 0.45, stagger: 0.08,
       });
     }
   });
