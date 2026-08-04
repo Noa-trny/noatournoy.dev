@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SupKonQuest — Noa Tournoy</title>
+<meta name="description" content="SupKonQuest: a multiplayer real-time strategy game. Godot 4.6 client, authoritative C++20 server targeting a Raspberry Pi 5, binary TCP protocol, procedural maps.">
+<meta name="theme-color" content="#fbfbfc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SupKonQuest — Noa Tournoy">
+<meta property="og:description" content="SupKonQuest: a multiplayer real-time strategy game. Godot 4.6 client, authoritative C++20 server targeting a Raspberry Pi 5, binary TCP protocol, procedural maps.">
+<meta property="og:url" content="https://noatournoy.dev/en/work/supkonquest/">
+<meta property="og:image" content="https://noatournoy.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/supkonquest/">
+<link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/supkonquest/">
+<link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/supkonquest/">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://noatournoy.dev/en/work/supkonquest/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin="">
+<link rel="stylesheet" href="/styles/spec.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Skip to content</a>
+
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/en/">Portfolio</a>
+  <div class="tophead-right">
+    <div class="lang" role="group" aria-label="Language">
+        <a href="/travaux/supkonquest/" lang="fr" hreflang="fr">FR</a>
+        <a href="/en/work/supkonquest/" lang="en" hreflang="en" aria-current="true">EN</a>
+      </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+  </div>
+</header>
+</div>
+
+<main id="contenu" tabindex="-1">
+
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label">
+      <span></span>
+      <span>2026, under Carton Studio's</span>
+      <span>Godot 4.6 · C++20 · binary TCP</span>
+    </p>
+    <h1 class="fiche-title" id="titre">SupKonQuest</h1>
+    <p class="hero-sub">A multiplayer real-time strategy game in the spirit of Risk: a Godot client, an authoritative C++ server, and nothing between them but a binary protocol.</p>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="sujet">
+    <div class="wrap">
+    <h2 class="sec-title" id="sujet">The server decides, the client draws.</h2>
+    <div class="prose">
+      <p>The architecture is server-authoritative: the server holds the game state, the client only represents it and sends intentions. It is the choice that costs the most to write, and the one that makes cheating structurally impossible.</p>
+      <p>Two repositories, two languages, one truth. The server is C++20 and targets a Raspberry Pi 5; the client is Godot 4.6. They speak over TCP through a versioned binary protocol, written for this game rather than lifted from a generic library.</p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="fait">
+    <div class="wrap">
+    <p class="label"><span>What it runs</span></p>
+    <h2 class="sr-only" id="fait">Delivery</h2>
+    <div class="prose">
+      <h3>Generated maps</h3>
+      <p>The map is produced procedurally on the server, in three configurations, then sent to the client. No map is stored: they are recomputed.</p>
+
+      <h3>A complete game</h3>
+      <p>Unit selection and movement, formations, camp capture, income, spells, end-of-game conditions, a computer opponent, and a leaderboard reachable from the menu. The game ends, which is the part of the work everyone underestimates.</p>
+
+      <h3>Three languages</h3>
+      <p>The client is translated into French, English and Spanish, with the language switch in the settings.</p>
+
+      <h3>The hardware constraint</h3>
+      <p>Targeting a Raspberry Pi 5 for deployment is not an affectation: on a machine that size, a drifting game loop or a chatty protocol shows up immediately. The constraint does the profiler's job.</p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="acces">
+    <div class="wrap">
+    <h2 class="sr-only" id="acces">Access to the code</h2>
+    <div class="prose">
+      <p>Both repositories are private, under the Carton Studio's organisation. I am happy to talk them through in an interview; I cannot open them here.</p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="suite">
+    <div class="wrap">
+    <h2 class="sr-only" id="suite">Next</h2>
+    <nav class="next" aria-label="Travaux">
+      <a href="/en/work/datasentinel/"><span class="dir">Previous project</span>DataSentinel</a>
+      <a href="/en/work/gamedex/"><span class="dir">Next project</span>Gamedex</a>
+    </nav>
+  </div>
+  </section>
+
+</main>
+
+<div class="menu" id="menu" hidden="">
+  <button class="menu-close" type="button">Close</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/en/work/">Work</a>
+      <a href="/en/skills/">Skills</a>
+      <a href="/en/contact/">Contact</a>
+      <a href="/en/">Home</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/en/work/">Travaux</a> · <a href="/en/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script src="/scripts/vendor/gsap.min.js" defer=""></script>
+<script src="/scripts/vendor/ScrollTrigger.min.js" defer=""></script>
+<script src="/scripts/kinetic.js" defer=""></script>
+<script src="/scripts/menu.js" defer=""></script>
+
+
+
+</body></html>

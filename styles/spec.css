@@ -95,21 +95,23 @@ img { max-width: 100%; display: block; }
   padding: 0;
   background: #ffffff;
 }
-.lang button {
-  font: inherit;
+/* Chaque langue a son adresse : la bascule est faite de liens, pas de
+   boutons, et la langue courante se signale par aria-current. */
+.lang a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: var(--t-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: #16181c;
-  background: transparent;
-  border: 0;
+  text-decoration: none;
   padding: 0.5rem 0.7rem;
   min-height: 34px;
-  cursor: pointer;
   transition: color 0.18s ease, background 0.18s ease;
 }
-.lang button:hover { color: #101216; }
-.lang button[aria-pressed="true"] { background: #101216; color: #ffffff; }
+.lang a:hover { color: #101216; }
+.lang a[aria-current] { background: #101216; color: #ffffff; }
 
 
 
@@ -1228,11 +1230,13 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 /* ---------- cibles tactiles ---------- */
 
 /* WCAG 2.5.8 demande 24 px, la bonne pratique 44 : on vise 44 partout. */
-.lang button { min-width: 48px; min-height: 44px; }
+.lang a { min-width: 48px; min-height: 44px; }
 .menu-btn, .menu-close { min-height: 44px; padding-inline: 0.5rem; }
 .tophead .mark { display: inline-flex; align-items: center; min-height: 44px; }
 .more { min-height: 44px; align-items: center; }
-.foot a { display: inline-block; padding-block: 0.75rem; }
+/* Les mots anglais sont plus courts : « Work » tombe a 32 px la ou
+   « Travaux » en faisait 60. On fixe un plancher a la cible, pas au texte. */
+.foot a { display: inline-block; padding-block: 0.75rem; min-width: 44px; text-align: center; }
 .foot-in { align-items: center; }
 .row-title a { display: block; padding-block: 0.35rem; }
 .menu nav a { min-height: 44px; align-content: center; }

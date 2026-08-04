@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gamedex — Noa Tournoy</title>
+<meta name="description" content="Gamedex: a video game catalogue on the RAWG API. React, TypeScript, Vite. Search, filters, sorting, infinite scroll, persistent favourites, Cypress tests. Built as a pair.">
+<meta name="theme-color" content="#fbfbfc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gamedex — Noa Tournoy">
+<meta property="og:description" content="Gamedex: a video game catalogue on the RAWG API. React, TypeScript, Vite. Search, filters, sorting, infinite scroll, persistent favourites, Cypress tests. Built as a pair.">
+<meta property="og:url" content="https://noatournoy.dev/en/work/gamedex/">
+<meta property="og:image" content="https://noatournoy.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/gamedex/">
+<link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/gamedex/">
+<link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/gamedex/">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://noatournoy.dev/en/work/gamedex/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin="">
+<link rel="stylesheet" href="/styles/spec.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Skip to content</a>
+
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/en/">Portfolio</a>
+  <div class="tophead-right">
+    <div class="lang" role="group" aria-label="Language">
+        <a href="/travaux/gamedex/" lang="fr" hreflang="fr">FR</a>
+        <a href="/en/work/gamedex/" lang="en" hreflang="en" aria-current="true">EN</a>
+      </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+  </div>
+</header>
+</div>
+
+<main id="contenu" tabindex="-1">
+
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label">
+      <span></span>
+      <span>2026, pair project, 2WEBD module</span>
+      <span>React · TypeScript · Vite · Cypress</span>
+    </p>
+    <h1 class="fiche-title" id="titre">Gamedex</h1>
+    <p class="hero-sub">A video game catalogue built on the RAWG API: search, filters by platform and store, sorting, infinite scroll, detail pages, and favourites that survive a reload.</p>
+    <ul class="fiche-links">
+      <li><a href="https://github.com/Noa-trny/Gamedex">Read the code</a></li>
+    </ul>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="sujet">
+    <div class="wrap">
+    <h2 class="sec-title" id="sujet">A real application, not a demo.</h2>
+    <div class="prose">
+      <p>Five actual routes: the game list with search, filters and infinite scroll; a game's detail page with its description, trailer, achievements and their unlock rates, studios and publishers; every game from a publisher; favourites; and an error page that takes you somewhere.</p>
+      <p>Favourites live in a React context backed by local storage: the state persists without a server. The API key sits in an environment file that is never committed: it appears nowhere in the source.</p>
+      <p>Built <strong>as a pair</strong> with Antoine Delebecque, for the 2WEBD module. Type checking, static analysis and an end-to-end journey under Cypress are part of the repository's scripts.</p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="suite">
+    <div class="wrap">
+    <h2 class="sr-only" id="suite">Next</h2>
+    <nav class="next" aria-label="Travaux">
+      <a href="/en/work/supkonquest/"><span class="dir">Previous project</span>SupKonQuest</a>
+      <a href="/en/work/laying-grass/"><span class="dir">Next project</span>laying_grass</a>
+    </nav>
+  </div>
+  </section>
+
+</main>
+
+<div class="menu" id="menu" hidden="">
+  <button class="menu-close" type="button">Close</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/en/work/">Work</a>
+      <a href="/en/skills/">Skills</a>
+      <a href="/en/contact/">Contact</a>
+      <a href="/en/">Home</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/en/work/">Travaux</a> · <a href="/en/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script src="/scripts/vendor/gsap.min.js" defer=""></script>
+<script src="/scripts/vendor/ScrollTrigger.min.js" defer=""></script>
+<script src="/scripts/kinetic.js" defer=""></script>
+<script src="/scripts/menu.js" defer=""></script>
+
+
+
+</body></html>

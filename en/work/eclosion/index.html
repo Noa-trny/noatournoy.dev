@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Éclosion — Noa Tournoy</title>
+<meta name="description" content="Éclosion: a 3D web experience where scrolling is time. Eight acts, fully procedural. First-visit payload cut by 19%, a 617 ms freeze eliminated.">
+<meta name="theme-color" content="#fbfbfc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Éclosion — Noa Tournoy">
+<meta property="og:description" content="Éclosion: a 3D web experience where scrolling is time. Eight acts, fully procedural. First-visit payload cut by 19%, a 617 ms freeze eliminated.">
+<meta property="og:url" content="https://noatournoy.dev/en/work/eclosion/">
+<meta property="og:image" content="https://noatournoy.dev/travaux/eclosion/img/dawn-1400.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/eclosion/">
+<link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/eclosion/">
+<link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/eclosion/">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://noatournoy.dev/en/work/eclosion/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin="">
+<link rel="stylesheet" href="/styles/spec.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Skip to content</a>
+
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/en/">Portfolio</a>
+  <div class="tophead-right">
+    <div class="lang" role="group" aria-label="Language">
+        <a href="/travaux/eclosion/" lang="fr" hreflang="fr">FR</a>
+        <a href="/en/work/eclosion/" lang="en" hreflang="en" aria-current="true">EN</a>
+      </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+  </div>
+</header>
+</div>
+
+<main id="contenu" tabindex="-1">
+
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label">
+      <span></span>
+      <span>2026, solo, end to end</span>
+      <span>Next.js · React Three Fiber · GLSL · WebAudio</span>
+    </p>
+    <h1 class="fiche-title" id="titre">Éclosion</h1>
+    <p class="hero-sub">A 3D web experience where scrolling is time: eight acts, from the Void to the Dawn, travelled with the wheel, from a seed's first beat to the world's first sunrise.</p>
+    <ul class="fiche-links">
+      <li><a href="https://eclosion.noatournoy.dev">See the experience</a></li>
+      <li><a href="https://github.com/Noa-trny/eclosion">Read the code</a></li>
+    </ul>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="sujet">
+    <div class="wrap">
+    <h2 class="sec-title" id="sujet">One hundred per cent procedural.</h2>
+    <div class="prose">
+      <p>No 3D models, no textures, no audio files, no external requests at runtime. Geometry, materials (noise and FBM in GLSL), over a hundred thousand particles and the music itself (pure WebAudio synthesis) are produced by the code. One deliberate exception: the typeface, committed to the repository.</p>
+      <p>Roughly 11,600 lines across 195 files. Next.js 15, React 19, strict TypeScript, Three.js and React Three Fiber, GSAP ScrollTrigger, Lenis, zustand, WebAudio.</p>
+    </div>
+
+    <figure class="figure" style="margin-top: clamp(2rem, 5vh, 3.5rem)">
+      <picture>
+        <source type="image/webp" srcset="/travaux/eclosion/img/dawn-700.webp 700w, /travaux/eclosion/img/dawn-1400.webp 1400w" sizes="(min-width: 60rem) 60rem, 100vw">
+        <img src="/travaux/eclosion/img/dawn.jpg" alt="L'aube d'Éclosion : le soleil affleure l'horizon au-dessus d'un relief procédural." width="1400" height="788" loading="lazy" decoding="async">
+      </picture>
+      <figcaption>The Dawn, final act. The solar disc ignores the fog so it can clear the bloom threshold.</figcaption>
+    </figure>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="choix">
+    <div class="wrap">
+    <p class="label"><span>Three decisions that shape everything</span></p>
+    <h2 class="sr-only" id="choix">Technical decisions</h2>
+
+    <div class="prose">
+      <h3>The scroll contract: zero React renders at 60 frames per second</h3>
+      <p>One smoothing layer (Lenis), one master ScrollTrigger scrubbing a GSAP timeline of duration 1, and a registry of mutable uniforms that the tweens write and the renderer reads every frame, never through a React render. React only wakes up on act changes. The DOM text follows through a single MotionValue, also outside React.</p>
+
+      <h3>One world, one truth</h3>
+      <p>An analytic function <strong>groundHeight(x, z)</strong> generates the visible terrain, constrains walking in free-roam, bounces the physics and bounds the birds' flight. What you see is exactly what you touch. Same logic for the camera: a single continuous CatmullRom curve, each act travelling to the first point of the next. No cut across the whole film.</p>
+
+      <h3>Stateless particles</h3>
+      <p>Every behaviour (rain, curl-noise fireflies, embers, the final vortex) is a closed function of (seed, time) evaluated in the vertex shader. No simulation to maintain, no GPU round trip. Buffers are allocated once at the highest quality level; changing tier only moves a setDrawRange.</p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="mesures">
+    <div class="wrap">
+    <p class="label"><span>The engineering, in numbers</span></p>
+    <h2 class="sr-only" id="mesures">Measurements</h2>
+
+    <table class="measures">
+      <caption>Integrated-GPU bench forced to the highest tier, the worst measurable case.</caption>
+      <thead>
+        <tr>
+          <th scope="col">Measurement</th>
+          <th scope="col">Before</th>
+          <th scope="col">After</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">First-visit payload</th>
+          <td>422 Kio</td>
+          <td class="after">342 Kio<span aria-hidden="true"> · −19 %</span></td>
+        </tr>
+        <tr>
+          <th scope="row">Worst frame at act boundaries</th>
+          <td>617 ms</td>
+          <td class="after">167 ms</td>
+        </tr>
+        <tr>
+          <th scope="row">Forest trees, at equal frame cost</th>
+          <td>420</td>
+          <td class="after">630</td>
+        </tr>
+        <tr>
+          <th scope="row">Lighthouse : accessibility, best practices, SEO</th>
+          <td>—</td>
+          <td class="after">100 / 100 / 100</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="prose" style="margin-top: clamp(2rem, 5vh, 3rem)">
+      <h3>The 19%</h3>
+      <p>The italic font, 80 KB preloaded at high priority, was rendered nowhere. A single occurrence of the word "italic" in the entire codebase: its own declaration.</p>
+
+      <h3>The 617 ms</h3>
+      <p>Three stalls stacked at every act boundary, untangled with the CPU profiler and GL hooks placed on <strong>linkProgram</strong>:</p>
+      <ul>
+        <li><strong>the cache-key trap</strong>: post-processing renders the scene under its own renderer state, so all shader warm-up was compiling programs the real render never used, and the first visible frame relinked everything;</li>
+        <li><strong>the link wait</strong>: an act would draw as soon as the camera swept it, ready or not;</li>
+        <li><strong>the driver's deferred reflection</strong>: even linked, a program pays for its first introspection, about 180 ms each on an integrated GPU.</li>
+      </ul>
+      <p>The answer: each act mounts invisible, compiles under the composer's state, gets one program introspected per frame, then reveals itself, all of it covered by the scene's fog. No visual change, smooth boundaries.</p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="debug">
+    <div class="wrap">
+    <h2 class="sec-title" id="debug">Nothing gets fixed without being seen.</h2>
+    <div class="prose">
+      <p>A CDP harness drives a real Chrome: enter the experience, jump to a precise beat, capture, before and after, for every rendering change. Speed-linked effects have to be captured mid-scroll; a still capture shows nothing. The GPU tier is forced by injecting the renderer string.</p>
+
+      <h3>The sun that wouldn't ignite</h3>
+      <p>The dawn disc rendered grey. Exponential fog was eating 99.5% of it at that distance, and its luminance ceiling stayed below the bloom threshold: "bright enough to bloom", said the comment; it had never been true. The fix: the sun ignores the fog (the moon re-emulates it identically in JavaScript) and an ignition curve clears the threshold: ember below the horizon, gold at grazing, cream at the zenith.</p>
+
+      <h3>The ocean's lines</h3>
+      <p>One symptom, "white streaks", turned out to be five stacked defects, each masking the next: motion-blur ghosting, light-shaft edges, the night sky dome visible underwater, the Gerstner sheet's edge, an overlit floor. The method that finally won: mask components one by one to isolate the source before touching a single shader.</p>
+    </div>
+
+    <div class="plates-grid" style="margin-top: clamp(2rem, 5vh, 3.5rem)">
+      <figure class="figure">
+        <picture>
+          <source type="image/webp" srcset="/travaux/eclosion/img/void-constellations-700.webp 700w, /travaux/eclosion/img/void-constellations-1400.webp 1400w" sizes="(min-width: 60rem) 30rem, 100vw">
+          <img src="/travaux/eclosion/img/void-constellations.jpg" alt="Le Néant : des constellations tracées sur un ciel vide." width="1400" height="788" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>The Void, generated constellations, no horizon.</figcaption>
+      </figure>
+      <figure class="figure">
+        <picture>
+          <source type="image/webp" srcset="/travaux/eclosion/img/storm-700.webp 700w, /travaux/eclosion/img/storm-1400.webp 1400w" sizes="(min-width: 60rem) 30rem, 100vw">
+          <img src="/travaux/eclosion/img/storm.jpg" alt="L'orage : pluie dense et éclairs au-dessus du relief." width="1400" height="788" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>The Storm, captured mid-scroll, the only way to see the speed blur.</figcaption>
+      </figure>
+      <figure class="figure">
+        <picture>
+          <source type="image/webp" srcset="/travaux/eclosion/img/forest-700.webp 700w, /travaux/eclosion/img/forest-1400.webp 1400w" sizes="(min-width: 60rem) 30rem, 100vw">
+          <img src="/travaux/eclosion/img/forest.jpg" alt="La forêt : des centaines d'arbres générés en instances." width="1400" height="788" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>The Forest, 630 trees across five InstancedMesh, at unchanged frame cost.</figcaption>
+      </figure>
+      <figure class="figure">
+        <picture>
+          <source type="image/webp" srcset="/travaux/eclosion/img/ocean-700.webp 700w, /travaux/eclosion/img/ocean-1400.webp 1400w" sizes="(min-width: 60rem) 30rem, 100vw">
+          <img src="/travaux/eclosion/img/ocean.jpg" alt="L'océan : une nappe de Gerstner traversée de fûts de lumière." width="1400" height="788" loading="lazy" decoding="async">
+        </picture>
+        <figcaption>The Ocean, a Gerstner sheet and light shafts below the surface.</figcaption>
+      </figure>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="qualite">
+    <div class="wrap">
+    <p class="label"><span>Holding quality over time</span></p>
+    <h2 class="sr-only" id="qualite">Quality and accessibility</h2>
+    <div class="prose">
+      <ul>
+        <li><strong>Continuous integration on every push</strong>: strict linting (the <code>any</code> type is banned), strict TypeScript, 16 unit tests (act tiling, seeded pseudo-random generator, analytic ground, FR/EN text parity), build.</li>
+        <li><strong>One end-to-end test</strong> plays the whole film (boot, entry, every act, the emergence from the water, the fallback, in both languages) and requires zero console errors. It caught a real race the day it went live: a dispose during a shader link.</li>
+        <li><strong>Without WebGL2</strong>: a fallback page serves the complete narrative as server-rendered HTML, without JavaScript, in both languages.</li>
+        <li><strong>Reduced motion</strong>: native scrolling, particles at 4%, no shake, sound off. <code>aria-live</code> announcements on each act, full keyboard navigation, visible focus throughout.</li>
+      </ul>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="suite">
+    <div class="wrap">
+    <h2 class="sr-only" id="suite">Next</h2>
+    <nav class="next" aria-label="Travaux">
+      <a href="/en/work/"><span class="dir">Back</span><span>All work</span></a>
+      <a href="/en/work/datasentinel/"><span class="dir">Next project</span>DataSentinel</a>
+    </nav>
+  </div>
+  </section>
+
+</main>
+
+<div class="menu" id="menu" hidden="">
+  <button class="menu-close" type="button">Close</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/en/work/">Work</a>
+      <a href="/en/skills/">Skills</a>
+      <a href="/en/contact/">Contact</a>
+      <a href="/en/">Home</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/en/work/">Travaux</a> · <a href="/en/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script src="/scripts/vendor/gsap.min.js" defer=""></script>
+<script src="/scripts/vendor/ScrollTrigger.min.js" defer=""></script>
+<script src="/scripts/kinetic.js" defer=""></script>
+<script src="/scripts/menu.js" defer=""></script>
+
+
+
+</body></html>
