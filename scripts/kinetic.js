@@ -82,22 +82,6 @@
       });
     }
 
-    /* ---- la capture se dévoile par un volet ---------------------------- */
-
-    gsap.utils.toArray(".work-shot").forEach(function (shot) {
-      gsap.fromTo(
-        shot,
-        { clipPath: "inset(0% 0% 100% 0%)" },
-        {
-          clipPath: "inset(0% 0% 0% 0%)",
-          duration: 0.9,
-          ease: "power3.inOut",
-          immediateRender: false,
-          scrollTrigger: { trigger: shot, start: "top 88%", once: true },
-        }
-      );
-    });
-
     /* ---- projecteur au curseur ---------------------------------------- */
 
     document.querySelectorAll(".cert").forEach(function (c) {
@@ -108,7 +92,7 @@
     });
 
     if (window.matchMedia("(hover: hover)").matches) {
-      document.querySelectorAll(".work, .cert").forEach(function (el) {
+      document.querySelectorAll(".row, .cert").forEach(function (el) {
         el.addEventListener("pointermove", function (e) {
           var r = el.getBoundingClientRect();
           el.style.setProperty("--mx", (e.clientX - r.left) + "px");
@@ -139,11 +123,58 @@
 
     var bar = document.createElement("div");
     bar.className = "progress";
+    bar.setAttribute("aria-hidden", "true");
+    bar.innerHTML = "<i></i>";
     document.body.appendChild(bar);
-    gsap.to(bar, {
-      scaleX: 1,
+    gsap.to(bar.firstChild, {
+      yPercent: 355,
       ease: "none",
-      scrollTrigger: { start: 0, end: "max", scrub: 0.2 },
+      scrollTrigger: { start: 0, end: "max", scrub: 0.25 },
+    });
+
+    /* ---- la vignette suit le curseur sur la liste --------------------- */
+
+    var rows = document.querySelectorAll(".row");
+    if (rows.length && window.matchMedia("(hover: hover)").matches) {
+      var peek = document.createElement("div");
+      peek.className = "peek";
+      peek.setAttribute("aria-hidden", "true");
+      document.body.appendChild(peek);
+
+      var px = gsap.quickTo(peek, "x", { duration: 0.5, ease: "power3.out" });
+      var py = gsap.quickTo(peek, "y", { duration: 0.5, ease: "power3.out" });
+      var shown = null;
+
+      rows.forEach(function (row) {
+        row.addEventListener("pointerenter", function () {
+          if (shown === row) return;
+          shown = row;
+          var shot = row.dataset.shot;
+          peek.innerHTML = shot
+            ? '<img src="' + shot + '" alt="">'
+            : '<div class="none"><b>' +
+              row.querySelector(".row-title").textContent.trim() +
+              "</b><span>" + (row.dataset.none || "") + "</span></div>";
+          gsap.to(peek, { opacity: 1, scale: 1, duration: 0.35, ease: "power3.out" });
+        });
+        row.addEventListener("pointerleave", function () {
+          shown = null;
+          gsap.to(peek, { opacity: 0, scale: 0.9, duration: 0.28, ease: "power2.out" });
+        });
+        row.addEventListener("pointermove", function (e) {
+          px(e.clientX);
+          py(e.clientY);
+        });
+      });
+    }
+
+    /* ---- les lignes de la liste entrent une à une --------------------- */
+
+    reveal(document.querySelectorAll(".row"), { opacity: 0, y: 26 }, {
+      trigger: document.querySelector(".rows"), duration: 0.6, stagger: 0.07,
+    });
+    reveal(document.querySelectorAll(".ghost-row"), { opacity: 0, x: -22 }, {
+      trigger: document.querySelector(".ghosts"), duration: 0.6, stagger: 0.07,
     });
 
     /* ---- premier écran ------------------------------------------------ */
@@ -182,32 +213,6 @@
     });
 
     /* ---- cartes de travaux -------------------------------------------- */
-
-    gsap.utils.toArray(".work").forEach(function (card) {
-      reveal([card], { opacity: 0, y: 40 }, { trigger: card, duration: 0.75, start: "top 90%" });
-
-      /* la capture dérive dans son cadre pendant qu'on la dépasse */
-      var img = card.querySelector(".work-shot img");
-      if (img) {
-        gsap.fromTo(
-          img,
-          { yPercent: -6, scale: 1.12 },
-          {
-            yPercent: 6,
-            scale: 1.12,
-            ease: "none",
-            scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 0.6 },
-          }
-        );
-      }
-
-      reveal(card.querySelectorAll(".work-points li"), { opacity: 0, x: -10 }, {
-        trigger: card, duration: 0.45, stagger: 0.06, start: "top 82%",
-      });
-      reveal(card.querySelectorAll(".pills li"), { opacity: 0, y: 10 }, {
-        trigger: card, duration: 0.4, stagger: 0.035, start: "top 78%",
-      });
-    });
 
     /* ---- frises : le rail se trace, les lignes suivent ---------------- */
 

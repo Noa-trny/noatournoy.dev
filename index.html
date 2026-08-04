@@ -85,135 +85,55 @@
 
   <section class="sec" id="travaux" aria-labelledby="h-travaux">
     <div class="wrap">
-      <p class="label" data-i18n="l.travaux">Travaux sélectionnés</p>
-      <h2 class="sec-title" id="h-travaux" data-i18n="t.travaux">Six pièces, du shader au <em>tableau de bord</em>.</h2>
+      <p class="label" data-i18n="l.travaux">Mes travaux</p>
+      <h2 class="sec-title" id="h-travaux" data-i18n="t.travaux">Du shader au <em>tableau de bord</em></h2>
 
-      <div class="works">
-
-        <article class="work">
-          <figure class="work-shot">
-            <picture>
-              <source type="image/webp" srcset="/travaux/eclosion/img/dawn-700.webp 700w, /travaux/eclosion/img/dawn-1400.webp 1400w" sizes="(min-width: 56rem) 40rem, 100vw">
-              <img src="/travaux/eclosion/img/dawn.jpg" alt="L'aube d'Éclosion : le soleil affleure l'horizon au-dessus d'un relief procédural." width="1400" height="788" loading="lazy" decoding="async">
-            </picture>
-          </figure>
-          <div class="work-body">
-            <h3 class="work-title"><a href="/travaux/eclosion/">Éclosion</a></h3>
-            <p class="work-desc" data-i18n="k1.d">Une expérience web 3D où le défilement est le temps : huit actes, du Néant à l'Aube. Cent pour cent procédurale, aucun modèle ni texture ni fichier audio.</p>
-            <ul class="work-points">
-              <li data-i18n="k1.p1">Charge de première visite réduite de 19 %, gel de 617 ms éliminé</li>
-              <li data-i18n="k1.p2">Zéro render React à 60 images par seconde, un seul registre d'uniforms</li>
-              <li data-i18n="k1.p3">Repli complet sans WebGL, rendu côté serveur, bilingue</li>
-            </ul>
-            <ul class="pills">
-              <li class="on">Next.js</li><li>React Three Fiber</li><li>GLSL</li><li>TypeScript</li><li>WebAudio</li>
-            </ul>
-            <a class="more" href="/travaux/eclosion/" data-i18n="more">Lire l'étude de cas</a>
+      <ol class="rows">
+        <li class="row" data-shot="/travaux/eclosion/img/dawn-700.webp">
+          <span class="row-no">_01.</span>
+          <div>
+            <h3 class="row-title"><a href="/travaux/eclosion/">Éclosion</a></h3>
+            <p class="row-tags"><span>Next.js</span><span>React Three Fiber</span><span>GLSL</span><span>WebAudio</span></p>
           </div>
-        </article>
-
-        <article class="work">
-          <figure class="work-shot empty">
-            <b>DataSentinel</b>
-            <span data-i18n="k2.conf">Confidentiel — ADEO</span>
-          </figure>
-          <div class="work-body">
-            <h3 class="work-title"><a href="/travaux/datasentinel/">DataSentinel</a></h3>
-            <p class="work-desc" data-i18n="k2.d">Un tableau de bord qui a remplacé le suivi manuel de la sécurité des produits digitaux, et les extensions full-stack qui le rendent utilisable au quotidien.</p>
-            <ul class="work-points">
-              <li data-i18n="k2.p1">Modélisation LookML sur BigQuery, requêtes SQL complexes</li>
-              <li data-i18n="k2.p2">Extensions Looker full-stack, backend Python et frontend React</li>
-              <li data-i18n="k2.p3">Certifications Google Looker et LookML obtenues</li>
-            </ul>
-            <ul class="pills">
-              <li class="on">Looker</li><li>LookML</li><li>Python</li><li>React</li><li>BigQuery</li><li>Terraform</li><li>Kubernetes</li>
-            </ul>
-            <a class="more" href="/travaux/datasentinel/" data-i18n="more2">Voir la fiche</a>
+        </li>
+        <li class="row" data-none="Confidentiel — ADEO">
+          <span class="row-no">_02.</span>
+          <div>
+            <h3 class="row-title"><a href="/travaux/datasentinel/">DataSentinel</a></h3>
+            <p class="row-tags"><span>Looker</span><span>LookML</span><span>Python</span><span>BigQuery</span><span>Terraform</span></p>
           </div>
-        </article>
-
-        <article class="work">
-          <figure class="work-shot empty">
-            <b>SupKonQuest</b>
-            <span data-i18n="k3.conf">Dépôts privés — Carton Studio's</span>
-          </figure>
-          <div class="work-body">
-            <h3 class="work-title"><a href="/travaux/supkonquest/">SupKonQuest</a></h3>
-            <p class="work-desc" data-i18n="k3.d">Un jeu de stratégie temps réel multijoueur dans l'esprit de Risk : un client Godot, un serveur C++ qui fait autorité, et rien entre les deux qu'un protocole binaire.</p>
-            <ul class="work-points">
-              <li data-i18n="k3.p1">Serveur faisant autorité, la triche devient structurellement impossible</li>
-              <li data-i18n="k3.p2">Cartes générées procéduralement, transmises au client</li>
-              <li data-i18n="k3.p3">Déployé sur Raspberry Pi 5, traduit en trois langues</li>
-            </ul>
-            <ul class="pills">
-              <li class="on">Godot 4.6</li><li>C++20</li><li>TCP binaire</li><li>Docker</li>
-            </ul>
-            <a class="more" href="/travaux/supkonquest/" data-i18n="more2">Voir la fiche</a>
+        </li>
+        <li class="row" data-none="Dépôts privés — Carton Studio's">
+          <span class="row-no">_03.</span>
+          <div>
+            <h3 class="row-title"><a href="/travaux/supkonquest/">SupKonQuest</a></h3>
+            <p class="row-tags"><span>Godot 4.6</span><span>C++20</span><span>TCP binaire</span><span>Docker</span></p>
           </div>
-        </article>
-
-        <article class="work">
-          <figure class="work-shot">
-            <picture>
-              <source type="image/webp" srcset="/travaux/ludoria/img/ludoria-katerenga-700.webp 700w, /travaux/ludoria/img/ludoria-katerenga.webp 1280w" sizes="(min-width: 56rem) 40rem, 100vw">
-              <img src="/travaux/ludoria/img/ludoria-katerenga.webp" alt="Le plateau de Katerenga dans Ludoria : cases de terrain colorées et pions sur fond de décor." width="1280" height="720" loading="lazy" decoding="async">
-            </picture>
-          </figure>
-          <div class="work-body">
-            <h3 class="work-title"><a href="/travaux/ludoria/">Ludoria</a></h3>
-            <p class="work-desc" data-i18n="k4.d">Trois jeux de plateau — Katerenga, Congress, Isolation — qui partagent un plateau mais pas leurs règles, réunis sous une seule interface, en local comme en réseau.</p>
-            <ul class="work-points">
-              <li data-i18n="k4.p1">Interface et direction artistique : trois jeux, un seul produit</li>
-              <li data-i18n="k4.p2">Moteurs de jeu, gestion des tours, conditions de victoire</li>
-              <li data-i18n="k4.p3">Travail d'équipe à trois, contributions vérifiables au commit près</li>
-            </ul>
-            <ul class="pills">
-              <li class="on">Python</li><li>Pygame</li><li>Pillow</li><li>sockets</li>
-            </ul>
-            <a class="more" href="/travaux/ludoria/" data-i18n="more2">Voir la fiche</a>
+        </li>
+        <li class="row" data-shot="/travaux/ludoria/img/ludoria-katerenga-700.webp">
+          <span class="row-no">_04.</span>
+          <div>
+            <h3 class="row-title"><a href="/travaux/ludoria/">Ludoria</a></h3>
+            <p class="row-tags"><span>Python</span><span>Pygame</span><span>sockets</span><span>Équipe de trois</span></p>
           </div>
-        </article>
-
-        <article class="work">
-          <figure class="work-shot">
-            <img src="/travaux/laying-grass/img/console.webp" alt="Le jeu laying_grass en console : plateau 20 sur 20, tuiles posées, légende et menu d'actions." width="1280" height="720" loading="lazy" decoding="async">
-          </figure>
-          <div class="work-body">
-            <h3 class="work-title"><a href="/travaux/laying-grass/">laying_grass</a></h3>
-            <p class="work-desc" data-i18n="k5.d">Un jeu de placement de tuiles en C++17 pur : bibliothèque standard uniquement, jusqu'au parseur JSON écrit à la main pour lire les 96 formes.</p>
-            <ul class="work-points">
-              <li data-i18n="k5.p1">De deux à neuf joueurs, grille 20 × 20 ou 30 × 30, neuf tours chacun</li>
-              <li data-i18n="k5.p2">Recherche du plus grand carré plein et calcul de connexité</li>
-              <li data-i18n="k5.p3">Règles, validation, algorithmes et affichage nettement séparés</li>
-            </ul>
-            <ul class="pills">
-              <li class="on">C++17</li><li>STL</li><li>Zéro dépendance</li>
-            </ul>
-            <a class="more" href="/travaux/laying-grass/" data-i18n="more2">Voir la fiche</a>
+        </li>
+        <li class="row" data-shot="/travaux/laying-grass/img/console.webp">
+          <span class="row-no">_05.</span>
+          <div>
+            <h3 class="row-title"><a href="/travaux/laying-grass/">laying_grass</a></h3>
+            <p class="row-tags"><span>C++17</span><span>STL</span><span>Zéro dépendance</span></p>
           </div>
-        </article>
-
-        <article class="work">
-          <figure class="work-shot empty">
-            <b>Gamedex</b>
-            <span data-i18n="k6.conf">TypeScript · React</span>
-          </figure>
-          <div class="work-body">
-            <h3 class="work-title"><a href="/travaux/gamedex/">Gamedex</a></h3>
-            <p class="work-desc" data-i18n="k6.d">Un catalogue de jeux vidéo bâti sur l'API RAWG : recherche, filtres par plateforme et par boutique, défilement infini, et des favoris qui survivent au rechargement.</p>
-            <ul class="work-points">
-              <li data-i18n="k6.p1">Cinq routes réelles, jusqu'à la page d'erreur qui ramène quelque part</li>
-              <li data-i18n="k6.p2">Favoris en contexte React adossé au stockage local</li>
-              <li data-i18n="k6.p3">Projet en binôme, parcours de bout en bout sous Cypress</li>
-            </ul>
-            <ul class="pills">
-              <li class="on">React</li><li>TypeScript</li><li>Vite</li><li>Cypress</li>
-            </ul>
-            <a class="more" href="/travaux/gamedex/" data-i18n="more2">Voir la fiche</a>
+        </li>
+        <li class="row" data-none="TypeScript · React">
+          <span class="row-no">_06.</span>
+          <div>
+            <h3 class="row-title"><a href="/travaux/gamedex/">Gamedex</a></h3>
+            <p class="row-tags"><span>React</span><span>TypeScript</span><span>Vite</span><span>Cypress</span></p>
           </div>
-        </article>
+        </li>
+      </ol>
 
-      </div>
+      <p style="margin-top:2rem"><a class="more" href="/travaux/" data-i18n="travaux.more">Le détail de chaque travail</a></p>
     </div>
   </section>
 
@@ -274,26 +194,37 @@
       <p class="label" data-i18n="l.stack">Stack</p>
       <h2 class="sec-title" id="h-stack" data-i18n="t.stack">Ce que j'utilise, et <em>où ça a servi</em>.</h2>
 
-      <ul class="time">
-        <li>
-          <span class="when" data-i18n="s1.w">Langages</span>
-          <div><p class="what">Python · TypeScript · JavaScript · SQL · C · C++ · Java · LookML</p></div>
+      <ul class="ghosts">
+        <li class="ghost-row">
+          <p class="ghost-word" data-i18n="s1.w">Langages</p>
+          <ul class="ghost-items">
+            <li>Python</li><li>TypeScript</li><li>JavaScript</li><li>SQL</li><li>C</li><li>C++</li><li>Java</li><li>LookML</li>
+          </ul>
         </li>
-        <li>
-          <span class="when" data-i18n="s2.w">Web</span>
-          <div><p class="what">React · Next.js · React Native / Expo · Node.js · Three.js · GLSL · Electron</p></div>
+        <li class="ghost-row">
+          <p class="ghost-word" data-i18n="s2.w">Web</p>
+          <ul class="ghost-items">
+            <li>React</li><li>Next.js</li><li>React Native</li><li>Node.js</li><li>Three.js</li><li>GLSL</li><li>Electron</li>
+          </ul>
         </li>
-        <li>
-          <span class="when" data-i18n="s3.w">Infra</span>
-          <div><p class="what">Docker · Kubernetes · Terraform · GitHub Actions · Vercel</p></div>
+        <li class="ghost-row">
+          <p class="ghost-word" data-i18n="s3.w">Infra</p>
+          <ul class="ghost-items">
+            <li>Docker</li><li>Kubernetes</li><li>Terraform</li><li>GitHub Actions</li><li>Vercel</li>
+          </ul>
         </li>
-        <li>
-          <span class="when" data-i18n="s4.w">Données</span>
-          <div><p class="what">BigQuery · Looker · PostgreSQL · Google Cloud Platform</p></div>
+        <li class="ghost-row">
+          <p class="ghost-word" data-i18n="s4.w">Données</p>
+          <ul class="ghost-items">
+            <li>BigQuery</li><li>Looker</li><li>PostgreSQL</li><li>Google Cloud</li>
+          </ul>
         </li>
-        <li>
-          <span class="when" data-i18n="s6.w">Langues</span>
-          <div><p class="what">Français · Anglais · Espagnol</p><p class="note" data-i18n="s6.n">Maternelle, professionnel, débutant.</p></div>
+        <li class="ghost-row">
+          <p class="ghost-word" data-i18n="s6.w">Langues</p>
+          <ul class="ghost-items">
+            <li>Français</li><li>Anglais</li><li class="dim">Espagnol</li>
+          </ul>
+          <p class="ghost-note" data-i18n="s6.n">Langue maternelle, niveau professionnel, débutant.</p>
         </li>
       </ul>
 
@@ -350,6 +281,8 @@
   </section>
 
 </main>
+
+<a class="side-mail" href="mailto:noa.tournoy@supinfo.com">noa.tournoy@supinfo.com</a>
 
 <footer class="foot">
   <div class="wrap foot-in">
