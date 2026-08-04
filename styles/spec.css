@@ -538,28 +538,47 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   font-variation-settings: "opsz" 8, "wght" 500, "wdth" 100;
 }
 
-/* Le mot est ecrit deux fois : une couche eteinte toujours lisible, une
-   couche pleine que le defilement balaie par-dessus. Le texte n'est donc
-   jamais absent, meme si le declencheur ne part pas. */
+/* Le remplissage se fait sur UN seul rendu de texte, par un degrade decoupe
+   a la forme des lettres. Deux calques de texte superposes, c'etait deux
+   anticrenelages sous-pixel qui se melangeaient : liseré colore a l'arret et
+   scintillement au defilement. */
 .bref-k {
-  position: relative;
   display: block;
+  /* La boite doit epouser le mot, pas la colonne : le degrade de remplissage
+     est dimensionne sur elle, et un mot court dans une large colonne se
+     remplirait d'un coup pendant qu'un mot long trainerait. */
+  width: max-content;
+  max-width: 100%;
   font-size: clamp(1.05rem, 2.1vw, 1.95rem);
   line-height: 1.02;
   white-space: nowrap;
   text-transform: uppercase;
   letter-spacing: -0.02em;
   font-variation-settings: "opsz" 144, "wght" 800, "wdth" 82;
-}
-.bref-fond { color: var(--ghost-mot); display: block; }
-.bref-plein {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
   color: var(--fg);
-  transition: color 0.3s ease;
 }
-.bref-in:hover .bref-plein { color: var(--acid); }
+
+/* Sans le decoupage a la forme du texte, le mot reste simplement plein :
+   il n'est jamais transparent par accident. */
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .bref-k {
+    /* Le remplissage est porte par une variable, pas par background-position :
+       en pourcentage, une position se resout sur (largeur boite - largeur
+       image), donc sur une base negative des que l'image depasse la boite.
+       L'interpolation y devient fausse, la position passe positive, le degrade
+       ne couvre plus les lettres et elles virent au transparent. */
+    --fill: 100%;
+    background-image: linear-gradient(90deg,
+      var(--fg) var(--fill), var(--ghost-mot) var(--fill));
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    transition: -webkit-text-fill-color 0.3s ease;
+  }
+  .bref-in:hover .bref-k { -webkit-text-fill-color: var(--acid); }
+}
 
 .bref-d {
   display: grid;

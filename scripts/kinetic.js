@@ -2,8 +2,11 @@
    Deux règles qui ne se négocient pas :
    1. uniquement transform et opacity — rien qui change une largeur, donc rien
       qui relayoute pendant qu'on lit ;
-   2. tout ce qui dépend du défilement passe par fromTo sans rendu immédiat —
-      un déclencheur muet laisse le contenu à son état normal, jamais invisible.
+   2. une révélation déclenchée une seule fois passe par fromTo sans rendu
+      immédiat — un déclencheur muet laisse le contenu à son état normal,
+      jamais invisible. Une animation scrubbée fait l'inverse : sa tête de
+      lecture est posée dès l'initialisation, et différer le rendu ferait
+      sauter les éléments à leur état de départ en plein défilement.
    Sans JavaScript, la page est déjà complète. */
 (function () {
   "use strict";
@@ -173,23 +176,29 @@
 
     /* ---- en bref : le mot se remplit au défilement -------------------- */
 
-    /* Chaque mot est écrit deux fois, superposé : une couche éteinte et une
-       couche pleine. Le défilement balaie la couche pleine par-dessus l'autre
-       — c'est un clip-path, donc ni largeur ni disposition ne changent, et le
-       mot reste lu une seule fois par les lecteurs d'écran.
+    /* Le mot se remplit sur un seul rendu de texte : un dégradé découpé à la
+       forme des lettres, dont on déplace la position. Superposer deux calques
+       de texte revenait à mélanger deux anticrénelages sous-pixel — liseré
+       coloré et scintillement.
        Les quatre colonnes étant à la même hauteur, elles partagent un seul
-       déclencheur et se décalent au décalage, de gauche à droite. */
+       déclencheur et se décalent de gauche à droite. */
     var bref = document.querySelector(".bref");
     if (bref) {
+      /* Ici le rendu immédiat est voulu, contrairement aux révélations « once ».
+         Sans lui, une colonne dont le tween n'a pas encore démarré garde son
+         état naturel — pleine — puis saute d'un coup à son état de départ quand
+         son tour arrive : le mot se vide brutalement en plein défilement.
+         Un scrub place sa tête de lecture dès l'initialisation, donc l'état de
+         départ n'est jamais celui qui reste affiché. */
       gsap.timeline({
         scrollTrigger: { trigger: bref, start: "top 86%", end: "top 42%", scrub: 0.5 },
       })
         .fromTo(bref.querySelectorAll(".bref-rule"), { scaleY: 0 },
-          { scaleY: 1, ease: "none", stagger: 0.08, immediateRender: false }, 0)
-        .fromTo(bref.querySelectorAll(".bref-plein"), { clipPath: "inset(0 100% 0 0)" },
-          { clipPath: "inset(0 0% 0 0)", ease: "none", stagger: 0.12, immediateRender: false }, 0.05)
+          { scaleY: 1, ease: "none", stagger: 0.08 }, 0)
+        .fromTo(bref.querySelectorAll(".bref-k"), { "--fill": "0%" },
+          { "--fill": "100%", ease: "none", stagger: 0.12 }, 0.05)
         .fromTo(bref.querySelectorAll(".bref-d"), { opacity: 0, y: 14 },
-          { opacity: 1, y: 0, ease: "power2.out", stagger: 0.1, immediateRender: false }, 0.28);
+          { opacity: 1, y: 0, ease: "power2.out", stagger: 0.1 }, 0.28);
     }
 
     /* ---- les lignes de la liste entrent une à une --------------------- */
