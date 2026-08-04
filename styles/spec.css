@@ -252,35 +252,106 @@ img { max-width: 100%; display: block; }
 
 /* ---------- premier écran ---------- */
 
-.hero { padding-block: clamp(3.5rem, 12vh, 8rem) clamp(2.5rem, 7vh, 4.5rem); }
+.hero { padding-block: clamp(3rem, 9vh, 6rem) clamp(2.5rem, 7vh, 4.5rem); }
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: center;
+}
+@media (max-width: 62rem) {
+  .hero-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+}
+
 .hero h1 {
-  margin: 0;
-  font-size: clamp(2.8rem, 9vw, 8rem);
-  line-height: 1.16;
-  letter-spacing: -0.01em;
+  margin: 0.35rem 0 0;
+  font-size: clamp(2.9rem, 7.5vw, 6.5rem);
+  line-height: 1.1;
+  letter-spacing: -0.005em;
   font-variation-settings: "opsz" 144, "wght" 800, "wdth" 74;
   text-transform: uppercase;
-  text-wrap: balance;
 }
-.hero h1 em { font-style: normal; color: var(--acid); }
+
 .hero-sub {
-  max-width: 46ch;
-  margin: clamp(1.5rem, 4vh, 2.25rem) 0 0;
-  font-size: clamp(1.05rem, 1.5vw, 1.3rem);
-  line-height: 1.55;
+  max-width: 44ch;
+  margin: clamp(1.1rem, 3vh, 1.75rem) 0 0;
+  font-size: clamp(1.05rem, 1.4vw, 1.25rem);
+  line-height: 1.6;
   color: #cdd2ce;
 }
-.hero-meta {
+/* les technologies clés se détachent dans la phrase, pas dans une ligne à part */
+.hero-sub b {
+  color: var(--acid);
+  font-variation-settings: "opsz" 20, "wght" 650, "wdth" 100;
+}
+
+.hero-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem 1.75rem;
-  margin: clamp(1.25rem, 3vh, 2rem) 0 0;
-  font-size: 0.8125rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #a9b0ab;
-  font-variation-settings: "opsz" 14, "wght" 500, "wdth" 100;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: clamp(1.5rem, 4vh, 2.25rem);
 }
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+.icon-btn:hover {
+  border-color: var(--acid);
+  background: var(--panel-2);
+  transform: translateY(-2px);
+}
+.icon-btn img, .icon-btn svg { display: block; }
+
+/* ---------- carte du premier écran ---------- */
+
+.hero-card {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  background: var(--panel);
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+}
+/* le rapport se pose sur le conteneur : un <picture> en ligne ne donne pas de
+   bloc de reference a l'image, et aspect-ratio y reste sans effet */
+.hero-card picture {
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+}
+.hero-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-card figcaption {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1rem 1.15rem 1.2rem;
+  border-top: 1px solid var(--line-soft);
+}
+.hero-card-k {
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim-2);
+  font-variation-settings: "opsz" 8, "wght" 600, "wdth" 100;
+}
+.hero-card figcaption a {
+  font-size: 1.25rem;
+  text-decoration: none;
+  font-variation-settings: "opsz" 20, "wght" 700, "wdth" 100;
+}
+.hero-card figcaption a:hover { color: var(--acid); }
+.hero-card-n { font-size: var(--t-sm); color: var(--dim); }
 
 /* ---------- rangée d'état ---------- */
 

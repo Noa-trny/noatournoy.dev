@@ -37,19 +37,45 @@
 <main id="contenu">
 
   <section class="wrap hero" aria-labelledby="titre">
-    <p class="label" data-i18n="hero.label">Lille, France · Disponible</p>
-    <h1 id="titre" data-i18n="hero.h1">
-      Ingénieur logiciel,<br>orienté <em>cybersécurité.</em>
-    </h1>
-    <p class="hero-sub" data-i18n="hero.sub">
-      Étudiant ingénieur à SUPINFO, solide en développement full-stack. Deux stages menés
-      jusqu'en production : le pilotage de la sécurité chez ADEO, puis le développement
-      produit chez Never2Wait.
-    </p>
-    <p class="hero-meta">
-      <span data-i18n="hero.m1">Python · TypeScript · C++ · SQL</span>
-      <span data-i18n="hero.m2">Docker · Kubernetes · Terraform · GCP</span>
-    </p>
+    <div class="hero-grid">
+      <div class="hero-text">
+        <p class="label" data-i18n="hero.label">Lille, France · Disponible</p>
+        <h1 id="titre" data-i18n="hero.h1">Noa Tournoy</h1>
+        <p class="hero-sub" data-i18n="hero.sub">
+          Ingénieur logiciel en formation, orienté <b>cybersécurité</b> et solide en
+          développement full-stack — <b>Python</b>, <b>TypeScript</b>, <b>Docker</b>.
+          Deux stages menés jusqu'en production, et une alternance chez <b>ADEO</b> à
+          partir d'octobre 2026.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn" href="#travaux" data-i18n="hero.cta">Voir mes travaux</a>
+          <a class="icon-btn" href="https://github.com/Noa-trny" aria-label="GitHub">
+            <img src="/assets/icons/github.svg" alt="" width="19" height="19">
+          </a>
+          <a class="icon-btn" href="https://www.linkedin.com/in/noa-tournoy/" aria-label="LinkedIn">
+            <img src="/assets/icons/linkedin.svg" alt="" width="19" height="19">
+          </a>
+          <a class="icon-btn" href="mailto:noa.tournoy@supinfo.com" aria-label="Écrire un courriel">
+            <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true" fill="none" stroke="#e7e9e7" stroke-width="1.8">
+              <rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="m3 7 9 6 9-6"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <figure class="hero-card">
+        <picture>
+          <source type="image/webp" srcset="/travaux/eclosion/img/dawn-700.webp 700w, /travaux/eclosion/img/dawn-1400.webp 1400w" sizes="(min-width: 62rem) 30rem, 100vw">
+          <img src="/travaux/eclosion/img/dawn.jpg" alt="L'aube d'Éclosion : le soleil affleure l'horizon au-dessus d'un relief procédural." width="1400" height="788">
+        </picture>
+        <figcaption>
+          <span class="hero-card-k" data-i18n="hero.card.k">Dernier travail</span>
+          <a href="/travaux/eclosion/">Éclosion<span aria-hidden="true"> →</span></a>
+          <span class="hero-card-n" data-i18n="hero.card.n">Expérience web 3D, 100 % procédurale</span>
+        </figcaption>
+      </figure>
+    </div>
 
     <div class="status">
       <div>
@@ -62,10 +88,10 @@
         <span class="v" data-i18n="st2.v">Alternance cybersécurité</span>
         <span class="n" data-i18n="st2.n">ADEO, Ronchin</span>
       </div>
-      <a href="#travaux">
-        <span class="k"><i></i><span data-i18n="st3.k">Dernier travail</span></span>
-        <span class="v">Éclosion</span>
-        <span class="n" data-i18n="st3.n">Expérience web 3D procédurale</span>
+      <a href="#certifications">
+        <span class="k"><i></i><span data-i18n="st3.k">Certifications</span></span>
+        <span class="v" data-i18n="st3.v">Quatre titres</span>
+        <span class="n" data-i18n="st3.n">Looker · LookML · AWS · CCNA</span>
       </a>
       <a href="#contact">
         <span class="k"><i></i><span data-i18n="st4.k">Écrire</span></span>
