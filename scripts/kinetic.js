@@ -60,6 +60,81 @@
       gsap.fromTo(list, from, to);
     }
 
+    /* ---- bandeau défilant, la vitesse suit le défilement -------------- */
+
+    var track = document.querySelector(".marquee-track");
+    if (track) {
+      var items = Array.prototype.slice.call(track.children);
+      items.forEach(function (n) { track.appendChild(n.cloneNode(true)); });
+      var half = track.scrollWidth / 2;
+      var loop = gsap.to(track, {
+        x: -half,
+        duration: 26,
+        ease: "none",
+        repeat: -1,
+        modifiers: { x: gsap.utils.unitize(function (x) { return parseFloat(x) % half; }) },
+      });
+      ScrollTrigger.create({
+        onUpdate: function (self) {
+          var v = gsap.utils.clamp(0.6, 5, 1 + Math.abs(self.getVelocity()) / 900);
+          gsap.to(loop, { timeScale: self.direction === -1 ? -v : v, duration: 0.3, overwrite: true });
+        },
+      });
+    }
+
+    /* ---- la capture se dévoile par un volet ---------------------------- */
+
+    gsap.utils.toArray(".work-shot").forEach(function (shot) {
+      gsap.fromTo(
+        shot,
+        { clipPath: "inset(0% 0% 100% 0%)" },
+        {
+          clipPath: "inset(0% 0% 0% 0%)",
+          duration: 0.9,
+          ease: "power3.inOut",
+          immediateRender: false,
+          scrollTrigger: { trigger: shot, start: "top 88%", once: true },
+        }
+      );
+    });
+
+    /* ---- projecteur au curseur ---------------------------------------- */
+
+    document.querySelectorAll(".cert").forEach(function (c) {
+      var g = document.createElement("span");
+      g.className = "cert-glow";
+      g.setAttribute("aria-hidden", "true");
+      c.appendChild(g);
+    });
+
+    if (window.matchMedia("(hover: hover)").matches) {
+      document.querySelectorAll(".work, .cert").forEach(function (el) {
+        el.addEventListener("pointermove", function (e) {
+          var r = el.getBoundingClientRect();
+          el.style.setProperty("--mx", (e.clientX - r.left) + "px");
+          el.style.setProperty("--my", (e.clientY - r.top) + "px");
+        });
+      });
+
+      /* boutons magnétiques */
+      document.querySelectorAll(".btn").forEach(function (b) {
+        var qx = gsap.quickTo(b, "x", { duration: 0.35, ease: "power3.out" });
+        var qy = gsap.quickTo(b, "y", { duration: 0.35, ease: "power3.out" });
+        b.addEventListener("pointermove", function (e) {
+          var r = b.getBoundingClientRect();
+          qx((e.clientX - r.left - r.width / 2) * 0.28);
+          qy((e.clientY - r.top - r.height / 2) * 0.4);
+        });
+        b.addEventListener("pointerleave", function () { qx(0); qy(0); });
+      });
+    }
+
+    /* ---- certifications ------------------------------------------------ */
+
+    reveal(document.querySelectorAll(".cert"), { opacity: 0, y: 32, scale: 0.97 }, {
+      trigger: document.querySelector(".certs"), duration: 0.6, stagger: 0.08,
+    });
+
     /* ---- jauge de progression ---------------------------------------- */
 
     var bar = document.createElement("div");

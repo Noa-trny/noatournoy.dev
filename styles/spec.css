@@ -450,6 +450,141 @@ img { max-width: 100%; display: block; }
   padding: 0.4rem 0.8rem;
 }
 
+/* ---------- certifications ---------- */
+
+.certs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+  gap: clamp(0.75rem, 1.6vw, 1.1rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.cert {
+  position: relative;
+  display: grid;
+  gap: 0.4rem;
+  align-content: start;
+  padding: 1.5rem 1.4rem 1.4rem;
+  min-height: 12.5rem;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  overflow: hidden;
+  isolation: isolate;
+}
+/* le sceau : un arc vert dans l'angle, pas une pastille */
+.cert::before {
+  content: "";
+  position: absolute;
+  inset: auto -5rem -5rem auto;
+  width: 10rem;
+  height: 10rem;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--acid) 22%, transparent);
+  z-index: -1;
+}
+.cert::after {
+  content: "";
+  position: absolute;
+  top: 1.5rem;
+  right: 1.4rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--acid);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--acid) 16%, transparent);
+}
+.cert-org {
+  font-size: var(--t-label);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim-2);
+  font-variation-settings: "opsz" 8, "wght" 600, "wdth" 100;
+}
+.cert-name {
+  margin: 0.15rem 0 0;
+  font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-variation-settings: "opsz" 144, "wght" 700, "wdth" 100;
+  text-wrap: balance;
+}
+.cert-note { margin: 0; font-size: var(--t-sm); color: var(--dim); }
+.cert-when {
+  margin-top: auto;
+  padding-top: 0.9rem;
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--acid);
+  align-self: end;
+}
+
+/* ---------- bandeau défilant ---------- */
+
+.marquee {
+  overflow: hidden;
+  border-block: 1px solid var(--line-soft);
+  padding-block: 1.15rem;
+  margin-top: clamp(2.5rem, 7vh, 4rem);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+  align-items: center;
+  will-change: transform;
+}
+.marquee-track span {
+  font-size: clamp(1rem, 1.7vw, 1.35rem);
+  letter-spacing: -0.01em;
+  color: var(--dim);
+  font-variation-settings: "opsz" 20, "wght" 620, "wdth" 100;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+}
+.marquee-track span::after {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 2px;
+  background: var(--acid);
+  opacity: 0.7;
+}
+
+/* ---------- projecteur au curseur ---------- */
+
+.work,
+.cert,
+.cta {
+  --mx: 50%;
+  --my: 50%;
+}
+.work::before,
+.cert-glow {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: radial-gradient(
+    22rem 22rem at var(--mx) var(--my),
+    color-mix(in srgb, var(--acid) 13%, transparent),
+    transparent 60%
+  );
+  opacity: 0;
+  transition: opacity 0.28s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+.work { position: relative; isolation: isolate; }
+.work > * { position: relative; z-index: 1; }
+.work:hover::before { opacity: 1; }
+.cert:hover .cert-glow { opacity: 1; }
+
 /* ---------- jauge de progression ---------- */
 
 .progress {
@@ -482,6 +617,16 @@ img { max-width: 100%; display: block; }
 /* la capture respire dans son cadre */
 .work-shot { overflow: hidden; }
 .work-shot img { will-change: transform; }
+
+/* le texte de la carte tient pendant que la capture défile */
+@media (min-width: 56rem) {
+  .work-body { position: sticky; top: 6.5rem; }
+}
+
+/* Survol : c'est le cadre qui s'approche, pas l'image — GSAP écrit déjà dans le
+   transform de l'image pour la parallaxe, les deux se marcheraient dessus. */
+.work-shot { transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.work:hover .work-shot { transform: scale(1.015); }
 
 /* ---------- entrées ---------- */
 
