@@ -100,7 +100,7 @@ img { max-width: 100%; display: block; }
   font-size: var(--t-label);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #5a5f66;
+  color: #16181c;
   background: transparent;
   border: 0;
   padding: 0.5rem 0.7rem;
@@ -174,11 +174,11 @@ img { max-width: 100%; display: block; }
   top: 0;
   right: 0;
   bottom: 0;
-  width: min(26rem, 86vw);
+  width: min(36rem, 92vw);
   display: grid;
-  align-content: start;
-  gap: clamp(1.5rem, 4vh, 2.25rem);
-  padding: clamp(1.5rem, 4vh, 2.25rem) clamp(1.5rem, 4vw, 2.75rem);
+  grid-template-rows: auto 1fr;
+  gap: clamp(2rem, 6vh, 3.5rem);
+  padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1.75rem, 4vw, 3.25rem) clamp(3rem, 8vh, 4.5rem);
   background: #fbfbfc;
   border-left: 1px solid #e6e7ea;
   box-shadow: -30px 0 70px rgba(16, 18, 22, 0.22);
@@ -203,10 +203,10 @@ img { max-width: 100%; display: block; }
 }
 .menu-close:hover { opacity: 0.55; }
 
-.menu nav { display: grid; gap: 0.15rem; }
+.menu nav { display: grid; gap: 0.1rem; align-content: center; }
 .menu nav a {
-  font-size: clamp(1.5rem, 3.2vw, 2.1rem);
-  line-height: 1.25;
+  font-size: clamp(2.1rem, 5vw, 3.6rem);
+  line-height: 1.18;
   text-transform: uppercase;
   letter-spacing: -0.01em;
   text-decoration: none;
@@ -216,14 +216,6 @@ img { max-width: 100%; display: block; }
   width: max-content;
 }
 .menu nav a:hover { color: #4d7a06; }
-.menu-foot {
-  display: grid;
-  gap: 0.4rem;
-  margin: 0;
-  font-size: 0.9375rem;
-  color: #5a5f66;
-}
-.menu-foot a { color: inherit; width: max-content; }
 html.menu-open, html.menu-open body { overflow: hidden; }
 
 /* ---------- étiquette de section ---------- */
@@ -349,7 +341,7 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   margin: clamp(1.25rem, 3vh, 1.9rem) 0 0;
   font-size: clamp(1.15rem, 1.6vw, 1.45rem);
   line-height: 1.5;
-  color: #d6dad7;
+  color: var(--fg);
   font-variation-settings: "opsz" 20, "wght" 560, "wdth" 100;
 }
 /* les technologies clés se détachent dans la phrase, pas dans une ligne à part */
@@ -421,11 +413,11 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   --panel: #ffffff;
   --panel-2: #f4f5f7;
   --fg: #101216;
-  --dim: #55595f;
-  --dim-2: #82878d;
+  --dim: #16181c;
+  --dim-2: #33363b;
   --line: #e2e3e7;
   --line-soft: #ebecef;
-  --ghost: #dfe1e5;
+  --ghost: #b7bcc3;
   --acid: #4d7a06;
   --acid-ink: #ffffff;
 
