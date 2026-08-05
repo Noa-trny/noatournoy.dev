@@ -1,0 +1,10 @@
+# Le site est servi tel quel : tout le texte reste en LF, quel que soit l'outil
+# qui l'ecrit sous Windows. Sans cette regle, un editeur qui repasse un fichier
+# en CRLF rejoue le fichier entier dans le diff.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.webp binary
+*.ico binary
+*.woff2 binary
