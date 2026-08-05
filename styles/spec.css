@@ -1268,8 +1268,14 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 
 /* ---------- contact ---------- */
 
+/* Bloc, pas inline-block : le libellé qui précède est en inline-flex, et sur
+   cette page le titre qui les séparait ailleurs est en sr-only — les deux se
+   retrouvaient sur la même ligne. La largeur reste calée sur le texte pour que
+   le filet du dessous n'aille pas jusqu'au bord. */
 .contact-line {
-  display: inline-block;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
   margin: 0 0 clamp(1.5rem, 4vh, 2.25rem);
   font-size: clamp(1.4rem, 4.6vw, 3.2rem);
   line-height: 1.1;
