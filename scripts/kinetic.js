@@ -24,11 +24,20 @@
   function splitWords(el) {
     if (!el || el.dataset.split) return [];
     var out = [];
-    Array.prototype.slice.call(el.childNodes).forEach(function (node) {
-      if (node.nodeType !== 3) {
-        if (node.nodeType === 1) out.push(node);
-        return;
-      }
+    decouper(el, out);
+    el.dataset.split = "1";
+    return out;
+  }
+
+  function decouper(parent, out) {
+    Array.prototype.slice.call(parent.childNodes).forEach(function (node) {
+      /* On DESCEND dans les éléments — le <em> qui porte le vert, par exemple.
+         Les animer en bloc, comme avant, leur donnait le yPercent du mot sans
+         lui donner son masque : la partie colorée montait sans être coupée,
+         d'un seul tenant, pendant que le reste du titre se levait mot par mot
+         derrière le sien. */
+      if (node.nodeType === 1) return decouper(node, out);
+      if (node.nodeType !== 3) return;
       var frag = document.createDocumentFragment();
       node.textContent.split(/(\s+)/).forEach(function (chunk) {
         if (!chunk) return;
@@ -46,8 +55,6 @@
       });
       node.parentNode.replaceChild(frag, node);
     });
-    el.dataset.split = "1";
-    return out;
   }
 
   gsap.matchMedia().add("(prefers-reduced-motion: no-preference)", function () {
