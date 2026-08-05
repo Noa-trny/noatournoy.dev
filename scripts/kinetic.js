@@ -127,7 +127,7 @@
     var bar = document.createElement("div");
     bar.className = "progress";
     bar.setAttribute("aria-hidden", "true");
-    bar.innerHTML = "<i></i>";
+    bar.appendChild(document.createElement("i"));
     document.body.appendChild(bar);
     gsap.to(bar.firstChild, {
       yPercent: 355,
@@ -172,12 +172,30 @@
           if (shown === row) return;
           var first = shown === null;
           shown = row;
+          /* La vignette se construit par noeuds, jamais par concatenation de
+             HTML : le jour ou l'une de ces valeurs viendra d'ailleurs que du
+             balisage du site, il n'y aura pas de faille a ouvrir.
+             Le chemin, lui, doit rester une racine du site. Le second
+             caractere compte autant que le premier : //un-tiers.com commence
+             bien par une barre et designe pourtant un autre domaine. */
           var shot = row.dataset.shot;
-          peek.innerHTML = shot
-            ? '<img src="' + shot + '" alt="">'
-            : '<div class="none"><b>' +
-              row.querySelector(".row-title").textContent.trim() +
-              "</b><span>" + (row.dataset.none || "") + "</span></div>";
+          if (shot && !/^\/[^/]/.test(shot)) shot = null;
+          peek.replaceChildren();
+          if (shot) {
+            var img = document.createElement("img");
+            img.src = shot;
+            img.alt = "";
+            peek.appendChild(img);
+          } else {
+            var none = document.createElement("div");
+            none.className = "none";
+            var titre = document.createElement("b");
+            titre.textContent = row.querySelector(".row-title").textContent.trim();
+            var raison = document.createElement("span");
+            raison.textContent = row.dataset.none || "";
+            none.append(titre, raison);
+            peek.appendChild(none);
+          }
           var centre = row.offsetTop + row.offsetHeight / 2;
           if (first) gsap.set(peek, { top: centre });
           else slide(centre);
