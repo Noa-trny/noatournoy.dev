@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n="doc.title">laying_grass — Noa Tournoy</title>
+<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="laying_grass : jeu de placement de tuiles en C++17 pur, zéro dépendance — bibliothèque standard uniquement, jusqu'au parseur JSON écrit à la main. 96 formes de tuiles, 2 à 9 joueurs.">
+<meta name="theme-color" content="#fbfbfc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laying_grass — Noa Tournoy">
+<meta property="og:description" content="Jeu de placement de tuiles en C++17 pur, zéro dépendance. 96 formes, 2 à 9 joueurs, détection du plus grand carré.">
+<meta property="og:url" content="https://noatournoy.dev/travaux/laying-grass/">
+<meta property="og:image" content="https://noatournoy.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/laying-grass/">
+<link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/laying-grass/">
+<link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/laying-grass/">
+<meta property="og:locale" content="fr_FR">
+<link rel="canonical" href="https://noatournoy.dev/travaux/laying-grass/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles/spec.css">
+</head>
+<body>
+<a class="skip" href="#contenu" data-i18n="skip">Aller au contenu</a>
+
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/">Portfolio</a>
+  <div class="tophead-right">
+    <div class="lang" role="group" aria-label="Langue">
+        <a href="/travaux/laying-grass/" lang="fr" hreflang="fr" aria-current="true">FR</a>
+        <a href="/en/work/laying-grass/" lang="en" hreflang="en">EN</a>
+      </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-i18n="menu">Menu</button>
+  </div>
+</header>
+</div>
+
+<main id="contenu" tabindex="-1">
+
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label">
+      <span data-i18n="c.a"></span>
+      <span data-i18n="c.b">2026, seul</span>
+      <span data-i18n="c.c">C++17 · console · zéro dépendance</span>
+    </p>
+    <h1 class="fiche-title" id="titre">laying_grass</h1>
+    <p class="hero-sub" data-i18n="lede">
+      Un jeu de placement de tuiles inspiré de « The Devil's Plan », écrit en C++17 pur :
+      bibliothèque standard uniquement, jusqu'au parseur JSON.
+    </p>
+    <ul class="fiche-links">
+      <li><a href="https://github.com/Noa-trny/laying_grass_cpp" data-i18n="link.read">Lire le code</a></li>
+    </ul>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="sujet">
+    <div class="wrap">
+    <h2 class="sec-title" id="sujet" data-i18n="sujet.t">Zéro dépendance, littéralement.</h2>
+    <div class="prose">
+      <p data-i18n="sujet.1">
+        Le jeu lit ses 96 formes de tuiles dans un fichier JSON. Importer une bibliothèque
+        pour lire un seul fichier aurait été plus rapide à écrire ; le parseur est écrit à la
+        main. C'est la décision qui résume l'esprit du projet, et celle qui apprend le plus.
+      </p>
+      <p data-i18n="sujet.2">
+        De deux à neuf joueurs, sur une grille de 20 × 20 ou de 30 × 30 selon l'effectif,
+        neuf tours chacun. Les tuiles tournent et se retournent. Gagne celui qui possède le
+        plus grand carré plein en fin de partie ; à égalité, le plus grand territoire
+        départage.
+      </p>
+    </div>
+
+    <figure class="figure" style="margin-top: clamp(2rem, 5vh, 3.5rem)">
+      <picture>
+        <img src="/travaux/laying-grass/img/console.webp" alt="Une partie en cours dans le terminal : la grille, les tuiles disponibles et le score des joueurs." data-i18n="fig.console.alt" data-i18n-attr="alt" width="1280" height="720" loading="lazy" decoding="async">
+      </picture>
+      <figcaption data-i18n="fig.console">Une partie en cours, telle que le programme la dessine dans le terminal.</figcaption>
+    </figure>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="archi">
+    <div class="wrap">
+    <p class="label"><span data-i18n="c2">L'architecture</span></p>
+    <h2 class="sr-only" id="archi" data-i18n="h.archi">Architecture</h2>
+    <div class="prose">
+      <p data-i18n="archi.p">
+        Une séparation nette entre les règles, la validation des placements, les algorithmes
+        et l'affichage. <strong>Game</strong> tient la logique, <strong>Validator</strong>
+        décide si un coup est légal, <strong>Algorithms</strong> porte la recherche du plus
+        grand carré et le calcul de connexité, <strong>Board</strong> gère la grille et les
+        territoires. RAII, <code>enum class</code>, <code>constexpr</code>, STL : les outils
+        du langage plutôt que des rustines.
+      </p>
+      <p data-i18n="archi.p2">
+        Trois mécaniques de bonus s'ajoutent au placement : les coupons d'échange, qui
+        laissent choisir parmi les cinq tuiles suivantes ; les pierres, qui bloquent un
+        adversaire ; et l'annexion, qui prend une case du territoire d'en face.
+      </p>
+      <p data-i18n="archi.p3">
+        Le dépôt est documenté à part : prise en main, architecture et décisions
+        d'implémentation, règles détaillées, arborescence et dépendances entre modules.
+      </p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="suite">
+    <div class="wrap">
+    <h2 class="sr-only" id="suite" data-i18n="h.suite">Suite</h2>
+    <nav class="next" aria-label="Travaux">
+      <a href="/travaux/gamedex/"><span class="dir" data-i18n="nav.prev">Travail précédent</span>Gamedex</a>
+      <a href="/travaux/ludoria/"><span class="dir" data-i18n="nav.next">Travail suivant</span>Ludoria</a>
+    </nav>
+  </div>
+  </section>
+
+</main>
+
+<div class="menu" id="menu" hidden>
+  <button class="menu-close" type="button" data-i18n="menu.close">Fermer</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/travaux/" data-i18n="m.travaux">Travaux</a>
+      <a href="/savoir-faire/" data-i18n="m.stack">Savoir-faire</a>
+      <a href="/contact/" data-i18n="m.contact">Contact</a>
+      <a href="/" data-i18n="m.accueil">Accueil</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/travaux/">Travaux</a> · <a href="/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script src="/scripts/vendor/gsap.min.js" defer></script>
+<script src="/scripts/vendor/ScrollTrigger.min.js" defer></script>
+<script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/menu.js" defer></script>
+</body>
+</html>

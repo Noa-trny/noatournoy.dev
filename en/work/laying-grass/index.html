@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>laying_grass — Noa Tournoy</title>
+<meta name="description" content="laying_grass: a tile-laying game in pure C++17 with zero dependencies — standard library only, right down to the hand-written JSON parser. 96 tile shapes, 2 to 9 players.">
+<meta name="theme-color" content="#fbfbfc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laying_grass — Noa Tournoy">
+<meta property="og:description" content="laying_grass: a tile-laying game in pure C++17 with zero dependencies — standard library only, right down to the hand-written JSON parser. 96 tile shapes, 2 to 9 players.">
+<meta property="og:url" content="https://noatournoy.dev/en/work/laying-grass/">
+<meta property="og:image" content="https://noatournoy.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/laying-grass/">
+<link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/laying-grass/">
+<link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/laying-grass/">
+<meta property="og:locale" content="en_US">
+<link rel="canonical" href="https://noatournoy.dev/en/work/laying-grass/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin="">
+<link rel="stylesheet" href="/styles/spec.css">
+</head>
+<body>
+<a class="skip" href="#contenu">Skip to content</a>
+
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/en/">Portfolio</a>
+  <div class="tophead-right">
+    <div class="lang" role="group" aria-label="Language">
+        <a href="/travaux/laying-grass/" lang="fr" hreflang="fr">FR</a>
+        <a href="/en/work/laying-grass/" lang="en" hreflang="en" aria-current="true">EN</a>
+      </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu">Menu</button>
+  </div>
+</header>
+</div>
+
+<main id="contenu" tabindex="-1">
+
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label">
+      <span></span>
+      <span>2026, solo</span>
+      <span>C++17 · console · zero dependencies</span>
+    </p>
+    <h1 class="fiche-title" id="titre">laying_grass</h1>
+    <p class="hero-sub">A tile-laying game inspired by "The Devil's Plan", written in pure C++17: standard library only, right down to the JSON parser.</p>
+    <ul class="fiche-links">
+      <li><a href="https://github.com/Noa-trny/laying_grass_cpp">Read the code</a></li>
+    </ul>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="sujet">
+    <div class="wrap">
+    <h2 class="sec-title" id="sujet">Zero dependencies, literally.</h2>
+    <div class="prose">
+      <p>The game reads its 96 tile shapes from a JSON file. Pulling in a library to read one file would have been quicker to write; the parser is hand-written instead. That is the decision that sums up the project, and the one that teaches the most.</p>
+      <p>Two to nine players, on a 20 × 20 or 30 × 30 grid depending on the count, nine rounds each. Tiles rotate and flip. The winner is whoever holds the largest filled square at the end; ties are broken by total territory.</p>
+    </div>
+
+    <figure class="figure" style="margin-top: clamp(2rem, 5vh, 3.5rem)">
+      <picture>
+        <img src="/travaux/laying-grass/img/console.webp" alt="A game in progress in the terminal: the grid, the available tiles and the players' scores." width="1280" height="720" loading="lazy" decoding="async">
+      </picture>
+      <figcaption>A game in progress, exactly as the program draws it in the terminal.</figcaption>
+    </figure>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="archi">
+    <div class="wrap">
+    <p class="label"><span>The architecture</span></p>
+    <h2 class="sr-only" id="archi">Architecture</h2>
+    <div class="prose">
+      <p>A clean separation between rules, placement validation, algorithms and display. <strong>Game</strong> holds the logic, <strong>Validator</strong> decides whether a move is legal, <strong>Algorithms</strong> carries the largest-square search and the connectivity computation, <strong>Board</strong> manages the grid and territories. RAII, <code>enum class</code>, <code>constexpr</code>, STL: the language's own tools rather than patches.</p>
+      <p>Three bonus mechanics sit on top of placement: exchange coupons, which let you pick from the next five tiles; stones, which block an opponent; and annexation, which takes a cell from the territory across the board.</p>
+      <p>The repository is documented separately: getting started, architecture and implementation decisions, detailed rules, file tree and inter-module dependencies.</p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="suite">
+    <div class="wrap">
+    <h2 class="sr-only" id="suite">Next</h2>
+    <nav class="next" aria-label="Travaux">
+      <a href="/en/work/gamedex/"><span class="dir">Previous project</span>Gamedex</a>
+      <a href="/en/work/ludoria/"><span class="dir">Next project</span>Ludoria</a>
+    </nav>
+  </div>
+  </section>
+
+</main>
+
+<div class="menu" id="menu" hidden="">
+  <button class="menu-close" type="button">Close</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/en/work/">Work</a>
+      <a href="/en/skills/">Skills</a>
+      <a href="/en/contact/">Contact</a>
+      <a href="/en/">Home</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/en/work/">Travaux</a> · <a href="/en/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script src="/scripts/vendor/gsap.min.js" defer=""></script>
+<script src="/scripts/vendor/ScrollTrigger.min.js" defer=""></script>
+<script src="/scripts/kinetic.js" defer=""></script>
+<script src="/scripts/menu.js" defer=""></script>
+
+
+</body></html>

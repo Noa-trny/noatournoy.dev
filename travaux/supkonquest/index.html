@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n="doc.title">SupKonQuest — Noa Tournoy</title>
+<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="SupKonQuest : jeu de stratégie temps réel multijoueur. Client Godot 4.6, serveur C++20 faisant autorité sur Raspberry Pi 5, protocole TCP binaire, cartes procédurales.">
+<meta name="theme-color" content="#fbfbfc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SupKonQuest — Noa Tournoy">
+<meta property="og:description" content="Stratégie temps réel multijoueur. Client Godot, serveur C++20 faisant autorité, protocole TCP binaire.">
+<meta property="og:url" content="https://noatournoy.dev/travaux/supkonquest/">
+<meta property="og:image" content="https://noatournoy.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/supkonquest/">
+<link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/supkonquest/">
+<link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/supkonquest/">
+<meta property="og:locale" content="fr_FR">
+<link rel="canonical" href="https://noatournoy.dev/travaux/supkonquest/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles/spec.css">
+</head>
+<body>
+<a class="skip" href="#contenu" data-i18n="skip">Aller au contenu</a>
+
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/">Portfolio</a>
+  <div class="tophead-right">
+    <div class="lang" role="group" aria-label="Langue">
+        <a href="/travaux/supkonquest/" lang="fr" hreflang="fr" aria-current="true">FR</a>
+        <a href="/en/work/supkonquest/" lang="en" hreflang="en">EN</a>
+      </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-i18n="menu">Menu</button>
+  </div>
+</header>
+</div>
+
+<main id="contenu" tabindex="-1">
+
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label">
+      <span data-i18n="c.a"></span>
+      <span data-i18n="c.b">2026, sous Carton Studio's</span>
+      <span data-i18n="c.c">Godot 4.6 · C++20 · TCP binaire</span>
+    </p>
+    <h1 class="fiche-title" id="titre">SupKonQuest</h1>
+    <p class="hero-sub" data-i18n="lede">
+      Un jeu de stratégie temps réel multijoueur, dans l'esprit de Risk : un client Godot,
+      un serveur C++ qui fait autorité, et rien entre les deux qu'un protocole binaire.
+    </p>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="sujet">
+    <div class="wrap">
+    <h2 class="sec-title" id="sujet" data-i18n="sujet.t">Le serveur décide, le client affiche.</h2>
+    <div class="prose">
+      <p data-i18n="sujet.1">
+        L'architecture fait autorité côté serveur : le serveur détient l'état de la partie,
+        le client ne fait que le représenter et transmettre des intentions. C'est le choix
+        qui coûte le plus cher à écrire, et celui qui rend la triche structurellement
+        impossible.
+      </p>
+      <p data-i18n="sujet.2">
+        Deux dépôts, deux langages, une seule vérité. Le serveur est en C++20 et vise le
+        Raspberry Pi 5 ; le client est en Godot 4.6. Ils se parlent en TCP par un protocole
+        binaire versionné, écrit pour cette partie plutôt que repris d'une bibliothèque
+        générique.
+      </p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="fait">
+    <div class="wrap">
+    <p class="label"><span data-i18n="c2">Ce que ça fait tourner</span></p>
+    <h2 class="sr-only" id="fait" data-i18n="h.fait">Réalisation</h2>
+    <div class="prose">
+      <h3 data-i18n="f1.t">Des cartes générées</h3>
+      <p data-i18n="f1.p">
+        La carte est produite procéduralement côté serveur, en trois configurations, puis
+        transmise au client. Aucune carte n'est stockée : elles se recalculent.
+      </p>
+
+      <h3 data-i18n="f2.t">Une partie complète</h3>
+      <p data-i18n="f2.p">
+        Sélection et déplacement d'unités, formations, capture de camps, revenu, sorts,
+        conditions de fin de partie, un adversaire automatique, et un classement accessible
+        depuis le menu. Le jeu se termine, ce qui est la part du travail qu'on sous-estime
+        toujours.
+      </p>
+
+      <h3 data-i18n="f3.t">Trois langues</h3>
+      <p data-i18n="f3.p">
+        Le client est traduit en français, anglais et espagnol, avec le changement de langue
+        depuis les réglages.
+      </p>
+
+      <h3 data-i18n="f4.t">La contrainte matérielle</h3>
+      <p data-i18n="f4.p">
+        Viser un Raspberry Pi 5 comme cible de déploiement n'est pas une coquetterie : sur
+        une machine de cette taille, une boucle de jeu qui dérive ou un protocole bavard se
+        voient tout de suite. La contrainte fait le travail du profileur.
+      </p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="acces">
+    <div class="wrap">
+    <h2 class="sr-only" id="acces" data-i18n="h.acces">Accès au code</h2>
+    <div class="prose">
+      <p data-i18n="acces.p">
+        Les deux dépôts sont privés, sous l'organisation Carton Studio's. J'en parle
+        volontiers en entretien ; je ne peux pas les ouvrir ici.
+      </p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="suite">
+    <div class="wrap">
+    <h2 class="sr-only" id="suite" data-i18n="h.suite">Suite</h2>
+    <nav class="next" aria-label="Travaux">
+      <a href="/travaux/datasentinel/"><span class="dir" data-i18n="nav.prev">Travail précédent</span>DataSentinel</a>
+      <a href="/travaux/gamedex/"><span class="dir" data-i18n="nav.next">Travail suivant</span>Gamedex</a>
+    </nav>
+  </div>
+  </section>
+
+</main>
+
+<div class="menu" id="menu" hidden>
+  <button class="menu-close" type="button" data-i18n="menu.close">Fermer</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/travaux/" data-i18n="m.travaux">Travaux</a>
+      <a href="/savoir-faire/" data-i18n="m.stack">Savoir-faire</a>
+      <a href="/contact/" data-i18n="m.contact">Contact</a>
+      <a href="/" data-i18n="m.accueil">Accueil</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/travaux/">Travaux</a> · <a href="/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script src="/scripts/vendor/gsap.min.js" defer></script>
+<script src="/scripts/vendor/ScrollTrigger.min.js" defer></script>
+<script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/menu.js" defer></script>
+</body>
+</html>

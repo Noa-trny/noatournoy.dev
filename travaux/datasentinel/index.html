@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title data-i18n="doc.title">DataSentinel — Noa Tournoy</title>
+<meta name="description" data-i18n="doc.desc" data-i18n-attr="content" content="DataSentinel : tableau de bord de pilotage de la sécurité des produits digitaux, construit pendant un stage de trois mois chez ADEO. Looker, LookML, Python, React, BigQuery, Terraform, Kubernetes.">
+<meta name="theme-color" content="#fbfbfc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DataSentinel — Noa Tournoy">
+<meta property="og:description" content="Un tableau de bord qui a remplacé le suivi manuel de la sécurité des produits digitaux, chez ADEO.">
+<meta property="og:url" content="https://noatournoy.dev/travaux/datasentinel/">
+<meta property="og:image" content="https://noatournoy.dev/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/datasentinel/">
+<link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/datasentinel/">
+<link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/datasentinel/">
+<meta property="og:locale" content="fr_FR">
+<link rel="canonical" href="https://noatournoy.dev/travaux/datasentinel/">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="preload" href="/fonts/RobotoFlex.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/styles/spec.css">
+</head>
+<body>
+<a class="skip" href="#contenu" data-i18n="skip">Aller au contenu</a>
+
+<div class="head-band">
+<header class="tophead wrap">
+  <a class="mark" href="/">Portfolio</a>
+  <div class="tophead-right">
+    <div class="lang" role="group" aria-label="Langue">
+        <a href="/travaux/datasentinel/" lang="fr" hreflang="fr" aria-current="true">FR</a>
+        <a href="/en/work/datasentinel/" lang="en" hreflang="en">EN</a>
+      </div>
+    <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-i18n="menu">Menu</button>
+  </div>
+</header>
+</div>
+
+<main id="contenu" tabindex="-1">
+
+  <section class="sec band-sec light" aria-labelledby="titre">
+    <div class="wrap">
+    <p class="label">
+      <span data-i18n="c.a"></span>
+      <span data-i18n="c.b">Juin → août 2025, stage ADEO Ronchin</span>
+      <span data-i18n="c.c">Looker · LookML · Python · React · BigQuery · Terraform</span>
+    </p>
+    <h1 class="fiche-title" id="titre">DataSentinel</h1>
+    <p class="hero-sub" data-i18n="lede">
+      Un tableau de bord qui a remplacé le suivi manuel de la sécurité des produits
+      digitaux, et les extensions full-stack qui le rendent utilisable au quotidien.
+    </p>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="sujet">
+    <div class="wrap">
+    <h2 class="sec-title" id="sujet" data-i18n="sujet.t">Des tableurs vers une source unique.</h2>
+    <div class="prose">
+      <p data-i18n="sujet.1">
+        Le suivi de la sécurité des produits digitaux vivait dans des feuilles de calcul
+        tenues à la main : état des vulnérabilités, conformité, avancement des tests
+        d'intrusion. Chaque recoupement était un travail de copie, et personne n'avait la
+        même version du chiffre.
+      </p>
+      <p data-i18n="sujet.2">
+        DataSentinel centralise ce pilotage dans un tableau de bord Looker branché
+        directement sur les données. Le chiffre affiché est le chiffre de la source ; il
+        n'y a plus de version intermédiaire à maintenir.
+      </p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="fait">
+    <div class="wrap">
+    <p class="label"><span data-i18n="c2">Ce que j'ai construit</span></p>
+    <h2 class="sr-only" id="fait" data-i18n="h.fait">Réalisation</h2>
+    <div class="prose">
+      <h3 data-i18n="f1.t">La modélisation</h3>
+      <p data-i18n="f1.p">
+        Exploitation des données via Google Cloud Platform et BigQuery : requêtes SQL
+        complexes et modélisation en LookML. C'est la couche qui décide de ce qu'un
+        indicateur veut dire : l'endroit où une définition floue coûte le plus cher.
+      </p>
+
+      <h3 data-i18n="f2.t">Les extensions full-stack</h3>
+      <p data-i18n="f2.p">
+        Un tableau de bord montre ; il ne laisse pas agir. J'ai développé des extensions
+        intégrées à Looker (backend Python, frontend React) pour rendre la gestion des
+        tests d'intrusion interactive : consulter, mettre à jour et suivre depuis l'outil
+        plutôt qu'à côté.
+      </p>
+
+      <h3 data-i18n="f3.t">Le déploiement</h3>
+      <p data-i18n="f3.p">
+        Pipeline d'intégration et de déploiement continus, et infrastructure décrite comme
+        du code : Terraform, GitHub Actions, Docker, Kubernetes. L'outil se redéploie sans
+        geste manuel.
+      </p>
+
+      <h3 data-i18n="f4.t">Ce que j'en ai rapporté</h3>
+      <p data-i18n="f4.p">
+        Les certifications <strong>Google Looker</strong> et <strong>LookML</strong>, et une
+        conviction : sur un sujet de sécurité, la valeur n'est pas dans le graphique mais
+        dans la définition de la donnée qu'il affiche.
+      </p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec dark" aria-labelledby="confid">
+    <div class="wrap">
+    <h2 class="sr-only" id="confid" data-i18n="h.confid">Confidentialité</h2>
+    <div class="prose">
+      <p data-i18n="confid.p">
+        Aucune capture, aucune donnée, aucun nom de produit : le contenu de l'outil
+        appartient à ADEO. Ce qui est décrit ici se limite à ce que je peux dire de mon
+        propre travail.
+      </p>
+    </div>
+  </div>
+  </section>
+
+  <section class="sec band-sec light" aria-labelledby="suite">
+    <div class="wrap">
+    <h2 class="sr-only" id="suite" data-i18n="h.suite">Suite</h2>
+    <nav class="next" aria-label="Travaux">
+      <a href="/travaux/eclosion/"><span class="dir" data-i18n="nav.prev">Travail précédent</span>Éclosion</a>
+      <a href="/travaux/supkonquest/"><span class="dir" data-i18n="nav.next">Travail suivant</span>SupKonQuest</a>
+    </nav>
+  </div>
+  </section>
+
+</main>
+
+<div class="menu" id="menu" hidden>
+  <button class="menu-close" type="button" data-i18n="menu.close">Fermer</button>
+  <div class="menu-panel">
+    <nav aria-label="Sections">
+      <a href="/travaux/" data-i18n="m.travaux">Travaux</a>
+      <a href="/savoir-faire/" data-i18n="m.stack">Savoir-faire</a>
+      <a href="/contact/" data-i18n="m.contact">Contact</a>
+      <a href="/" data-i18n="m.accueil">Accueil</a>
+    </nav>
+  </div>
+</div>
+
+<footer class="foot dark">
+  <div class="wrap foot-in">
+    <span>Noa Tournoy — Lille, France</span>
+    <span><a href="https://eclosion.noatournoy.dev">Éclosion</a> · <a href="/travaux/">Travaux</a> · <a href="/contact/">Contact</a></span>
+  </div>
+</footer>
+
+<script src="/scripts/vendor/gsap.min.js" defer></script>
+<script src="/scripts/vendor/ScrollTrigger.min.js" defer></script>
+<script src="/scripts/kinetic.js" defer></script>
+<script src="/scripts/menu.js" defer></script>
+</body>
+</html>

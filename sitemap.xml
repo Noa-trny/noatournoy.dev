@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://noatournoy.dev/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/en/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/travaux/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/en/work/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/savoir-faire/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/savoir-faire/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/skills/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/savoir-faire/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/en/skills/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/savoir-faire/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/skills/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/savoir-faire/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/contact/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/contact/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/contact/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/en/contact/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/contact/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/contact/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/contact/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/travaux/eclosion/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/eclosion/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/eclosion/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/eclosion/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/en/work/eclosion/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/eclosion/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/eclosion/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/eclosion/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/travaux/datasentinel/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/datasentinel/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/datasentinel/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/datasentinel/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/en/work/datasentinel/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/datasentinel/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/datasentinel/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/datasentinel/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/travaux/supkonquest/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/supkonquest/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/supkonquest/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/supkonquest/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/en/work/supkonquest/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/supkonquest/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/supkonquest/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/supkonquest/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/travaux/gamedex/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/gamedex/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/gamedex/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/gamedex/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/en/work/gamedex/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/gamedex/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/gamedex/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/gamedex/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/travaux/laying-grass/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/laying-grass/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/laying-grass/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/laying-grass/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/en/work/laying-grass/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/laying-grass/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/laying-grass/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/laying-grass/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/travaux/ludoria/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/ludoria/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/ludoria/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/ludoria/"/>
+  </url>
+  <url>
+    <loc>https://noatournoy.dev/en/work/ludoria/</loc>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://noatournoy.dev/travaux/ludoria/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://noatournoy.dev/en/work/ludoria/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://noatournoy.dev/travaux/ludoria/"/>
+  </url>
+</urlset>
