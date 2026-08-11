@@ -1,19 +1,7 @@
-import type { Metadata } from "next";
-import { alternates, pair } from "@/content/routes";
+import { HomeBody } from "@/components/HomeBody";
 
-// Ossature de route — le contenu arrive en phase 3, depuis content/prose/.
-// Elle existe des maintenant pour que la parite d'URLs avec l'ancien site soit
-// verifiable avant qu'une seule ligne de prose ne bouge.
+// Le pendant anglais. Voir app/(fr)/page.tsx.
 
-export const metadata: Metadata = {
-  title: "Noa Tournoy",
-  alternates: alternates(pair.home, "en"),
-};
-
-export default function HomeEn() {
-  return (
-    <main id="contenu" tabIndex={-1}>
-      <h1>Noa Tournoy</h1>
-    </main>
-  );
+export default function Home() {
+  return <HomeBody locale="en" />;
 }

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { alternates, isSlug, pair, SLUGS, type Slug } from "@/content/routes";
+import { alternates, isSlug, pair, SLUGS } from "@/content/routes";
+import { bySlug } from "@/content/projects";
+import { prose } from "@/content/prose";
+import { ProjectPage } from "@/components/ProjectPage";
 
 // Le pendant anglais de app/(fr)/travaux/[slug]/page.tsx. Les six slugs sont
 // identiques dans les deux langues — seul le segment parent change.
@@ -18,17 +21,30 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   if (!isSlug(slug)) return {};
-  return { alternates: alternates(pair.project(slug), "en") };
+  const p = bySlug(slug);
+  const c = p.copy.en;
+  const url = pair.project(slug).en;
+
+  return {
+    title: c.metaTitle,
+    description: c.metaDescription,
+    alternates: alternates(pair.project(slug), "en"),
+    openGraph: {
+      type: "article",
+      title: c.metaTitle,
+      description: c.ogDescription,
+      url,
+      locale: "en_US",
+      images: [p.ogImage ?? "/og.png"],
+    },
+  };
 }
 
 export default async function Work({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
   if (!isSlug(slug)) notFound();
-  const s: Slug = slug;
 
   return (
-    <main id="contenu" tabIndex={-1}>
-      <h1>{s}</h1>
-    </main>
+    <ProjectPage slug={slug} locale="en" sections={prose.en[slug]} />
   );
 }

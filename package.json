@@ -5,10 +5,12 @@
   "description": "Portfolio de Noa Tournoy.",
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npm run check:parity",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check:parity": "node --experimental-strip-types --no-warnings scripts/check-parity.mts"
   },
   "dependencies": {
     "next": "16.3.0",
