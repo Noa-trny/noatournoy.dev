@@ -1,42 +1,26 @@
 import type { Metadata, Viewport } from "next";
+import { connection } from "next/server";
+import { alternates, pair } from "@/content/routes";
+import { FontPreload, sharedMetadata } from "../shared-head";
 import "@/styles/spec.css";
 
-// Layout racine du groupe francais. Il n'existe volontairement PAS de
-// `app/layout.tsx` : deux layouts racine (un par langue) sont le seul moyen
-// propre de porter deux valeurs de `<html lang>`, et un layout imbrique ne
-// peut pas changer cet attribut.
+// Layout racine du groupe francais. Voir app/(en)/layout.tsx pour le pendant
+// anglais et la raison pour laquelle il n'existe pas de app/layout.tsx.
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://noatournoy.dev"),
-  title:
-    "Noa Tournoy — ingénieur logiciel, développement et cybersécurité",
+  ...sharedMetadata,
+  title: "Noa Tournoy — ingénieur logiciel, développement et cybersécurité",
   description:
     "Noa Tournoy, étudiant ingénieur à Lille, spécialisé en cybersécurité. Développement full-stack en Python, TypeScript et Docker. Alternance chez ADEO à partir d'octobre 2026.",
-  alternates: {
-    canonical: "/",
-    languages: {
-      fr: "/",
-      en: "/en/",
-      "x-default": "/",
-    },
-  },
+  alternates: alternates(pair.home, "fr"),
   openGraph: {
     type: "website",
-    title:
-      "Noa Tournoy — ingénieur logiciel, développement et cybersécurité",
+    title: "Noa Tournoy — ingénieur logiciel, développement et cybersécurité",
     description:
       "Développement full-stack, données et cybersécurité. Six travaux, du tableau de bord Looker à l'expérience web 3D Éclosion.",
-    url: "/",
+    url: pair.home.fr,
     locale: "fr_FR",
     images: ["/og.png"],
-  },
-  twitter: { card: "summary_large_image" },
-  icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/favicon.ico", sizes: "32x32" },
-    ],
-    apple: "/apple-touch-icon.png",
   },
 };
 
@@ -47,25 +31,22 @@ export const viewport: Viewport = {
   themeColor: "#fbfbfc",
 };
 
-export default function RootLayoutFr({
+// `connection()` fait basculer tout l'arbre en rendu par requete. C'est la
+// condition d'existence du nonce de proxy.ts : une page pre-rendue au build n'a
+// pas de requete, donc pas de nonce, donc ses <script> inline seraient bloques.
+// Le poser ici plutot que dans chaque page evite qu'une page future l'oublie et
+// se retrouve silencieusement cassee en production.
+export default async function RootLayoutFr({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  await connection();
+
   return (
     <html lang="fr">
       <head>
-        {/* Une seule fonte, prechargee a la main. `next/font` renommerait le
-            fichier avec une empreinte, ce qui invaliderait la regle de cache
-            immuable sur /fonts/ sans rien apporter : le sous-ensemble latin et
-            `font-display: swap` sont deja en place. */}
-        <link
-          rel="preload"
-          href="/fonts/RobotoFlex.woff2"
-          as="font"
-          type="font/woff2"
-          crossOrigin=""
-        />
+        <FontPreload />
       </head>
       <body>{children}</body>
     </html>

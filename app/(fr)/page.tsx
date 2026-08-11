@@ -1,16 +1,9 @@
-import { connection } from "next/server";
-
 // Portage verbatim de l'ancien index.html. Aucune animation ici : GSAP revient
 // en phase 4 sous forme de composant client, et la scene 3D en phase 6. Les
 // attributs `data-i18n` de l'ancien balisage ne sont pas repris : plus aucun
 // script ne les lisait depuis le passage a deux arbres statiques (commit d018db8).
 
-// `connection()` fait basculer la page en rendu par requete. C'est la condition
-// pour que le nonce de proxy.ts existe : une page pre-rendue au build n'a pas de
-// requete, donc pas de nonce, donc ses <script> inline seraient bloques.
-export default async function Accueil() {
-  await connection();
-
+export default function Accueil() {
   return (
     <>
       <a className="skip" href="#contenu">
