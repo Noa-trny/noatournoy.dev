@@ -1,4 +1,4 @@
-import { Children, isValidElement, type ReactNode } from "react";
+import { Children, cloneElement, isValidElement, type ReactNode } from "react";
 
 // Decoupe un titre en mots masques, cote SERVEUR.
 //
@@ -46,10 +46,12 @@ function walk(node: ReactNode, keyBase: string): ReactNode {
     const el = node as React.ReactElement<{ children?: ReactNode }>;
     if (el.props.children === undefined) return node;
     // On descend : le <em> doit etre decoupe comme le reste.
-    return {
-      ...el,
-      props: { ...el.props, children: walk(el.props.children, `${keyBase}.c`) },
-    } as ReactNode;
+    //
+    // `cloneElement` et non un etalement de l'objet element : recopier un
+    // element a la main lui fait perdre les proprietes que React n'ajoute qu'en
+    // developpement, et React le signale — « Attempted to render <em> without
+    // development properties ».
+    return cloneElement(el, undefined, walk(el.props.children, `${keyBase}.c`));
   }
   return node;
 }

@@ -18,6 +18,11 @@ const config: NextConfig = {
   // package-lock.json etranger et le signale a chaque build.
   turbopack: { root: import.meta.dirname },
 
+  // Next 16 depose AGENTS.md et CLAUDE.md a la racine au premier `next dev`.
+  // Ce depot ne porte aucune trace d'outillage : la documentation de travail
+  // vit a cote, hors du dossier versionne.
+  agentRules: false,
+
   experimental: {
     // app/global-not-found.tsx est indispensable ici : sans layout racine unique
     // — les deux vivent dans les groupes (fr) et (en) — un not-found.tsx n'a
