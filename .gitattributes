@@ -3,8 +3,22 @@
 # en CRLF rejoue le fichier entier dans le diff.
 * text=auto eol=lf
 
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.mjs  text eol=lf
+*.json text eol=lf
+*.gltf text eol=lf
+
 *.png binary
 *.jpg binary
 *.webp binary
 *.ico binary
 *.woff2 binary
+
+# Actifs 3D : jamais de normalisation de fin de ligne.
+*.glb  binary
+*.bin  binary
+*.hdr  binary
+*.exr  binary
+*.ktx2 binary
+*.drc  binary
