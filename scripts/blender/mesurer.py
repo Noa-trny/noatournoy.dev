@@ -159,6 +159,63 @@ def rapport(chemin):
     if total_tris > 300000:
         print(f"  -> decimation necessaire : ratio ~{300000/total_tris:.2f}")
 
+    return objets
+
+
+def rendre_vues(objets, dossier):
+    """
+    Regarder plutot que deduire.
+
+    L'heuristique d'interieur s'est revelee inutile sur ce modele : la boite
+    englobante etant celle de la parcelle entiere, elle a marque 796 maillages
+    sur 800. Des vues valent mieux qu'une deduction fausse.
+    """
+    mn, mx = boite_monde(objets)
+    c = (mn + mx) / 2.0
+    d = mx - mn
+    r = max(d.x, d.y) * 0.62
+
+    monde = bpy.data.worlds.new("w")
+    bpy.context.scene.world = monde
+    monde.use_nodes = True
+    fond = next(n for n in monde.node_tree.nodes if n.bl_idname == "ShaderNodeBackground")
+    fond.inputs["Color"].default_value = (0.45, 0.53, 0.66, 1.0)
+    fond.inputs["Strength"].default_value = 1.4
+
+    soleil = bpy.data.objects.new("s", bpy.data.lights.new("s", "SUN"))
+    bpy.context.scene.collection.objects.link(soleil)
+    soleil.data.energy = 3.0
+    soleil.rotation_euler = (math.radians(48), 0, math.radians(35))
+
+    vues = [
+        ("a-ensemble", Vector((c.x + r, c.y - r, c.z + r * 0.55)), c, 35.0),
+        ("b-facade",   Vector((c.x, c.y - r * 1.15, c.z + d.z * 0.35)), c, 42.0),
+        ("c-dessus",   Vector((c.x, c.y - r * 0.25, c.z + r * 1.4)), c, 35.0),
+    ]
+    sc = bpy.context.scene
+    sc.render.engine = "CYCLES"
+    sc.cycles.samples = 24
+    sc.cycles.use_denoising = True
+    try:
+        prefs = bpy.context.preferences.addons["cycles"].preferences
+        prefs.compute_device_type = "OPTIX"; prefs.get_devices()
+        for dev in prefs.devices: dev.use = dev.type in ("OPTIX", "CPU")
+        sc.cycles.device = "GPU"
+    except Exception:
+        pass
+    sc.render.resolution_x, sc.render.resolution_y = 1280, 800
+    sc.view_settings.view_transform = "AgX"
+    for nom, pos, cible, foc in vues:
+        cam = bpy.data.objects.new(nom, bpy.data.cameras.new(nom))
+        bpy.context.scene.collection.objects.link(cam)
+        cam.location = pos
+        cam.data.lens = foc
+        cam.rotation_euler = (Vector(cible) - pos).to_track_quat("-Z", "Y").to_euler()
+        sc.camera = cam
+        sc.render.filepath = os.path.join(dossier, nom + ".png")
+        bpy.ops.render.render(write_still=True)
+        print("  rendu ->", nom)
+
 
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
@@ -168,7 +225,9 @@ def main():
     if not os.path.exists(chemin):
         raise SystemExit(f"introuvable : {chemin}")
     os.makedirs(SORTIE, exist_ok=True)
-    rapport(chemin)
+    objets = rapport(chemin)
+    if "--render" in argv:
+        rendre_vues(objets, SORTIE)
 
 
 main()
