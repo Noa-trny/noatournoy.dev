@@ -18,6 +18,19 @@ const config: NextConfig = {
   // package-lock.json etranger et le signale a chaque build.
   turbopack: { root: import.meta.dirname },
 
+  experimental: {
+    // app/global-not-found.tsx est indispensable ici : sans layout racine unique
+    // — les deux vivent dans les groupes (fr) et (en) — un not-found.tsx n'a
+    // aucun layout dans lequel se rendre. Cette convention rend son propre
+    // document complet et remplace le layout racine pour la route /_not-found.
+    //
+    // Le drapeau vaut false par defaut. La page fonctionnait quand meme, parce
+    // que le gating vit dans le loader webpack alors que Next 16 construit avec
+    // Turbopack, qui prend un autre chemin. Autrement dit : ca marchait par
+    // accident. On declare l'intention plutot que de dependre de cet ecart.
+    globalNotFound: true,
+  },
+
   async redirects() {
     return [
       // Ces deux redirections etaient MORTES en production : `trailingSlash`

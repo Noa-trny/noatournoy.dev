@@ -13,7 +13,9 @@ import "@/styles/spec.css";
 
 export const metadata: Metadata = {
   title: "Page introuvable — Noa Tournoy",
-  robots: { index: false, follow: true },
+  // Pas de `robots` ici : Next pose deja <meta name="robots" content="noindex">
+  // sur la route not-found. En declarer un second n'ajoutait rien et servait la
+  // balise en double.
 };
 
 export const viewport: Viewport = {
