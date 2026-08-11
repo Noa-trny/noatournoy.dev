@@ -9,6 +9,12 @@ import { journey, type Phase } from "./journeyStore";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+// Expose pour le harnais de mise au point : sans lui on ne peut pas distinguer
+// « la progression n'atteint pas 1 » de « l'amortissement n'a pas converge ».
+if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
+  (window as unknown as Record<string, unknown>).ScrollTrigger = ScrollTrigger;
+}
+
 /** Les deux franchissements du film, en fraction de progression. */
 export const SEUILS = { transit: 0.55, garage: 0.96 } as const;
 
@@ -35,6 +41,13 @@ export function useScrollBridge(scope: RefObject<HTMLElement | null>) {
     () => {
       const el = scope.current;
       if (!el) return;
+
+      // Les positions de declenchement sont mesurees a la creation. A ce
+      // moment la, la fonte variable n'est pas encore substituee et les images
+      // n'ont pas leur taille finale : la hauteur du document change encore.
+      // Sans ces rafraichissements, la progression n'atteint jamais 1.
+      document.fonts?.ready.then(() => ScrollTrigger.refresh());
+      window.addEventListener("load", () => ScrollTrigger.refresh(), { once: true });
 
       const proxy = { p: 0 };
       gsap.to(proxy, {

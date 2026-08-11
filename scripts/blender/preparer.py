@@ -209,6 +209,52 @@ def retexturer():
 
 # ------------------------------------------------------------------ rendu
 
+def recentrer():
+    """
+    Amene la maison a un repere utile : baie au centre, sol a zero.
+
+    Le fichier livre place la maison entre x = -25 et x = 67, parce que
+    l'origine est celle de la parcelle. Ecrire une courbe de camera dans ce
+    repere revient a manipuler des nombres sans signification et a se tromper.
+    Apres recentrage, la scene se lit toute seule : la camera arrive de +Z,
+    franchit la baie en Z = 0, et s'enfonce vers les Z negatifs.
+    """
+    objets = maillages()
+    verres = [o for o in objets
+              if any(s.material and s.material.name == "Glass" for s in o.material_slots)]
+    cible = verres or objets
+
+    mn = Vector((1e9,) * 3); mx = Vector((-1e9,) * 3)
+    for o in cible:
+        for c in o.bound_box:
+            p = o.matrix_world @ Vector(c)
+            mn = Vector((min(mn[i], p[i]) for i in range(3)))
+            mx = Vector((max(mx[i], p[i]) for i in range(3)))
+    centre = (mn + mx) / 2.0
+
+    # Le sol de reference est le BAS DU VITRAGE, pas le point le plus bas du
+    # modele. Une baie toute hauteur pose sur le plancher ; le point le plus bas,
+    # lui, est une fondation enterree — s'y fier plaçait le plancher a 2,99 m et
+    # aurait mis la camera dans le vide sous la maison.
+    sol = 1e9
+    for o in cible:
+        for c in o.bound_box:
+            sol = min(sol, (o.matrix_world @ Vector(c)).z)
+
+    # Blender est Z-up : x lateral, y profondeur, z hauteur.
+    delta = Vector((-centre.x, -centre.y, -sol))
+    # Les RACINES de la scene, pas les maillages : l'importateur glTF range
+    # tout sous une hierarchie de noeuds vides, si bien qu'aucun maillage n'est
+    # sans parent — la premiere version ne deplaçait donc rien du tout, en le
+    # signalant quand meme dans le journal.
+    racines = [o for o in bpy.context.scene.objects if o.parent is None]
+    for o in racines:
+        o.location += delta
+    print(f"                 {len(racines)} racine(s) deplacee(s)")
+    print(f"  recentrage   : deplace de ({delta.x:.2f}, {delta.y:.2f}, {delta.z:.2f})")
+    print(f"                 baie desormais en (0, 0), sol a 0")
+
+
 def redimensionner_textures(cote=1024):
     """
     Redimensionne les images DANS Blender, avant l'export.
@@ -329,6 +375,7 @@ def main():
         rendre(SORTIE)
 
     if "--export" in argv:
+        recentrer()
         redimensionner_textures(1024)
         cible = argv[argv.index("--export") + 1]
         os.makedirs(os.path.dirname(cible), exist_ok=True)

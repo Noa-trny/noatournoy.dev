@@ -26,6 +26,15 @@ export function Journey({ children }: { children: React.ReactNode }) {
   const conteneur = useRef<HTMLDivElement>(null);
   const [actif, setActif] = useState(false);
   const [prete, setPrete] = useState(false);
+  // Mode solo, en developpement : `?scene` efface la couche DOM pour qu'on
+  // puisse regler la trajectoire en voyant la scene. Sans lui, le canvas est
+  // derriere des bandes opaques et on regle a l'aveugle.
+  const [solo, setSolo] = useState(false);
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") return;
+    setSolo(new URLSearchParams(window.location.search).has("scene"));
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -68,6 +77,18 @@ export function Journey({ children }: { children: React.ReactNode }) {
     if (process.env.NODE_ENV === "production") return;
     (window as unknown as Record<string, unknown>).__voyage = {
       scroll: () => ({ ...scroll }),
+      diag: () => {
+        const st = (window as unknown as { ScrollTrigger?: { getAll: () => unknown[] } }).ScrollTrigger;
+        const el = document.querySelector(".journey") as HTMLElement | null;
+        return {
+          scrollY: Math.round(window.scrollY),
+          maxDoc: Math.round(document.documentElement.scrollHeight - window.innerHeight),
+          maxBody: Math.round(document.body.scrollHeight - window.innerHeight),
+          journeyTop: el ? Math.round(el.getBoundingClientRect().top + window.scrollY) : null,
+          journeyH: el ? Math.round(el.offsetHeight) : null,
+          triggers: st ? st.getAll().length : "?",
+        };
+      },
       etat: () => journey.get(),
       actif: () => actif,
       refus: refusDe3D,
@@ -82,6 +103,7 @@ export function Journey({ children }: { children: React.ReactNode }) {
       className="journey"
       data-3d={actif ? "on" : "off"}
       data-prete={prete ? "1" : "0"}
+      data-solo={solo ? "1" : undefined}
     >
       {actif ? (
         <div className="journey-canvas" aria-hidden="true">

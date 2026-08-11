@@ -1,70 +1,57 @@
 "use client";
 
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useRef } from "react";
-import * as THREE from "three";
-import { scroll } from "./scroll/scrollState";
+import { Canvas } from "@react-three/fiber";
+import { Sky } from "@react-three/drei";
+import { Suspense } from "react";
+import { CameraRig } from "./camera/CameraRig";
+import { House } from "./house/House";
 
-// Phase 6 : le squelette. Aucun modèle, aucune lumière d'ambiance, aucun
-// matériau physique — juste de quoi PROUVER que le pont entre le défilement et
-// la boucle de rendu est sans gigue avant de construire quoi que ce soit
-// par-dessus. La maison arrive en phase 7, la voiture en phase 9.
+// La scene. Phase 7 : la maison et le trajet de camera. Les vitrines viennent
+// en phase 8, le garage et la voiture en phase 9.
+//
+// Deux choses volontairement absentes :
+//
+// - Aucun `<Environment preset=...>`. Il irait chercher une HDRI sur un CDN
+//   tiers, que `connect-src 'self'` bloque. `<Sky>` est procedural et ne pese
+//   pas un octet.
+// - Aucun post-processing. Il tirerait tout l'EffectComposer, et surtout il
+//   invaliderait le prechauffage des shaders — le piege de cle de cache qui a
+//   coute 617 ms de pire frame sur Eclosion.
 
-/** L'amortissement qui découple la boucle de GSAP de celle de R3F. */
-function Rig() {
-  const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
-  const cube = useRef<THREE.Mesh>(null);
-  const look = useRef(new THREE.Vector3());
-
-  useFrame((_, delta) => {
-    // Un onglet en arrière-plan, un ramasse-miettes ou une compilation de
-    // shader produisent un delta énorme. Sans ce plafond, la caméra
-    // téléporterait au retour.
-    const dt = Math.min(delta, 1 / 30);
-
-    scroll.eased = THREE.MathUtils.damp(scroll.eased, scroll.target, 6, dt);
-    const t = scroll.eased;
-
-    // Une trajectoire provisoire, en ligne droite : elle sera remplacée par une
-    // CatmullRomCurve3 en phase 7.
-    camera.position.set(
-      Math.sin(t * Math.PI) * 3,
-      2.2 - t * 0.8,
-      12 - t * 14
-    );
-    look.current.set(0, 1.2 - t * 0.4, -2 - t * 6);
-    camera.lookAt(look.current);
-
-    if (cube.current) {
-      cube.current.rotation.y = t * Math.PI * 2;
-      cube.current.rotation.x = t * Math.PI;
-    }
-  });
-
+function Lumiere() {
   return (
-    <mesh ref={cube} position={[0, 1, -4]}>
-      <boxGeometry args={[2, 2, 2]} />
-      {/* `toneMapped={false}` garde le vert acide exact : c'est une couleur
-          d'identité, pas une couleur physique. */}
-      <meshBasicMaterial color="#c2f53f" wireframe toneMapped={false} />
-    </mesh>
+    <>
+      {/* Rasant, venant de l'avant-gauche : c'est cette incidence qui creuse
+          les debords et pose l'ombre horizontale sous la dalle. */}
+      <directionalLight position={[-18, 16, 24]} intensity={2.6} />
+      {/* Le ciel comme lumiere d'appoint. Sans lui les faces a l'ombre
+          tombent au noir et la maison se lit en decoupage. */}
+      <hemisphereLight args={["#b9c9e2", "#5a5750", 1.1]} />
+    </>
   );
 }
 
 export default function Scene() {
   return (
     <Canvas
-      camera={{ fov: 38, near: 0.1, far: 200, position: [0, 2.2, 12] }}
-      gl={{ antialias: false, powerPreference: "high-performance" }}
-      dpr={[1, 1.5]}
-      // Le canvas est purement décoratif : il ne doit jamais recevoir le focus
-      // ni apparaître dans l'arbre d'accessibilité. Toute la navigation vit
-      // dans le DOM, à côté.
+      camera={{ fov: 40, near: 0.1, far: 400, position: [0, 1.75, 42] }}
+      gl={{ antialias: true, powerPreference: "high-performance" }}
+      dpr={[1, 1.75]}
+      shadows={false}
+      // Purement decoratif : jamais dans l'arbre d'accessibilite, jamais un
+      // arret de tabulation. Toute la navigation vit dans le DOM, a cote.
       aria-hidden="true"
       tabIndex={-1}
     >
-      <color attach="background" args={["#08080a"]} />
-      <Rig />
+      <color attach="background" args={["#aebdd2"]} />
+      <Sky sunPosition={[-18, 16, 24]} turbidity={5} rayleigh={1.4} />
+      <Lumiere />
+      <CameraRig />
+      {/* La maison a sa propre frontiere : quand le garage arrivera en phase 9,
+          il aura la sienne, et sa suspension ne figera pas ce qui est deja la. */}
+      <Suspense fallback={null}>
+        <House />
+      </Suspense>
     </Canvas>
   );
 }

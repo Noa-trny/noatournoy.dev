@@ -14,8 +14,17 @@ export function proxy(request: NextRequest) {
 
   const csp = [
     `default-src 'none'`,
-    // 'wasm-unsafe-eval' n'arrive qu'avec le decodeur Meshopt, en phase 7.
-    `script-src 'self' 'nonce-${nonce}'${dev ? " 'unsafe-eval'" : ""}`,
+    // `'wasm-unsafe-eval'` est exige par le decodeur Meshopt, qui appelle
+    // WebAssembly.instantiate sur un module embarque en base64. C'est un
+    // affaiblissement REEL mais etroit : il autorise la compilation WASM, jamais
+    // eval() sur du JavaScript. Le modele de la maison est compresse en
+    // EXT_meshopt_compression — 2,9 Mo au lieu de 9,7.
+    //
+    // Rien d'autre n'est ajoute : pas de worker-src blob:, parce que
+    // MeshoptDecoder.useWorkers() n'est pas appele et que GLTFLoader ne le fait
+    // pas de lui-meme. Et pas de decodeur Draco, qui aurait exige d'auto-heberger
+    // quatre fichiers et d'ouvrir les workers depuis des blob:.
+    `script-src 'self' 'nonce-${nonce}' 'wasm-unsafe-eval'${dev ? " 'unsafe-eval'" : ""}`,
     // En developpement, PAS de nonce sur style-src : l'overlay de Next injecte
     // des <style> inline, et la specification CSP fait ignorer 'unsafe-inline'
     // des qu'un nonce est present dans la meme directive. Les mettre tous les
@@ -26,7 +35,11 @@ export function proxy(request: NextRequest) {
     `style-src-attr 'unsafe-inline'`,
     `img-src 'self' blob: data:`,
     `font-src 'self'`,
-    `connect-src 'self'${dev ? " ws:" : ""}`,
+    // `blob:` est exige par le decodeur Meshopt, qui recupere son module WASM
+    // par une URL d'objet. Sans lui : « Fetch API cannot load blob:... Refused
+    // to connect ». La portee reste etroite — un blob: ne peut venir que de
+    // notre propre document.
+    `connect-src 'self' blob:${dev ? " ws:" : ""}`,
     `manifest-src 'self'`,
     `base-uri 'none'`,
     `form-action 'none'`,

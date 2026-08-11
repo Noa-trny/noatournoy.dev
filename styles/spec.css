@@ -1417,3 +1417,8 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .journey-canvas canvas { display: block; }
 
 .journey-dom { position: relative; z-index: 1; }
+
+/* Mode solo de mise au point : `?scene` en developpement. La couche DOM
+   s'efface pour laisser voir la scene, sans quoi on regle la trajectoire de
+   camera derriere des bandes opaques. */
+.journey[data-solo="1"] .journey-dom { opacity: 0; pointer-events: none; }
