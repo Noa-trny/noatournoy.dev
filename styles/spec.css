@@ -1329,6 +1329,12 @@ html.menu-open, html.menu-open body { overflow: hidden; }
     scroll-behavior: auto !important;
   }
   .zone-dark::after, .band-sec::after { animation: none !important; }
+
+  /* La jauge de defilement vit desormais dans le balisage, alors qu'elle etait
+     injectee par le script — donc absente en mouvement reduit. On retablit ce
+     comportement ici : rien ne l'anime sous cette preference, elle resterait
+     figee en haut sans jamais rien indiquer. */
+  .progress { display: none; }
 }
 
 /* ---------- cibles tactiles ---------- */

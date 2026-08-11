@@ -3,6 +3,7 @@ import { pair, routes } from "@/content/routes";
 import { home, type EmTitle } from "@/content/home";
 import { ui } from "@/content/ui";
 import { Footer, LangSwitch, MenuDrawer, Skip } from "./chrome/Chrome";
+import { Split } from "./motion/Split";
 import { WorkRows } from "./WorkRows";
 
 // Le corps de l'accueil, partage par les deux langues. Tout son texte vient de
@@ -16,9 +17,13 @@ import { WorkRows } from "./WorkRows";
 function SecTitle({ id, title }: { id: string; title: EmTitle }) {
   return (
     <h2 className="sec-title" id={id}>
-      {title.before}
-      {title.em ? <em>{title.em}</em> : null}
-      {title.after}
+      {/* Split descend dans le <em> : anime en bloc, le mot vert montait d'un
+          seul tenant pendant que le reste du titre se levait mot par mot. */}
+      <Split>
+        {title.before}
+        {title.em ? <em>{title.em}</em> : null}
+        {title.after}
+      </Split>
     </h2>
   );
 }
@@ -53,7 +58,9 @@ export function HomeBody({ locale }: { locale: Locale }) {
           <div className="wrap hero-in" id="contenu" tabIndex={-1}>
             <div className="hero-grid">
               <div className="hero-text">
-                <h1 id="titre">Noa Tournoy</h1>
+                <h1 id="titre">
+                  <Split>Noa Tournoy</Split>
+                </h1>
                 <p className="hero-sub">
                   {c.heroSub.map((s, i) =>
                     s.b ? <b key={i}>{s.t}</b> : <span key={i}>{s.t}</span>
@@ -210,6 +217,8 @@ export function HomeBody({ locale }: { locale: Locale }) {
                   </div>
                 </li>
               ))}
+              {/* Le rail que la frise trace au defilement. */}
+              <span className="time-rail" aria-hidden="true" />
             </ul>
           </div>
         </section>
@@ -271,6 +280,8 @@ export function HomeBody({ locale }: { locale: Locale }) {
                   <h3 className="cert-name">{cert.name}</h3>
                   <p className="cert-note">{cert.note}</p>
                   <span className="cert-when">{cert.when}</span>
+                  {/* Le halo qui suit le curseur ; injecte jadis par kinetic.js. */}
+                  <span className="cert-glow" aria-hidden="true" />
                 </li>
               ))}
             </ul>

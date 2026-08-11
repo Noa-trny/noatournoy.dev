@@ -4,6 +4,7 @@ import { pair, routes } from "@/content/routes";
 import { bySlug, neighbours } from "@/content/projects";
 import { ui } from "@/content/ui";
 import { Footer, Header, MenuDrawer, Skip } from "./chrome/Chrome";
+import { Split } from "./motion/Split";
 
 /**
  * Une section de corps d'une fiche.
@@ -82,7 +83,8 @@ export function ProjectPage({
                 className={s.srOnly ? "sr-only" : "sec-title"}
                 id={s.id}
               >
-                {s.title}
+                {/* Les titres masques n'ont pas besoin de masques de mots. */}
+                {s.srOnly ? s.title : <Split>{s.title}</Split>}
               </h2>
               {s.body}
             </div>

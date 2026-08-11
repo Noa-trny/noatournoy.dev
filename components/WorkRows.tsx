@@ -1,6 +1,7 @@
 import type { Locale } from "@/content/routes";
 import { routes } from "@/content/routes";
 import { PROJECTS } from "@/content/projects";
+import { RowPeek } from "./motion/RowPeek";
 
 // La liste numerotee des travaux. Elle existe sur deux pages avec deux contenus
 // differents : l'accueil montre les etiquettes de techno, /travaux/ montre une
@@ -15,9 +16,10 @@ import { PROJECTS } from "@/content/projects";
 // 2. La PUCE D'ANNEE n'existait que cote francais — /en/work/ avait perdu le
 //    <span> de l'annee en cours de route. Les deux langues la portent a nouveau.
 //
-// Les attributs data-shot / data-none disparaissent aussi : la vignette qui
-// suit le curseur lira PROJECTS directement quand le mouvement reviendra en
-// phase 4, plutot que de relire le DOM qu'elle vient d'ecrire.
+// Les attributs data-shot / data-none disparaissent : la vignette qui suit le
+// curseur lit PROJECTS directement plutot que de relire le DOM qu'elle vient
+// d'ecrire. Il ne reste qu'un `data-slug`, la cle qui relie une ligne rendue
+// cote serveur a son entree du manifeste.
 
 export function WorkRows({
   locale,
@@ -30,7 +32,7 @@ export function WorkRows({
     <div className="rows-wrap">
       <ol className="rows">
         {PROJECTS.map((p) => (
-          <li className="row" key={p.slug}>
+          <li className="row" key={p.slug} data-slug={p.slug}>
             {/* Une seule expression : `{p.no}.` produirait deux noeuds de texte,
                 que React separe par un commentaire dans le HTML rendu. */}
             <span className="row-no">{`${p.no}.`}</span>
@@ -52,6 +54,7 @@ export function WorkRows({
           </li>
         ))}
       </ol>
+      <RowPeek locale={locale} />
     </div>
   );
 }

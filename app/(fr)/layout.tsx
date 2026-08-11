@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { connection } from "next/server";
 import { alternates, pair } from "@/content/routes";
+import { Kinetics } from "@/components/motion/Kinetics";
+import { MenuBehaviour } from "@/components/motion/MenuBehaviour";
 import { FontPreload, sharedMetadata } from "../shared-head";
 import "@/styles/spec.css";
 
@@ -48,7 +50,17 @@ export default async function RootLayoutFr({
       <head>
         <FontPreload />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        {/* La jauge de defilement. Elle etait injectee dans le <body> par
+            kinetic.js, donc INEXISTANTE en mouvement reduit ; dans le balisage
+            elle existe toujours, et spec.css la masque sous cette preference. */}
+        <div className="progress" aria-hidden="true">
+          <i />
+        </div>
+        <Kinetics />
+        <MenuBehaviour />
+      </body>
     </html>
   );
 }
