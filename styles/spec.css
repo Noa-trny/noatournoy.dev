@@ -1397,3 +1397,23 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   height: 44px;
   transform: translateY(-50%);
 }
+
+/* ---------- le voyage ---------- */
+
+/* Le canvas se pose PAR-DESSUS rien : il est fixe, hors flux, derriere le
+   contenu. Deux consequences voulues — il ne decale aucun element, donc CLS
+   nul, et le DOM du site reste la seule source de navigation. */
+.journey { position: relative; }
+
+.journey-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  /* Aucun evenement pointeur tant que rien n'est cliquable dedans : les
+     vitrines les reprendront en phase 8. */
+  pointer-events: none;
+}
+
+.journey-canvas canvas { display: block; }
+
+.journey-dom { position: relative; z-index: 1; }

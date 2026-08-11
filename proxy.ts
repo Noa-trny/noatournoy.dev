@@ -16,7 +16,11 @@ export function proxy(request: NextRequest) {
     `default-src 'none'`,
     // 'wasm-unsafe-eval' n'arrive qu'avec le decodeur Meshopt, en phase 7.
     `script-src 'self' 'nonce-${nonce}'${dev ? " 'unsafe-eval'" : ""}`,
-    `style-src 'self' 'nonce-${nonce}'${dev ? " 'unsafe-inline'" : ""}`,
+    // En developpement, PAS de nonce sur style-src : l'overlay de Next injecte
+    // des <style> inline, et la specification CSP fait ignorer 'unsafe-inline'
+    // des qu'un nonce est present dans la meme directive. Les mettre tous les
+    // deux revenait donc a tout bloquer.
+    dev ? `style-src 'self' 'unsafe-inline'` : `style-src 'self' 'nonce-${nonce}'`,
     // <next-route-announcer> pose un style= inline que rien ne desactive.
     // Cela n'autorise que les attributs : les blocs <style> restent interdits.
     `style-src-attr 'unsafe-inline'`,
