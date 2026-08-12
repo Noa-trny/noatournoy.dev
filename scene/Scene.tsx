@@ -165,7 +165,22 @@ export default function Scene({ locale }: { locale: Locale }) {
   return (
     <Canvas
       camera={{ fov: 30, near: 0.1, far: 400, position: [0, 1.9, 24] }}
-      gl={{ antialias: true, powerPreference: "high-performance" }}
+      gl={{
+        antialias: true,
+        // « default » ET NON « high-performance ».
+        //
+        // Sur un portable a deux cartes graphiques, reclamer la carte dediee
+        // pousse le navigateur a basculer d'un GPU a l'autre juste apres la
+        // creation du contexte — et cette bascule PERD le contexte. Le
+        // symptome est caracteristique : la scene s'affiche une seconde, puis
+        // disparait. C'est ce qui a ete rapporte.
+        //
+        // Le gain esperait etait mince : la scene tient largement sur une carte
+        // integree, ses ombres etant gelees et son environnement pre-calcule.
+        powerPreference: "default",
+        // Laisse le navigateur retenter au lieu d'abandonner l'onglet.
+        failIfMajorPerformanceCaveat: false,
+      }}
       dpr={[1, 1.75]}
       // DE VRAIES OMBRES PORTEES, et c'est le changement qui fait tout le
       // reste. Sans elles la directionnelle « rasante » n'eclairait que la

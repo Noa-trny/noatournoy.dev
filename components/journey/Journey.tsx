@@ -49,8 +49,12 @@ export function Journey({
     const evaluer = () => {
       const refus = refusDe3D();
       setActif(refus === null);
-      if (refus !== null && process.env.NODE_ENV === "development") {
-        console.info(`[voyage] canvas non monté : ${refus}`);
+      // Journalise TOUJOURS, pas seulement en developpement. Quand la scene ne
+      // s'affiche pas chez quelqu'un d'autre, c'est la seule chose qui
+      // distingue « la machine a refuse » de « ça a plante » — et c'est
+      // exactement l'information qui manquait au premier rapport de bug.
+      if (refus !== null) {
+        console.warn(`[voyage] canvas non monté : ${refus}`);
       }
     };
     evaluer();
@@ -58,19 +62,61 @@ export function Journey({
     return () => mq.removeEventListener("change", evaluer);
   }, []);
 
-  // La perte de contexte WebGL n'est pas rare sur portable : sans ce garde,
-  // l'utilisateur recupere un rectangle noir a la place de la scene.
+  // LA PERTE DE CONTEXTE WEBGL, ET SA RECUPERATION.
+  //
+  // La premiere version abandonnait des la premiere perte : elle appelait
+  // `preventDefault()` — ce qui demande au navigateur de PREPARER une
+  // restauration — puis coupait la 3D avant que cette restauration arrive.
+  // Autrement dit elle demandait le retour du contexte et n'en faisait rien.
+  //
+  // Or une perte n'est pas forcement fatale. Sur un portable a deux cartes
+  // graphiques, le navigateur bascule d'un GPU a l'autre peu apres la creation
+  // du contexte, le perd, et le rend une fraction de seconde plus tard. Le
+  // symptome vu par l'utilisateur etait exactement celui-la : la maison
+  // s'affiche, puis disparait, et le site d'avant reapparait dessous.
+  //
+  // On attend donc la restauration, et on ne se replie que si elle ne vient
+  // pas — ou si les pertes se repetent, signe d'un pilote qui ne tiendra pas.
+  const pertes = useRef(0);
   useEffect(() => {
     if (!actif) return;
     const el = conteneur.current;
     if (!el) return;
+    let minuterie: number | undefined;
+
     const perdu = (e: Event) => {
+      // Sans `preventDefault`, le navigateur ne restaure JAMAIS le contexte :
+      // c'est l'appel qui signale qu'on souhaite le recuperer.
       e.preventDefault();
-      setActif(false);
-      journey.reset();
+      pertes.current += 1;
+      console.warn(
+        `[voyage] contexte WebGL perdu (${pertes.current}) — attente de restauration`
+      );
+      if (pertes.current > 2) {
+        console.warn("[voyage] trop de pertes, repli sur le site sans 3D");
+        setActif(false);
+        journey.reset();
+        return;
+      }
+      minuterie = window.setTimeout(() => {
+        console.warn("[voyage] contexte non restaure en 4 s, repli");
+        setActif(false);
+        journey.reset();
+      }, 4000);
     };
+
+    const revenu = () => {
+      window.clearTimeout(minuterie);
+      console.warn("[voyage] contexte WebGL restaure");
+    };
+
     el.addEventListener("webglcontextlost", perdu, true);
-    return () => el.removeEventListener("webglcontextlost", perdu, true);
+    el.addEventListener("webglcontextrestored", revenu, true);
+    return () => {
+      window.clearTimeout(minuterie);
+      el.removeEventListener("webglcontextlost", perdu, true);
+      el.removeEventListener("webglcontextrestored", revenu, true);
+    };
   }, [actif]);
 
   useEffect(() => {
