@@ -150,6 +150,34 @@ def rapport(chemin):
     if not interieurs:
         print("    aucun — c'est probablement une coquille exterieure")
 
+    print("\n=== DEGAGEMENT RECTILIGNE A HAUTEUR D'OEIL ===")
+    segs = degagement(objets, mn, mx)
+    if not segs:
+        print("    aucun vide borne des deux cotes : coquille exterieure")
+    else:
+        for longueur, axe, transverse, milieu in segs[:8]:
+            print(
+                f"    {longueur:6.2f} m  le long de {axe}"
+                f"   (autre axe = {transverse:7.2f}, milieu = {milieu:7.2f})"
+            )
+        print(f"    -> le plus long fait {segs[0][0]:.2f} m ; il en faut ~20")
+
+    print("\n=== BAIES VITREES VERTICALES ===")
+    vitrages = baies(objets)
+    if not vitrages:
+        print("    aucun materiau de verre identifiable par son nom")
+    else:
+        for aire, larg, haut, bmn, bmx, nom in vitrages[:6]:
+            c = (bmn + bmx) / 2.0
+            print(
+                f"    {larg:5.2f} x {haut:5.2f} m  centre ({c.x:7.2f},"
+                f" {c.y:7.2f}, {c.z:6.2f})   {nom[:38]}"
+            )
+        a, larg, haut, bmn, bmx, nom = vitrages[0]
+        c = (bmn + bmx) / 2.0
+        print(f"    -> la plus grande fait {larg:.2f} x {haut:.2f} m")
+        print(f"       le franchissement doit passer par ({c.x:.2f}, {c.y:.2f})")
+
     print("\n=== A CONFRONTER AU CAHIER DES CHARGES ===")
     print("  baie franchissable   : 7,20 x 2,90 m")
     print("  couloir              : 6,00 x 13,00 m")
@@ -160,6 +188,110 @@ def rapport(chemin):
         print(f"  -> decimation necessaire : ratio ~{300000/total_tris:.2f}")
 
     return objets
+
+
+def degagement(objets, mn, mx, hauteur_oeil=1.70, pas=0.5):
+    """
+    LE DEGAGEMENT RECTILIGNE — la mesure qui manquait.
+
+    Le modele precedent a ete choisi sur son titre, ses tags et trois vues. Il
+    remplissait tout, sauf la seule chose dont depend le recit : la longueur en
+    ligne droite dont on dispose a l'interieur. Elle faisait huit metres, il en
+    fallait vingt, et cette decouverte est arrivee bien trop tard — apres la
+    preparation du modele, apres la trajectoire, apres les vitrines.
+
+    Le principe est celui d'une canne d'aveugle. A hauteur d'oeil, on balaie le
+    plan en lignes paralleles et on marche le long de chacune en enregistrant
+    tout ce qu'on percute. Entre deux impacts consecutifs il y a du vide ; un
+    vide BORNE AUX DEUX BOUTS par de la matiere est un couloir, alors qu'un vide
+    ouvert d'un cote n'est que le dehors.
+
+    Renvoie les plus longs, tries, avec leur axe et leur position.
+    """
+    import bpy
+    from mathutils import Vector
+
+    depsgraph = bpy.context.evaluated_depsgraph_get()
+    scene = bpy.context.scene
+    z = mn.z + hauteur_oeil
+    segments = []
+
+    def marcher(depart, direction, longueur):
+        """Tous les impacts le long d'un rayon, du plus proche au plus loin."""
+        impacts = []
+        parcouru = 0.0
+        origine = Vector(depart)
+        # Borne dure : un modele pathologique (surfaces coplanaires, normales
+        # inversees) peut renvoyer un impact a distance nulle indefiniment.
+        for _ in range(200):
+            reste = longueur - parcouru
+            if reste <= 0.01:
+                break
+            touche, point, _, _, _, _ = scene.ray_cast(
+                depsgraph, origine, direction, distance=reste
+            )
+            if not touche:
+                break
+            d = (point - origine).length
+            parcouru += d
+            impacts.append(parcouru)
+            # On repart LEGEREMENT au-dela, sinon on repercute la meme face.
+            origine = point + direction * 0.002
+            parcouru += 0.002
+        return impacts
+
+    axes = (
+        ("X", Vector((1.0, 0.0, 0.0)), mn.x, mx.x, mn.y, mx.y),
+        ("Y", Vector((0.0, 1.0, 0.0)), mn.y, mx.y, mn.x, mx.x),
+    )
+    for nom, direction, a0, a1, b0, b1 in axes:
+        longueur = (a1 - a0) + 2.0
+        b = b0
+        while b <= b1:
+            depart = (
+                Vector((a0 - 1.0, b, z)) if nom == "X" else Vector((b, a0 - 1.0, z))
+            )
+            impacts = marcher(depart, direction, longueur)
+            # Un vide borne des deux cotes : entre l'impact i et l'impact i+1.
+            for i in range(len(impacts) - 1):
+                vide = impacts[i + 1] - impacts[i]
+                if vide < 3.0:
+                    continue
+                milieu = a0 - 1.0 + (impacts[i] + impacts[i + 1]) / 2.0
+                segments.append((vide, nom, b, milieu))
+            b += pas
+
+    segments.sort(reverse=True)
+    return segments
+
+
+def baies(objets, mots=("glass", "verre", "window", "glazing", "vitr")):
+    """
+    Ou est la baie, exactement.
+
+    L'autre defaut du modele precedent : la trajectoire traversait le plan du
+    vitrage a une abscisse choisie a la main, et cette abscisse tombait sur du
+    beton plein. Le franchissement se terminait dans un mur. La position de la
+    baie n'est pas une preference, c'est une donnee du modele — donc on la lit.
+    """
+    trouve = []
+    for o in objets:
+        noms = " ".join((m.name or "").lower() for m in o.data.materials if m)
+        if not any(k in noms for k in mots):
+            continue
+        mn, mx = boite_monde([o])
+        d = mx - mn
+        # Une baie est VERTICALE : large et haute, mince dans la troisieme
+        # dimension. Ce test ecarte les tables basses et les garde-corps
+        # horizontaux, qui portent souvent le meme materiau de verre.
+        epaisseur = min(d.x, d.y)
+        hauteur = d.z
+        largeur = max(d.x, d.y)
+        if hauteur < 1.6 or largeur < 1.6 or epaisseur > 0.6:
+            continue
+        trouve.append((largeur * hauteur, largeur, hauteur, mn, mx, o.name))
+    trouve.sort(reverse=True, key=lambda t: t[0])
+    return trouve
 
 
 def rendre_vues(objets, dossier):
