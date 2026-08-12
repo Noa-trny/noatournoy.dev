@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { RefObject } from "react";
 import { scroll } from "./scrollState";
-import { GLASS_T } from "../camera/path";
+import { T_ENTREE, T_VERRIERE } from "../camera/path";
 import { journey, type Phase } from "./journeyStore";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -32,12 +32,12 @@ if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
  */
 export const SEUILS = {
   // Le transit commence quand la maison cesse d'etre un objet a l'horizon pour
-  // devenir un lieu ou l'on entre : au pied de l'escalier, environ un quart de
-  // trajet avant le vitrage.
-  transit: Math.max(0, GLASS_T - 0.26),
-  // Et l'interieur commence... quand on est dedans. Deux centiemes apres le
-  // plan du verre, le temps que le fondu de la vitre s'acheve.
-  dedans: Math.min(1, GLASS_T + 0.02),
+  // devenir un lieu ou l'on entre : juste avant la fenetre de facade.
+  transit: Math.max(0, T_ENTREE - 0.12),
+  // Et la derniere phase commence quand on RESSORT, deux centiemes apres la
+  // verriere arriere — le temps que son fondu s'acheve. Elle ne s'appelle plus
+  // « dedans » par hasard : on est alors sur la terrasse, face au large.
+  dedans: Math.min(1, T_VERRIERE + 0.02),
 } as const;
 
 const phasePour = (p: number): Phase =>

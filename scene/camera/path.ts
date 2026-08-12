@@ -36,6 +36,28 @@ function courbe(points: [number, number, number][]) {
 export const BAIE = { x: -0.15, y: 1.27, z: -2.95 } as const;
 
 /**
+ * ON FRANCHIT DEUX VITRAGES, PAS UN — et l'avoir cru pendant tout ce temps
+ * reposait sur une erreur de lecture du modele.
+ *
+ * J'avais pris la plus grande surface de verre du fichier pour la baie
+ * d'entree. Elle l'est par la taille, pas par la fonction : un rayon tire vers
+ * l'arrivee de la camera bute dessus avant de sortir, donc elle donne a
+ * l'interieur. C'est la VERRIERE ARRIERE, sept metres de large, qui ouvre sur
+ * la terrasse — et les 12,60 m de degagement que j'appelais « le sejour »
+ * etaient cette terrasse, pas une piece.
+ *
+ * L'entree, elle, est une ouverture modeste en facade. Le voyage traverse donc
+ * la maison de part en part et ressort de l'autre cote, face a l'horizon. Cela
+ * vaut mieux que ce que j'avais compris.
+ */
+export const VITRAGES = [
+  /** L'entree, en facade, cote arrivee. Verifie expose sur le dehors. */
+  { x: -2.99, y: 1.58, z: 3.45 },
+  /** La verriere arriere, sur la terrasse. C'est elle, le climax. */
+  { x: BAIE.x, y: BAIE.y, z: BAIE.z },
+] as const;
+
+/**
  * Les niveaux, releves sur les grandes surfaces horizontales du modele.
  *
  * La villa s'etage, la ou le pavillon etait de plain-pied. C'est le changement
@@ -72,14 +94,36 @@ const OEIL = 1.6;
 export const CHEMIN = courbe([
   [0.9, NIVEAUX.garage + OEIL + 0.9, 34.0], // 0.00  la villa entiere de loin
   [1.3, NIVEAUX.garage + OEIL + 0.5, 27.0],
-  [0.7, NIVEAUX.garage + OEIL + 0.2, 20.0], // ~0.25 la file de vitrines defile
-  [-0.1, NIVEAUX.garage + OEIL, 13.5],
-  [-0.5, NIVEAUX.garage + OEIL, 8.6], // ~0.45 on longe la voiture et le garage
-  [-0.3, NIVEAUX.garage + OEIL + 1.6, 5.0], // ~0.58 on monte avec les marches
-  [-0.15, NIVEAUX.sejour + OEIL, 1.4], // ~0.72 sur le palier, face a la baie
-  [BAIE.x, NIVEAUX.sejour + OEIL, BAIE.z], //      DANS le plan du vitrage
-  [0.5, NIVEAUX.sejour + OEIL, -5.0],
-  [2.4, NIVEAUX.sejour + OEIL - 0.05, -6.2], // 1.00  le sejour s'ouvre en largeur
+  [0.7, NIVEAUX.garage + OEIL + 0.2, 20.0], // ~0.22 la file de vitrines defile
+  [-0.4, NIVEAUX.garage + OEIL, 13.5],
+  [-1.6, NIVEAUX.garage + OEIL + 0.5, 9.2], // ~0.42 on longe la voiture et le garage
+
+  // LA MONTEE ET L'ENTREE, tracees d'apres un balayage du degagement reel.
+  //
+  // Le premier trace montait au milieu de l'escalier et percutait tout : sept
+  // centimetres de la rambarde, onze de sa main courante, vingt-cinq d'un
+  // rocher. Le balayage a montre que la seule ouverture en facade, a hauteur
+  // d'homme, est a x = -2,75 environ — c'est-a-dire exactement la fenetre
+  // basse relevee comme donnant sur le dehors.
+  // La montee se fait AU-DESSUS du mur de souténement, pas dedans. A six
+  // metres de la facade, le degagement a hauteur d'oeil est libre sur toute la
+  // largeur ; a mi-hauteur, la camera etait dans la pierre.
+  [-2.75, VITRAGES[0].y, 6.4],
+  [VITRAGES[0].x, VITRAGES[0].y, VITRAGES[0].z], // le premier vitrage
+
+  // L'INTERIEUR est un passage etroit, pas une salle : le degagement a hauteur
+  // d'oeil n'y fait qu'un metre et demi de large, autour de x = 0.
+  [-0.9, NIVEAUX.sejour + OEIL, 2.4],
+  [0.0, NIVEAUX.sejour + OEIL, 0.6],
+  [BAIE.x, NIVEAUX.sejour + OEIL, BAIE.z], // la verriere arriere
+
+  // LA TERRASSE, et c'est la que les 12,60 m mesures se depensent enfin. On
+  // sort de la maison au lieu de s'y arreter, et le balayage lateral se fait
+  // face au large.
+  [0.5, NIVEAUX.sejour + OEIL, -4.2],
+  [2.3, NIVEAUX.sejour + OEIL, -4.5],
+  [4.0, NIVEAUX.sejour + OEIL - 0.03, -4.3],
+  [5.3, NIVEAUX.sejour + OEIL - 0.05, -4.0], // 1.00  au bout de la terrasse
 ]);
 
 /**
@@ -92,12 +136,14 @@ export const CHEMIN = courbe([
  */
 export const VISEE = courbe([
   [0.0, 1.1, 7.0],
-  [-0.15, 1.3, -1.0],
-  [BAIE.x, 1.5, -6.0],
-  // La fin regarde vers le grand cote du sejour : 12,60 m de degagement mesure,
-  // mais le long de X — PERPENDICULAIREMENT a la marche. L'espace s'ouvre
-  // lateralement au lieu de se prolonger, et la camera doit donc tourner.
-  [5.4, 1.4, -6.6],
+  [-2.4, 1.5, 2.0],
+  [-0.6, 1.6, -1.4],
+  [0.2, 1.5, -6.2],
+  // Une fois dehors, la visee precede la camera dans le balayage : c'est ce
+  // decalage entre les deux courbes qui donne un panoramique la ou une visee
+  // calquee sur le trajet donnerait un simple travelling.
+  [3.0, 1.45, -7.4],
+  [9.4, 1.4, -5.2],
 ]);
 
 /**
@@ -109,21 +155,29 @@ export const VISEE = courbe([
  * premiere retouche. On cherche ou la courbe traverse le plan de la baie —
  * `BAIE.z` et non zero, la baie de ce modele n'etant pas a l'origine.
  */
-export const GLASS_T = (() => {
-  const N = 400;
-  let precedent = CHEMIN.getPointAt(0).z;
-  for (let i = 1; i <= N; i++) {
-    const t = i / N;
-    const z = CHEMIN.getPointAt(t).z;
-    if (precedent > BAIE.z && z <= BAIE.z) {
-      // interpolation lineaire entre les deux echantillons
-      const f = (precedent - BAIE.z) / (precedent - z);
-      return (i - 1 + f) / N;
+export const FRANCHISSEMENTS = (() => {
+  const N = 600;
+  const trouve: number[] = [];
+  for (const v of VITRAGES) {
+    let precedent = CHEMIN.getPointAt(0).z;
+    for (let i = 1; i <= N; i++) {
+      const t = i / N;
+      const z = CHEMIN.getPointAt(t).z;
+      if (precedent > v.z && z <= v.z) {
+        const f = (precedent - v.z) / (precedent - z);
+        trouve.push((i - 1 + f) / N);
+        break;
+      }
+      precedent = z;
     }
-    precedent = z;
   }
-  return 0.85;
+  return trouve;
 })();
+
+/** L'entree en facade : dehors -> dedans. Bref, et pas le point d'orgue. */
+export const T_ENTREE = FRANCHISSEMENTS[0] ?? 0.5;
+/** La verriere arriere : dedans -> la terrasse et l'horizon. Le climax. */
+export const T_VERRIERE = FRANCHISSEMENTS[FRANCHISSEMENTS.length - 1] ?? 0.8;
 
 /** Largeur de la bande de fondu du vitrage, en fraction de progression. */
 export const GLASS_BANDE = 0.045;
@@ -154,5 +208,11 @@ export const HAUTEUR_CADREE =
  * franchissement au lieu de le noyer.
  */
 export const dollyA = (t: number) =>
-  THREE.MathUtils.smoothstep(t, GLASS_T - 0.30, GLASS_T - 0.04) *
-  (1 - THREE.MathUtils.smoothstep(t, GLASS_T + 0.02, GLASS_T + 0.12));
+  // L'enveloppe se cale sur la VERRIERE et non sur l'entree. Les deux sont des
+  // franchissements, mais un seul est un evenement : l'entree est une fenetre
+  // de deux metres qu'on passe en une fraction de seconde, la verriere ouvre
+  // sur le large. Doser le vertigo sur les deux le diluerait au lieu de le
+  // ponctuer — c'est le meme raisonnement qui interdit de le tenir a fond sur
+  // toute la longueur.
+  THREE.MathUtils.smoothstep(t, T_VERRIERE - 0.24, T_VERRIERE - 0.04) *
+  (1 - THREE.MathUtils.smoothstep(t, T_VERRIERE + 0.02, T_VERRIERE + 0.12));

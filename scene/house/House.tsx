@@ -5,7 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { scroll } from "../scroll/scrollState";
-import { GLASS_T, GLASS_BANDE } from "../camera/path";
+import { FRANCHISSEMENTS, GLASS_BANDE } from "../camera/path";
 
 // La maison.
 //
@@ -85,11 +85,15 @@ export function House() {
     // proche finirait par la trancher en pleine frame, et une nappe
     // transparente plein cadre coute cher a trier au moment ou la scene est la
     // plus chargee.
-    const loin = THREE.MathUtils.clamp(
-      Math.abs(scroll.eased - GLASS_T) / GLASS_BANDE,
-      0,
-      1
-    );
+    // La distance au franchissement LE PLUS PROCHE, et non a un seul.
+    // Le trajet en compte deux — la fenetre de facade puis la verriere de la
+    // terrasse — et se caler sur un seul laissait l'autre parfaitement opaque
+    // au moment ou la camera le traverse.
+    let ecart = Infinity;
+    for (const f of FRANCHISSEMENTS) {
+      ecart = Math.min(ecart, Math.abs(scroll.eased - f));
+    }
+    const loin = THREE.MathUtils.clamp(ecart / GLASS_BANDE, 0, 1);
     const cible = 0.34 * loin;
 
     for (const m of vitrages.current) {

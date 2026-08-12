@@ -2,7 +2,7 @@ import type { Locale } from "@/content/routes";
 import { routes } from "@/content/routes";
 import { home } from "@/content/home";
 import { ui } from "@/content/ui";
-import { GLASS_T } from "@/scene/camera/path";
+import { T_VERRIERE } from "@/scene/camera/path";
 import { SEUILS } from "@/scene/scroll/useScrollBridge";
 
 // Les quelques mots de la visite.
@@ -28,7 +28,7 @@ import { SEUILS } from "@/scene/scroll/useScrollBridge";
 // montee prend du temps : les memes nombres auraient affiche « contact » sur
 // une image de facade.
 const T_TRAVAUX = SEUILS.transit * 0.45; // en pleine file de vitrines
-const T_PARCOURS = (SEUILS.transit + GLASS_T) / 2; // dans la montee
+const T_PARCOURS = (SEUILS.transit + T_VERRIERE) / 2; // dans la traversee
 const T_CONTACT = Math.min(0.97, SEUILS.dedans + 0.09); // une fois dedans
 
 type Beat = {
