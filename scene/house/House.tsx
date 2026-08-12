@@ -5,6 +5,7 @@ import { useFrame } from "@react-three/fiber";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { scroll } from "../scroll/scrollState";
+import { GLASS_T, GLASS_BANDE } from "../camera/path";
 
 // La maison.
 //
@@ -18,11 +19,6 @@ import { scroll } from "../scroll/scrollState";
 // documente dans proxy.ts.
 
 const MODELE = "/models/maison.glb";
-
-/** Autour de cette abscisse, la camera est dans le plan du vitrage. */
-export const GLASS_T = 0.34;
-/** Largeur de la bande de fondu, en fraction de progression. */
-export const GLASS_BANDE = 0.05;
 
 export function House() {
   const { scene } = useGLTF(MODELE);

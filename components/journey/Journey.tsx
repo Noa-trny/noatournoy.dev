@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
+import type { Locale } from "@/content/routes";
 import { refusDe3D } from "@/scene/capability";
 import { useScrollBridge } from "@/scene/scroll/useScrollBridge";
 import { journey } from "@/scene/scroll/journeyStore";
@@ -22,7 +23,13 @@ const Scene = lazy(() => import("@/scene/Scene"));
 // garantit que les liens vers les six travaux restent dans le HTML servi, donc
 // atteignables au clavier et lisibles par un robot d'indexation.
 
-export function Journey({ children }: { children: React.ReactNode }) {
+export function Journey({
+  locale,
+  children,
+}: {
+  locale: Locale;
+  children: React.ReactNode;
+}) {
   const conteneur = useRef<HTMLDivElement>(null);
   const [actif, setActif] = useState(false);
   const [prete, setPrete] = useState(false);
@@ -108,7 +115,7 @@ export function Journey({ children }: { children: React.ReactNode }) {
       {actif ? (
         <div className="journey-canvas" aria-hidden="true">
           <Suspense fallback={null}>
-            <Scene />
+            <Scene locale={locale} />
           </Suspense>
         </div>
       ) : null}

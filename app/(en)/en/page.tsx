@@ -5,7 +5,7 @@ import { Journey } from "@/components/journey/Journey";
 
 export default function Home() {
   return (
-    <Journey>
+    <Journey locale="en">
       <HomeBody locale="en" />
     </Journey>
   );

@@ -23,32 +23,64 @@ function courbe(points: [number, number, number][]) {
   return c;
 }
 
-/** Le trajet : la rue, la baie, l'interieur. */
+/**
+ * Le trajet : le parvis, la baie, l'interieur.
+ *
+ * L'approche occupe l'essentiel du parcours, parce que c'est elle qui porte les
+ * six vitrines. L'interieur ne fait que 8 m — mesure au lancer de rayon — donc
+ * il forme une coda courte, pas une seconde moitie.
+ *
+ * Le leger louvoiement lateral n'est pas decoratif : il fait varier l'angle
+ * sous lequel chaque vitrine se presente, la ou une ligne droite les donnerait
+ * toutes de trois quarts identiques.
+ */
 export const CHEMIN = courbe([
-  // A 42 m la maison occupait un timbre-poste au bas du cadre : elle ne fait
-  // que 6,5 m de haut, et le ciel prenait les trois quarts de l'image.
-  [  0.0, 1.90,  24.0 ],  // 0.00  la facade tient le cadre
-  [ -1.6, 1.84,  16.0 ],
-  [ -0.6, 1.78,   9.0 ],
-  [  0.0, 1.74,   4.0 ],  // ~0.28 la baie grandit
-  [  0.0, 1.72,   0.0 ],  // ~0.34 DANS le plan du vitrage
-  [  0.4, 1.70,  -4.5 ],
-  [  1.0, 1.68,  -8.5 ],
-  [  0.8, 1.66, -11.5 ],  // 1.00  le fond de la maison
+  [  0.0, 1.90,  26.0 ],  // 0.00  la facade tient le cadre, les vitrines devant
+  [  0.8, 1.87,  20.0 ],
+  [ -0.9, 1.84,  15.0 ],
+  [  0.9, 1.80,  10.0 ],
+  [ -0.5, 1.76,   5.5 ],
+  [  0.0, 1.74,   2.0 ],
+  [  0.0, 1.72,   0.0 ],  //       DANS le plan du vitrage
+  [  0.3, 1.70,  -2.0 ],
+  [  0.6, 1.68,  -3.6 ],  // 1.00  le fond de la piece
 ]);
 
 /** Ce que la camera regarde. Plus lisse que le trajet lui-meme. */
 export const VISEE = courbe([
-  [  0.0, 2.05,   4.0 ],
-  [  0.0, 1.95,  -3.0 ],
-  [  0.5, 1.78,  -9.0 ],
-  [  0.9, 1.66, -16.0 ],
+  [  0.0, 2.05,  12.0 ],
+  [  0.0, 1.95,   2.0 ],
+  [  0.4, 1.80,  -4.0 ],
+  [  0.8, 1.70, -10.0 ],
 ]);
 
-// 30 et non 40 : a 24 m une maison de 3,5 m de haut ne remplit qu'un cinquieme
-// du cadre en 40 degres, et le ciel prend le reste. Une focale plus longue
-// resserre, aplatit la perspective — ce qui sert le brutalisme — et rend le
-// dolly zoom plus lisible, l'ecart entre les deux focales etant plus grand.
+/**
+ * L'abscisse a laquelle la camera est dans le plan du vitrage.
+ *
+ * CALCULEE, pas ecrite a la main. Avec `getPointAt` la progression est uniforme
+ * en DISTANCE : deplacer un point de controle change donc l'abscisse du
+ * franchissement, et un nombre fige se serait desynchronise en silence a la
+ * premiere retouche. On cherche simplement ou la courbe traverse Z = 0.
+ */
+export const GLASS_T = (() => {
+  const N = 400;
+  let precedent = CHEMIN.getPointAt(0).z;
+  for (let i = 1; i <= N; i++) {
+    const t = i / N;
+    const z = CHEMIN.getPointAt(t).z;
+    if (precedent > 0 && z <= 0) {
+      // interpolation lineaire entre les deux echantillons
+      const f = precedent / (precedent - z);
+      return (i - 1 + f) / N;
+    }
+    precedent = z;
+  }
+  return 0.85;
+})();
+
+/** Largeur de la bande de fondu du vitrage, en fraction de progression. */
+export const GLASS_BANDE = 0.045;
+
 export const FOV_BASE = 30;
 
 /**
@@ -69,5 +101,5 @@ export const HAUTEUR_CADREE =
  * franchissement au lieu de le noyer.
  */
 export const dollyA = (t: number) =>
-  THREE.MathUtils.smoothstep(t, 0.10, 0.32) *
-  (1 - THREE.MathUtils.smoothstep(t, 0.36, 0.55));
+  THREE.MathUtils.smoothstep(t, GLASS_T - 0.30, GLASS_T - 0.04) *
+  (1 - THREE.MathUtils.smoothstep(t, GLASS_T + 0.02, GLASS_T + 0.12));

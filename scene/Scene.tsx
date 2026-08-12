@@ -5,6 +5,9 @@ import { ContactShadows, Sky } from "@react-three/drei";
 import { Suspense } from "react";
 import { CameraRig } from "./camera/CameraRig";
 import { House } from "./house/House";
+import { Vitrines } from "./vitrines/Vitrines";
+import type { Locale } from "@/content/routes";
+import { journey } from "./scroll/journeyStore";
 
 // La scene. Phase 7 : la maison et le trajet de camera. Les vitrines viennent
 // en phase 8, le garage et la voiture en phase 9.
@@ -66,7 +69,7 @@ function Sol() {
   );
 }
 
-export default function Scene() {
+export default function Scene({ locale }: { locale: Locale }) {
   return (
     <Canvas
       camera={{ fov: 30, near: 0.1, far: 400, position: [0, 1.9, 24] }}
@@ -77,6 +80,9 @@ export default function Scene() {
       // arret de tabulation. Toute la navigation vit dans le DOM, a cote.
       aria-hidden="true"
       tabIndex={-1}
+      // Un clic dans le vide eteint le survol : R3F ne relance un lancer de
+      // rayon que sur evenement pointeur, jamais parce que la camera a bouge.
+      onPointerMissed={() => journey.set({ activeId: null })}
     >
       <color attach="background" args={["#aebdd2"]} />
       <Sky sunPosition={[-18, 16, 24]} turbidity={5} rayleigh={1.4} />
@@ -87,6 +93,11 @@ export default function Scene() {
           il aura la sienne, et sa suspension ne figera pas ce qui est deja la. */}
       <Suspense fallback={null}>
         <House />
+      </Suspense>
+      {/* Les vitrines ont leur propre frontiere : leurs captures ne doivent pas
+          retarder l'apparition de la maison. */}
+      <Suspense fallback={null}>
+        <Vitrines locale={locale} />
       </Suspense>
     </Canvas>
   );
