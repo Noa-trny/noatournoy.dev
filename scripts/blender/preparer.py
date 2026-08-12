@@ -70,43 +70,76 @@ PROFILS = {
     # Modele retenu : 17,4 m de degagement rectiligne interieur, sur deux
     # niveaux, avec une 911 deja garee devant le garage.
     "villa": {
-        # La vegetation et le terrain, qui pesent a eux seuls plus de 170 000
-        # triangles pour des objets que la camera longe sans les regarder. Le
-        # chene fait 69 000 triangles a lui tout seul, les cornouillers 98 000 a
-        # eux trois.
+        # ON NE JETTE PRESQUE RIEN, et c'est un renversement assume.
+        #
+        # J'avais retire la vegetation, les rochers, le terrain et les jardinieres
+        # — 566 000 triangles — au motif que la camera ne les regarde pas. C'est
+        # vrai qu'elle ne les regarde pas ; c'est faux qu'ils ne servent a rien.
+        # Ce sont eux qui posent la maison dans un lieu. Sans eux elle flotte sur
+        # un plan gris, et c'est exactement ce que rendait la scene.
+        #
+        # Ne partent donc que les objets vraiment invisibles depuis le trajet :
+        # le detail de cuisine, qui coute deux fois — le robinet dore fait 53 000
+        # triangles, la passoire 45 000, le pot d'epices 35 000, et chacun de ces
+        # objets minuscules traine ses trois cartes de texture.
         "jeter": {
+            # LES DEUX GRANDS ARBRES, et pour une raison qui ne se devine pas :
+            # ils ne survivent pas a la decimation. Un feuillage de ce genre est
+            # fait de cartes plates portant une texture a canal alpha ; l'algo
+            # « collapse » fusionne des aretes en supposant une surface, et il
+            # effondre donc les cartes en triangles pointus. Le rendu montrait
+            # des sapins de papier crepon a la place des houppiers.
+            #
+            # Les garder intacts coutait 167 000 triangles a eux seuls, et ils
+            # se plantaient de toute façon en travers de la facade. Le bonsai,
+            # les fougeres, les rochers et les jardinieres restent : ils posent
+            # la maison dans un lieu sans barrer la vue.
             "LC_Oak_Tree_Material", "LC_Oak_Tree_Material1",
             "LC_Dogwood_Tree_Material", "LC_Dogwood_Tree_Material1",
-            "ferns_1", "trop_leav_4", "trop_leav_5",
-            "GG050089", "GG050091",                    # les bonsais, 21 800 tri piece
-            "Rock05", "Rock08", "rock_wall_11_disp_2k",
-            "stone_pathway_02", "Ground003", "Water",
-            "PDM_Ceramic_Wallscape_Planters_Material_13",
-            "PDM_Ceramic_Wallscape_Planters_Material_14",
-            "PDM_Ceramic_Wallscape_Planters_Material_15",
-            "PDM_Galvanized_Planters_Material_05",
-            # Le detail de cuisine. Il coute deux fois : en triangles — le
-            # robinet dore en fait 53 000, la passoire 45 000, le pot d'epices
-            # 35 000 — et en textures, chacun de ces objets minuscules trainant
-            # ses trois cartes en 1024. Une camera qui traverse un couloir en
-            # 30 degres n'en verra jamais un seul.
             "Faucet2Brass", "Faucet2Plastic", "Gold",
             "Sink2", "Sink2Metal", "Sink3Colander", "Sink3Gird", "Sink3Metal",
             "Sink3OutMetal", "Sink3Wood", "Sink_3_Wood2",
             "SpiceJarGlass", "SpicejarMetal", "SpicyRackMetal",
             "CayennePepper", "BlackPepper", "Oregano", "Salt",
         },
-        # Le beton porte toute la lecture de la matiere : c'est la seule texture
-        # que la camera regarde de pres, et la seule qui garde 1024 px.
-        "textures_fines": {"beton_diffuse", "beton_normal", "beton_rough"},
+        # AUCUN RETEXTURAGE. Le pavillon arrivait en brique beige de banlieue et
+        # demandait a etre sauve ; cette villa a son identite — enduit blanc,
+        # pierre doree, bois — et c'est elle qu'on est venu chercher. La passer
+        # en beton banche revenait a acheter un modele pour effacer ce qui le
+        # distinguait.
+        "beton": set(),
+        # La vegetation est decimee bien plus durement que l'architecture. Une
+        # arete de mur decimee se voit au premier coup d'oeil ; un feuillage, non
+        # — c'est deja du bruit. Le chene passe de 69 000 triangles a 6 000 sans
+        # que la silhouette bouge.
+        # Le feuillage restant est decime avec MENAGEMENT, pas durement : c'est
+        # la meme mecanique de cartes alpha que celle qui a detruit les grands
+        # arbres, simplement a une echelle ou elle se voit moins.
+        "plafond_par_materiau": {
+            "ferns_1": 6000, "trop_leav_4": 6000, "trop_leav_5": 6000,
+            "GG050089": 12000, "GG050091": 12000,
+            "Rock05": 3000, "Rock08": 3000,
+            "PDM_Ceramic_Wallscape_Planters_Material_13": 1500,
+            "PDM_Ceramic_Wallscape_Planters_Material_14": 1500,
+            "PDM_Ceramic_Wallscape_Planters_Material_15": 1500,
+            "PDM_Galvanized_Planters_Material_05": 1500,
+        },
+        "textures_fines": set(),
         "projection": "UV",
-        # `Plaster` porte la coquille entiere — 17 x 21 m sur 8,5 m de haut —
-        # donc la passer en beton banche fait basculer l'interieur AUSSI, ce
-        # qui est exactement le but : un couloir de beton, pas un salon peint.
-        "beton": {"Concrete048", "Plaster"},
-        # Le modele est livre a 7,90 fois l'echelle reelle. Mesure et non
-        # devinee : la 911 du fichier fait 35,70 unites pour 4,519 m reels, et
-        # la verification tombe a 2 % sur les deux autres axes.
+        # Les marques ne se cedent pas. Le modeleur peut nous accorder son droit
+        # d'auteur par une licence CC BY ; personne ne peut nous accorder
+        # « Porsche » ni « 911 », qui sont des marques deposees, et un portfolio
+        # est un usage dans la vie des affaires.
+        #
+        # Renommer ne debadge pas la carrosserie — l'ecusson et le lettrage
+        # vivent dans la texture et demandent une passe de peinture. Mais les
+        # noms partent dans le glTF servi, donc dans quelque chose d'indexable,
+        # et ça c'est gratuit a corriger.
+        "renommer": {
+            "911Body": "SportsCarBody",
+            "911Glass": "SportsCarGlass",
+            "Porsche": "SportsCar",
+        },
         "echelle": 1.0 / 7.90,
         "plafond_petit": 3000,
         "plafond_grand": 14000,
@@ -118,6 +151,7 @@ MATERIAUX_TERRAIN = set()
 MATERIAUX_ENVELOPPE = set()
 PLAFOND_PETIT = 4000
 PLAFOND_GRAND = 12000
+PLAFOND_MATERIAU = {}
 ECHELLE = None
 PROJECTION = "BOX"
 
@@ -159,6 +193,30 @@ def jeter_le_terrain():
     print(f"  terrain      : {partis} maillage(s) retire(s), {tris} triangles")
 
 
+# --------------------------------------------------------------- 1 ter. renommer
+
+def renommer(table):
+    """Efface les noms de marque des maillages et des materiaux.
+
+    Un fichier glTF transporte les noms tels quels, et un fichier servi est un
+    fichier indexable. C'est la partie du debadgeage qui ne coute rien ; celle
+    qui touche la carrosserie demande une passe de texture.
+    """
+    if not table:
+        return
+    n = 0
+    for coll in (bpy.data.objects, bpy.data.materials, bpy.data.meshes):
+        for item in coll:
+            nom = item.name
+            for avant, apres in table.items():
+                if avant in nom:
+                    nom = nom.replace(avant, apres)
+            if nom != item.name:
+                item.name = nom
+                n += 1
+    print(f"  renommage    : {n} nom(s) sans marque deposee")
+
+
 # ------------------------------------------------------- 1 bis. mettre a l'echelle
 
 def mettre_a_l_echelle():
@@ -195,7 +253,12 @@ def decimer():
     for o in maillages():
         t = triangles(o)
         total_avant += t
+        # Un plafond par MATIERE quand le profil en donne un : la vegetation
+        # supporte une decimation que l'architecture ne supporte pas.
         plafond = PLAFOND_PETIT if dim_max(o) < 5.0 else PLAFOND_GRAND
+        for mat in materiaux_de(o):
+            if mat in PLAFOND_MATERIAU:
+                plafond = min(plafond, PLAFOND_MATERIAU[mat])
         if t <= plafond:
             total_apres += t
             continue
@@ -294,6 +357,19 @@ def materiau_beton(repere):
 
 
 def retexturer():
+    if not MATERIAUX_ENVELOPPE:
+        print("  retexturage  : aucun — les materiaux d'origine sont conserves")
+        verres = [m for m in bpy.data.materials if m.name.lower().startswith("glass")]
+        for m in verres:
+            if not m.use_nodes:
+                continue
+            b = m.node_tree.nodes.get("Principled BSDF")
+            if b:
+                b.inputs["Roughness"].default_value = 0.04
+                b.inputs["Metallic"].default_value = 0.0
+        print(f"  verre        : {len(verres)} materiau(x) — "
+              + ", ".join(sorted(m.name for m in verres)))
+        return
     repere = bpy.data.objects.new("repere_beton", None)
     bpy.context.scene.collection.objects.link(repere)
     repere.location = (0, 0, 0)
@@ -485,6 +561,7 @@ def main():
     os.makedirs(SORTIE, exist_ok=True)
 
     global MATERIAUX_TERRAIN, MATERIAUX_ENVELOPPE, ECHELLE, PROJECTION
+    global PLAFOND_MATERIAU
     global PLAFOND_PETIT, PLAFOND_GRAND
     if "--profil" in argv:
         nom_profil = argv[argv.index("--profil") + 1]
@@ -506,6 +583,7 @@ def main():
     MATERIAUX_ENVELOPPE = prof["beton"]
     ECHELLE = prof["echelle"]
     PROJECTION = prof.get("projection", "BOX")
+    PLAFOND_MATERIAU = prof.get("plafond_par_materiau", {})
     PLAFOND_PETIT = prof["plafond_petit"]
     PLAFOND_GRAND = prof["plafond_grand"]
     print(f"\n  profil       : {nom_profil}")
@@ -516,6 +594,7 @@ def main():
           f"{sum(triangles(o) for o in maillages())} triangles")
 
     jeter_le_terrain()
+    renommer(prof.get("renommer"))
     mettre_a_l_echelle()
     decimer()
     retexturer()

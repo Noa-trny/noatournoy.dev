@@ -46,7 +46,7 @@ import { NIVEAUX } from "./camera/path";
 // reste sous la bande, il faut tan(elevation) > p / hauteur de facade. Avec le
 // debord de ce modele, cela place le plancher aux alentours de 27 degres — soit
 // exactement assez pour que la bande soit franche sans tout avaler.
-const SOLEIL: readonly [number, number, number] = [-30, 18, 18];
+const SOLEIL: readonly [number, number, number] = [-32, 14, 21];
 
 function Lumiere() {
   return (
@@ -56,8 +56,8 @@ function Lumiere() {
           ombres n'existe comme contraste que s'il a du chaud en face. */}
       <directionalLight
         position={SOLEIL as unknown as THREE.Vector3Tuple}
-        intensity={3.6}
-        color="#ffe9cf"
+        intensity={3.9}
+        color="#ffdfba"
         castShadow
         shadow-mapSize={[2048, 2048]}
         // `bias` corrige l'acne de profondeur, `normalBias` le decollement sur
@@ -154,7 +154,7 @@ function Sol() {
       raycast={() => {}}
     >
       <planeGeometry args={[400, 400]} />
-      <meshStandardMaterial color="#8a857b" roughness={0.95} metalness={0} />
+      <meshStandardMaterial color="#84806f" roughness={0.97} metalness={0} />
     </mesh>
   );
 }
@@ -183,13 +183,29 @@ export default function Scene({ locale }: { locale: Locale }) {
       onPointerMissed={() => journey.set({ activeId: null })}
     >
       <color attach="background" args={["#b9c3cf"]} />
+      {/* LA BRUME, et son vrai role n'est pas l'ambiance.
+      
+          Le sol est un plan de quatre cents metres de cote. Sans elle il
+          rencontre le ciel sur une ligne parfaitement droite et parfaitement
+          nette, a mi-hauteur d'image — ce qui denonce le plan comme un plan.
+          Une decroissance exponentielle le dissout avant qu'il n'atteigne son
+          bord, et l'horizon cesse d'exister.
+      
+          La densite est choisie pour que la villa n'en paie presque rien : a
+          trente metres l'attenuation vaut quatre pour cent, a deux cents metres
+          les trois quarts. C'est aussi de la perspective aerienne — le lointain
+          d'une photo d'architecture est toujours plus pale que le premier plan.
+      
+          Le `<Sky>` n'est pas concerne : son shader ne lit pas le brouillard,
+          ce qui est ici exactement ce qu'on veut. */}
+      <fogExp2 attach="fog" args={["#cdd0cf", 0.0075]} />
       {/* Turbidite plus haute que par defaut : c'est la brume, et c'est
           elle qui donne au soleil bas son halo chaud au-dessus de
           l'horizon. */}
       <Sky
         sunPosition={SOLEIL as unknown as THREE.Vector3Tuple}
-        turbidity={6.5}
-        rayleigh={1.1}
+        turbidity={8.0}
+        rayleigh={0.9}
       />
       {/* L'ENVIRONNEMENT, cuit une fois a partir du ciel lui-meme.
       
@@ -214,8 +230,8 @@ export default function Scene({ locale }: { locale: Locale }) {
       >
         <Sky
           sunPosition={SOLEIL as unknown as THREE.Vector3Tuple}
-          turbidity={6.5}
-          rayleigh={1.1}
+          turbidity={8.0}
+          rayleigh={0.9}
         />
       </Environment>
       <Lumiere />

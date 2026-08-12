@@ -57,12 +57,16 @@ export type Emplacement = {
 // fait que 0,48 fois la distance en demi-largeur : une vitrine posee a 3,4 m de
 // l'axe n'entre dans l'image qu'a partir de sept metres devant la camera. Placee
 // trop pres du depart, elle nait deja hors cadre et n'est jamais vue.
-const Z_DEPART = 30.0;
-// Etale sur dix-huit metres et non douze. A 2,4 m d'intervalle la file se
-// lisait comme une pile de panneaux entassee sur le bord droit du cadre : deux
-// vitrines etaient enormes au premier plan et les quatre autres se
-// chevauchaient derriere. Il faut que chacune ait le cadre pour elle un moment.
-const Z_PAS = 3.6;
+const Z_DEPART = 25.0;
+// Etale sur dix-sept metres et non douze : a 2,4 m d'intervalle la file se
+// lisait comme une pile de panneaux entassee sur le bord droit du cadre.
+//
+// Et elle COMMENCE NEUF METRES DEVANT LA CAMERA, pas quatre. Le cadre ne fait
+// que 0,48 fois la distance en demi-largeur : a quatre metres, une vitrine
+// posee a 4,2 m de l'axe deborde de l'image et n'y montre qu'une tranche
+// enorme. A neuf, elle tient tout juste — c'est-a-dire qu'elle entre par le
+// bord au moment ou on la decouvre.
+const Z_PAS = 3.4;
 
 export const EMPLACEMENTS: readonly Emplacement[] = SLUGS.map((slug, i) => {
   const z = Z_DEPART - i * Z_PAS;

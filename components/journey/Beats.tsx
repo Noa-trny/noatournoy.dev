@@ -2,6 +2,8 @@ import type { Locale } from "@/content/routes";
 import { routes } from "@/content/routes";
 import { home } from "@/content/home";
 import { ui } from "@/content/ui";
+import { GLASS_T } from "@/scene/camera/path";
+import { SEUILS } from "@/scene/scroll/useScrollBridge";
 
 // Les quelques mots de la visite.
 //
@@ -18,6 +20,17 @@ import { ui } from "@/content/ui";
 // Positionnes en pourcentage de la hauteur du voyage, donc synchronises avec la
 // camera sans une seule ligne de JavaScript par frame.
 
+// LES TROIS INSTANTS SONT DERIVES DU TRAJET, comme les phases.
+//
+// Ils etaient ecrits en dur — 0,26 / 0,62 / 0,93 — et calés sur l'ancienne
+// maison, ou l'exterieur occupait presque tout et l'interieur tenait dans les
+// dernieres miettes. Sur la villa, le franchissement tombe ailleurs et la
+// montee prend du temps : les memes nombres auraient affiche « contact » sur
+// une image de facade.
+const T_TRAVAUX = SEUILS.transit * 0.45; // en pleine file de vitrines
+const T_PARCOURS = (SEUILS.transit + GLASS_T) / 2; // dans la montee
+const T_CONTACT = Math.min(0.97, SEUILS.dedans + 0.09); // une fois dedans
+
 type Beat = {
   readonly t: number;
   readonly cote: "gauche" | "droite";
@@ -29,8 +42,8 @@ export function Beats({ locale }: { locale: Locale }) {
 
   const beats: Beat[] = [
     {
-      // Juste apres la stele, quand la camera longe les premieres vitrines.
-      t: 0.26,
+      // Quand la camera longe la file de vitrines, sur le parvis bas.
+      t: T_TRAVAUX,
       cote: "droite",
       contenu: (
         <>
@@ -47,8 +60,8 @@ export function Beats({ locale }: { locale: Locale }) {
       ),
     },
     {
-      // A l'approche de la baie : ce qu'il y a derriere la vitre.
-      t: 0.62,
+      // Dans la montee de l'escalier, avant la baie.
+      t: T_PARCOURS,
       cote: "gauche",
       contenu: (
         <>
@@ -65,8 +78,8 @@ export function Beats({ locale }: { locale: Locale }) {
       ),
     },
     {
-      // Une fois dedans, la fin de la visite.
-      t: 0.93,
+      // Une fois la baie franchie, dans le sejour.
+      t: T_CONTACT,
       cote: "gauche",
       contenu: (
         <>

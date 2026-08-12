@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { RefObject } from "react";
 import { scroll } from "./scrollState";
+import { GLASS_T } from "../camera/path";
 import { journey, type Phase } from "./journeyStore";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -15,11 +16,32 @@ if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {
   (window as unknown as Record<string, unknown>).ScrollTrigger = ScrollTrigger;
 }
 
-/** Les deux franchissements du film, en fraction de progression. */
-export const SEUILS = { transit: 0.55, garage: 0.96 } as const;
+/**
+ * Les deux franchissements du film, DERIVES du trajet.
+ *
+ * Ils etaient ecrits en dur — 0,55 et 0,96 — et les deux nombres racontaient
+ * l'ancienne maison : un long parcours exterieur, puis un interieur si court
+ * qu'il tenait dans les quatre derniers centiemes. Sur la villa l'interieur est
+ * une vraie deuxieme partie, et un seuil a 0,96 declencherait la derniere phase
+ * bien apres que la camera y soit entree — donc bascule d'eclairage et montage
+ * de contenu au mauvais moment, voire jamais.
+ *
+ * `GLASS_T` est deja calcule a partir de la courbe. En accrochant les phases
+ * dessus, retoucher un point de controle les deplace toutes seules ; c'est le
+ * meme raisonnement que pour `GLASS_T` lui-meme, applique une fois de plus.
+ */
+export const SEUILS = {
+  // Le transit commence quand la maison cesse d'etre un objet a l'horizon pour
+  // devenir un lieu ou l'on entre : au pied de l'escalier, environ un quart de
+  // trajet avant le vitrage.
+  transit: Math.max(0, GLASS_T - 0.26),
+  // Et l'interieur commence... quand on est dedans. Deux centiemes apres le
+  // plan du verre, le temps que le fondu de la vitre s'acheve.
+  dedans: Math.min(1, GLASS_T + 0.02),
+} as const;
 
 const phasePour = (p: number): Phase =>
-  p >= SEUILS.garage ? "garage" : p >= SEUILS.transit ? "transit" : "approche";
+  p >= SEUILS.dedans ? "garage" : p >= SEUILS.transit ? "transit" : "approche";
 
 // Le pont entre le défilement et la scène. C'est le SEUL endroit où l'on crée
 // un ScrollTrigger qui touche la 3D.
