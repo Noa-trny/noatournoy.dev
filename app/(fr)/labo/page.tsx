@@ -1,13 +1,10 @@
-import Apercu from "@/scene/monde/Apercu";
+import Bureau from "@/scene/bureau/Bureau";
 
-// Le laboratoire : une page qui n'existe que pour REGARDER une piste avant de
-// la construire. Elle n'est liee depuis nulle part et sortira du depot une fois
-// la direction arretee.
-//
-// Import direct plutot que `next/dynamic` avec `ssr: false` : ce dernier est
-// interdit dans un composant serveur depuis Next 15. Le "use client" du module
-// suffit — le canvas ne rend rien cote serveur de toute façon.
+// Le laboratoire : la page ou l'on REGARDE une piste avant de la construire.
+// Liee depuis nulle part, elle sortira du depot quand le monde sera branche au
+// site. C'est la reponse a la lecon de la journee — une villa entiere avait ete
+// preparee, eclairee et parcourue avant qu'on regarde ce qu'elle donnait.
 
 export default function Labo() {
-  return <Apercu />;
+  return <Bureau />;
 }
