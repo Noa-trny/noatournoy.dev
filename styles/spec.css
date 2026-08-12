@@ -1400,25 +1400,56 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 
 /* ---------- le voyage ---------- */
 
-/* Le canvas se pose PAR-DESSUS rien : il est fixe, hors flux, derriere le
-   contenu. Deux consequences voulues — il ne decale aucun element, donc CLS
-   nul, et le DOM du site reste la seule source de navigation. */
+/* Le canvas est COLLANT et non fixe : il se libere tout seul a la fin du
+   conteneur, la ou un element fixe aurait continue de couvrir les bandes du
+   site en dessous. La hauteur du conteneur est posee en ligne par le
+   composant, qui la partage avec le pont de defilement. */
 .journey { position: relative; }
+.journey[data-3d="off"] { height: 0; overflow: hidden; }
 
-.journey-canvas {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  /* Aucun evenement pointeur tant que rien n'est cliquable dedans : les
-     vitrines les reprendront en phase 8. */
-  pointer-events: none;
+.journey-collant {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
 }
 
+.journey-canvas { position: absolute; inset: 0; }
 .journey-canvas canvas { display: block; }
 
-.journey-dom { position: relative; z-index: 1; }
+/* Le nom en surimpression. Decoratif : le vrai titre est en dessous. */
+.journey-titre {
+  position: absolute;
+  left: var(--gut);
+  bottom: clamp(2rem, 7vh, 5rem);
+  margin: 0;
+  max-width: 30rem;
+  color: #f4f5f2;
+  /* Une ombre portee plutot qu'un cartouche : le beton est clair par endroits
+     et sombre par d'autres, un fond plein trancherait mal partout. */
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+.journey-titre b {
+  display: block;
+  font-size: clamp(2.2rem, 6vw, 4.6rem);
+  font-weight: 800;
+  font-variation-settings: "wght" 800, "wdth" 74;
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+}
+.journey-titre span {
+  display: block;
+  margin-top: 0.9rem;
+  font-size: var(--t-body);
+  line-height: 1.5;
+  color: #dfe2dc;
+}
 
-/* Mode solo de mise au point : `?scene` en developpement. La couche DOM
-   s'efface pour laisser voir la scene, sans quoi on regle la trajectoire de
-   camera derriere des bandes opaques. */
-.journey[data-solo="1"] .journey-dom { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  /* Le voyage n'existe pas sous cette preference — la garde de capacite le
+     refuse avant meme de charger le moindre octet de three.js. Cette regle
+     n'est qu'une ceinture de securite. */
+  .journey { height: 0 !important; overflow: hidden; }
+}

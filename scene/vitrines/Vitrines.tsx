@@ -2,7 +2,7 @@
 
 import { useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useRouter } from "next/navigation";
 import * as THREE from "three";
 import type { Locale } from "@/content/routes";
@@ -152,31 +152,29 @@ function useCaptures(projets: Project[]) {
 export function Vitrines({ locale }: { locale: Locale }) {
   const projets = useMemo(() => EMPLACEMENTS.map((e) => bySlug(e.slug)), []);
   const captures = useCaptures(projets);
-  const [sansImage, setSansImage] = useState<Map<string, THREE.Texture>>(
-    new Map()
-  );
+  // Dessinees des le premier rendu, jamais attendues : une texture noire a
+  // l'ecran coute plus cher qu'une police de repli pendant deux secondes.
+  const sansImage = useMemo(() => {
+    const m = new Map<string, { texture: THREE.Texture; redessiner: () => void }>();
+    for (const p of projets) {
+      if (p.peek.kind !== "none") continue;
+      m.set(p.slug, textureSansImage(p, locale));
+    }
+    return m;
+  }, [projets, locale]);
 
+  // Puis on repasse dessus quand la vraie police est disponible.
   useEffect(() => {
     let vivant = true;
-    const creees: THREE.Texture[] = [];
-    // On attend la police : une CanvasTexture ne se redessine pas, et dessiner
-    // trop tot cuirait la police de repli dans la texture.
     policePrete().then(() => {
-      if (!vivant) return;
-      const m = new Map<string, THREE.Texture>();
-      for (const p of projets) {
-        if (p.peek.kind !== "none") continue;
-        const t = textureSansImage(p, locale);
-        creees.push(t);
-        m.set(p.slug, t);
-      }
-      setSansImage(m);
+      if (vivant) sansImage.forEach((e) => e.redessiner());
     });
     return () => {
       vivant = false;
-      creees.forEach((t) => t.dispose());
     };
-  }, [projets, locale]);
+  }, [sansImage]);
+
+  useEffect(() => () => sansImage.forEach((e) => e.texture.dispose()), [sansImage]);
 
   return (
     <group>
@@ -185,7 +183,7 @@ export function Vitrines({ locale }: { locale: Locale }) {
         const tex =
           p.peek.kind === "shot"
             ? captures.get(p.peek.src) ?? null
-            : sansImage.get(p.slug) ?? null;
+            : sansImage.get(p.slug)?.texture ?? null;
         return (
           <Vitrine
             key={e.slug}
