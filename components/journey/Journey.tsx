@@ -85,6 +85,21 @@ export function Journey({
     let minuterie: number | undefined;
 
     const perdu = (e: Event) => {
+      // UN CANVAS DEJA RETIRE DU DOCUMENT NE COMPTE PAS, et c'est le coeur du
+      // defaut rapporte.
+      //
+      // En developpement, le mode strict de React monte, demonte puis remonte
+      // chaque composant. Le premier canvas est donc jete — et un canvas jete
+      // emet `webglcontextlost`. L'ecouteur, pose en capture sur le conteneur,
+      // recevait l'evenement du canvas MORT et coupait la 3D du vivant.
+      //
+      // Attendre la restauration ne suffisait pas non plus : un contexte
+      // detruit ne revient jamais, donc le garde-fou de quatre secondes
+      // finissait par tuer la scene de toute façon. Il faut distinguer les deux
+      // situations, et `isConnected` le fait exactement.
+      const source = e.target as HTMLCanvasElement | null;
+      if (source && !source.isConnected) return;
+
       // Sans `preventDefault`, le navigateur ne restaure JAMAIS le contexte :
       // c'est l'appel qui signale qu'on souhaite le recuperer.
       e.preventDefault();
