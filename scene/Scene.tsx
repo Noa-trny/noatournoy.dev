@@ -31,22 +31,24 @@ import { NIVEAUX } from "./camera/path";
 // la ou les ombres disent qu'il est se lit faux immediatement, sans qu'on
 // sache dire pourquoi.
 //
-// Dix-huit metres de haut pour trente-cinq de cote : environ 27 degres
-// d'elevation. Ce choix n'est pas decoratif. Le beton brut n'a ni couleur ni
-// motif — il n'a que du relief, et le relief ne devient visible qu'en lumiere
-// rasante.
+// Trente et un degres d'elevation, et l'azimut a soixante-neuf degres
+// d'incidence sur la facade. Les deux nombres sortent d'une comparaison de
+// rendus hors ligne, un seul parametre a la fois.
 //
-// L'angle a ete trouve par MESURE, pas au gout, et deux essais ont servi de
-// bornes. A 31 degres sans ombres portees : un aplat gris. A 14 degres : la
-// facade entiere disparaissait dans l'ombre du debord de toiture, et la
-// lumiere ne se lisait plus que sur le sol.
+// LA REGLE QUE J'AVAIS TIREE DU PAVILLON S'INVERSE ICI, et c'est la leçon.
+// Sur une facade longue et plate, le relief n'existe que par la lumiere
+// rasante : plus le soleil est bas, plus les reliefs se creusent. J'en avais
+// fait un principe. Mais cette villa n'est pas une facade, c'est un empilement
+// de volumes en porte-a-faux — et un volume ne projette une ombre sur celui du
+// dessous que si le soleil est assez HAUT pour l'y poser. Essaye a 24 degres
+// d'elevation et 77 d'incidence : la facade recevait 22 % de la lumiere
+// directe, elle etait uniformement terne et pas une ombre portee n'apparaissait,
+// faute de quelque chose a projeter dessus. A 31 et 69, le debord marque le
+// volume du dessous, l'escalier se raye de ses marches, le garage se creuse.
 //
-// La contrainte s'ecrit d'ailleurs en une ligne. Un debord de profondeur p pose
-// sur la facade une bande d'ombre de hauteur p / tan(elevation) ; pour qu'il en
-// reste sous la bande, il faut tan(elevation) > p / hauteur de facade. Avec le
-// debord de ce modele, cela place le plancher aux alentours de 27 degres — soit
-// exactement assez pour que la bande soit franche sans tout avaler.
-const SOLEIL: readonly [number, number, number] = [-32, 14, 21];
+// Autrement dit : la lumiere rasante revele la TEXTURE, la lumiere haute revele
+// la MASSE. Le pavillon n'avait que de la texture, la villa n'a que de la masse.
+const SOLEIL: readonly [number, number, number] = [-30, 20, 14];
 
 function Lumiere() {
   return (
