@@ -1400,56 +1400,88 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 
 /* ---------- le voyage ---------- */
 
-/* Le canvas est COLLANT et non fixe : il se libere tout seul a la fin du
-   conteneur, la ou un element fixe aurait continue de couvrir les bandes du
-   site en dessous. La hauteur du conteneur est posee en ligne par le
-   composant, qui la partage avec le pont de defilement. */
+/* La visite EST le site : le canvas reste derriere toute la page et le contenu
+   defile par-dessus.
+
+   Le collant porte une marge basse NEGATIVE d'une hauteur de fenetre. Sans
+   elle, il consommerait un ecran entier dans le flux et le contenu commencerait
+   dessous au lieu de passer devant. Avec elle, il occupe zero place et se
+   comporte comme un fond fixe qui se libere a la fin du conteneur. */
 .journey { position: relative; }
-.journey[data-3d="off"] { height: 0; overflow: hidden; }
 
 .journey-collant {
   position: sticky;
   top: 0;
-  height: 100vh;
   height: 100svh;
+  margin-bottom: -100svh;
   overflow: hidden;
-}
-
-.journey-canvas { position: absolute; inset: 0; }
-.journey-canvas canvas { display: block; }
-
-/* Le nom en surimpression. Decoratif : le vrai titre est en dessous. */
-.journey-titre {
-  position: absolute;
-  left: var(--gut);
-  bottom: clamp(2rem, 7vh, 5rem);
-  margin: 0;
-  max-width: 30rem;
-  color: #f4f5f2;
-  /* Une ombre portee plutot qu'un cartouche : le beton est clair par endroits
-     et sombre par d'autres, un fond plein trancherait mal partout. */
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.4);
+  z-index: 0;
   pointer-events: none;
 }
-.journey-titre b {
-  display: block;
-  font-size: clamp(2.2rem, 6vw, 4.6rem);
-  font-weight: 800;
-  font-variation-settings: "wght" 800, "wdth" 74;
-  letter-spacing: -0.02em;
-  line-height: 0.98;
+/* Les vitrines doivent rester cliquables : on rend la main au canvas seul. */
+.journey-collant canvas { pointer-events: auto; display: block; }
+
+.journey-canvas { position: absolute; inset: 0; }
+
+.journey-dom { position: relative; z-index: 1; }
+
+/* LE CONTENU S'ECARTE, IL NE SE REND PAS TRANSPARENT.
+
+   Premiere tentative : voiler les bandes a 82 %. Resultat, la scene se
+   devinait sans jamais se voir — un lavis uniforme, ni un site ni une visite.
+
+   Ici les bandes pleine largeur disparaissent et chaque bloc de contenu devient
+   un panneau translucide pose sur la scene. Entre deux panneaux, la scene est
+   entierement visible : c'est ce qui fait la difference entre « le site avec un
+   fond » et « une visite ou le contenu apparait ».
+
+   Les jetons restent ceux du site — meme panneau, meme rayon, meme vert. */
+.journey[data-3d="on"] .band-sec,
+.journey[data-3d="on"] .hero.light {
+  background: none;
+  /* De l'air entre les blocs : c'est cet espace qui laisse voir la scene. */
+  padding-block: clamp(5rem, 16vh, 11rem);
 }
-.journey-titre span {
-  display: block;
-  margin-top: 0.9rem;
-  font-size: var(--t-body);
-  line-height: 1.5;
-  color: #dfe2dc;
+.journey[data-3d="on"] .band-sec::after,
+.journey[data-3d="on"] .hero::after { display: none; }
+
+.journey[data-3d="on"] .band-sec > .wrap,
+.journey[data-3d="on"] .hero .hero-in {
+  background: rgba(10, 11, 11, 0.80);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: var(--r);
+  padding: clamp(1.6rem, 4vw, 3.2rem);
 }
 
+/* Tous les blocs deviennent sombres, y compris ceux qui etaient clairs :
+   au-dessus d'une scene qui change en permanence, un panneau clair et un
+   panneau sombre alternes donneraient deux regimes de lisibilite differents. */
+.journey[data-3d="on"] .band-sec.light,
+.journey[data-3d="on"] .band-sec.light .sec-title,
+.journey[data-3d="on"] .band-sec.light .row-title a,
+.journey[data-3d="on"] .band-sec.light .cert-name,
+.journey[data-3d="on"] .hero h1 { color: var(--fg); }
+.journey[data-3d="on"] .band-sec.light .label,
+.journey[data-3d="on"] .band-sec.light .row-tags,
+.journey[data-3d="on"] .band-sec.light .note,
+.journey[data-3d="on"] .band-sec.light .ghost-items { color: var(--dim); }
+.journey[data-3d="on"] .band-sec.light .row { border-color: var(--line); }
+
+/* La carte Eclosion ferait doublon : deux images concurrentes au meme endroit,
+   dont l'une bouge. */
+.journey[data-3d="on"] .hero-card { display: none; }
+.journey[data-3d="on"] .hero-grid { grid-template-columns: 1fr; }
+
+/* Le pied de page garde son fond plein : c'est la fin de la visite. */
+.journey[data-3d="on"] .foot { background: var(--bg); }
+
 @media (prefers-reduced-motion: reduce) {
-  /* Le voyage n'existe pas sous cette preference — la garde de capacite le
-     refuse avant meme de charger le moindre octet de three.js. Cette regle
-     n'est qu'une ceinture de securite. */
-  .journey { height: 0 !important; overflow: hidden; }
+  /* La garde de capacite refuse deja la scene sous cette preference : ceci
+     n'est qu'une ceinture, si la classe restait posee. */
+  .journey[data-3d="on"] .band-sec > .wrap,
+  .journey[data-3d="on"] .hero .hero-in {
+    background: none;
+    border: 0;
+    padding: 0;
+  }
 }

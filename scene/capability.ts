@@ -16,14 +16,34 @@
  * nombre de contextes vivants (autour de 16), et une sonde qui fuit finit par
  * empêcher la vraie scène de s'ouvrir.
  */
+let sondeWebGL: boolean | null = null;
+
 function hasWebGL2(): boolean {
+  // MEMORISE pour toute la duree de la page.
+  //
+  // Chaque appel ouvrait un contexte, et un navigateur en plafonne le nombre
+  // vivant — autour de seize. Une sonde par montage, plus les remontages du
+  // rechargement a chaud et des navigations, finissait par saturer : la garde
+  // repondait alors « pas de WebGL » sur une machine qui en a, et la scene
+  // disparaissait sans raison visible.
+  //
+  // La capacite WebGL d'un onglet ne change pas en cours de route : la mesurer
+  // une fois suffit.
+  if (sondeWebGL !== null) return sondeWebGL;
   try {
     const canvas = document.createElement("canvas");
     const gl = canvas.getContext("webgl2");
-    if (!gl) return false;
+    if (!gl) {
+      sondeWebGL = false;
+      return false;
+    }
+    // On libere immediatement : le contexte de sonde ne doit pas compter dans
+    // le budget de celui dont la scene aura besoin.
     gl.getExtension("WEBGL_lose_context")?.loseContext();
+    sondeWebGL = true;
     return true;
   } catch {
+    sondeWebGL = false;
     return false;
   }
 }

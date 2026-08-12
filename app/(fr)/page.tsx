@@ -9,11 +9,8 @@ import { Journey } from "@/components/journey/Journey";
 
 export default function Accueil() {
   return (
-    <>
-      {/* Le voyage occupe ses propres ecrans, puis le site reprend dessous
-          avec ses bandes. Sans 3D il ne prend aucune place. */}
-      <Journey locale="fr" />
+    <Journey locale="fr">
       <HomeBody locale="fr" />
-    </>
+    </Journey>
   );
 }

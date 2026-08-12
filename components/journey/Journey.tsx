@@ -6,16 +6,19 @@ import { refusDe3D } from "@/scene/capability";
 import { useScrollBridge } from "@/scene/scroll/useScrollBridge";
 import { journey } from "@/scene/scroll/journeyStore";
 import { scroll } from "@/scene/scroll/scrollState";
-import { home } from "@/content/home";
 import { FocusVitrines } from "./FocusVitrines";
 
 const Scene = lazy(() => import("@/scene/Scene"));
 
-// LE VOYAGE, en tete de l'accueil.
+// LE VOYAGE. Il EST l'accueil, du premier ecran au dernier.
 //
-// Il occupe ses propres ecrans, puis le site reprend dessous avec ses bandes.
-// Le canvas est en `sticky` et non en `fixed` : il se libere tout seul a la fin
-// du conteneur, la ou un element fixe aurait continue de couvrir le site.
+// Le canvas reste derriere toute la page et le contenu defile par-dessus, en
+// bandes devenues translucides. Le defilement pilote donc la camera sur toute
+// la hauteur : arriver sur le parvis, longer les vitrines, franchir la baie.
+//
+// `sticky` avec une marge basse NEGATIVE, et non `fixed` : ainsi le canvas ne
+// consomme aucune place dans le flux — le contenu remonte par-dessus lui — tout
+// en se liberant proprement a la fin du conteneur.
 //
 // LE POINT LE PLUS IMPORTANT reste `useState(false)`. Le rendu serveur et le
 // PREMIER rendu client produisent le meme arbre — rien. La detection de
@@ -28,10 +31,13 @@ const Scene = lazy(() => import("@/scene/Scene"));
 // les six liens vers les travaux vivent dans le corps du site, en dessous —
 // jamais dans la scene.
 
-/** Hauteur du voyage, en hauteurs de fenetre. */
-const ECRANS = 3.6;
-
-export function Journey({ locale }: { locale: Locale }) {
+export function Journey({
+  locale,
+  children,
+}: {
+  locale: Locale;
+  children: React.ReactNode;
+}) {
   const conteneur = useRef<HTMLDivElement>(null);
   const [actif, setActif] = useState(false);
 
@@ -76,40 +82,26 @@ export function Journey({ locale }: { locale: Locale }) {
 
   useScrollBridge(conteneur, actif);
 
-  const c = home[locale];
-
   return (
     <div
       ref={conteneur}
       className="journey"
       data-3d={actif ? "on" : "off"}
-      // La hauteur est posee ici et non en CSS : elle est la MEME grandeur que
-      // celle qui sert au pont de defilement, et la dupliquer dans une feuille
-      // de style ferait deriver les deux a la premiere retouche.
-      style={actif ? { height: `${ECRANS * 100}vh` } : undefined}
     >
       {actif ? (
-        <>
-          <div className="journey-collant">
-            <div className="journey-canvas" aria-hidden="true">
-              <Suspense fallback={null}>
-                <Scene locale={locale} />
-              </Suspense>
-            </div>
-            {/* Le nom en surimpression, DECORATIF : le vrai <h1> vit dans le
-                corps du site, juste dessous. Le dupliquer dans l'arbre
-                d'accessibilite donnerait deux titres de niveau 1 pour une seule
-                page. */}
-            <p className="journey-titre" aria-hidden="true">
-              <b>Noa Tournoy</b>
-              <span>{c.heroSub.map((s) => s.t).join("")}</span>
-            </p>
+        <div className="journey-collant" aria-hidden="true">
+          <div className="journey-canvas">
+            <Suspense fallback={null}>
+              <Scene locale={locale} />
+            </Suspense>
           </div>
-          {/* Le focus clavier allume la vitrine correspondante quand on
-              remonte dans le voyage. */}
-          <FocusVitrines />
-        </>
+        </div>
       ) : null}
+      {/* Le contenu du site, toujours rendu et jamais retire : c'est lui qui
+          porte les six liens vers les travaux, le texte et la structure. La
+          scene passe DERRIERE, elle ne le remplace pas. */}
+      <div className="journey-dom">{children}</div>
+      {actif ? <FocusVitrines /> : null}
     </div>
   );
 }
