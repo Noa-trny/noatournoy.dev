@@ -56,8 +56,8 @@ function Lumiere() {
           ombres n'existe comme contraste que s'il a du chaud en face. */}
       <directionalLight
         position={SOLEIL as unknown as THREE.Vector3Tuple}
-        intensity={3.9}
-        color="#ffdfba"
+        intensity={3.7}
+        color="#ffdcb2"
         castShadow
         shadow-mapSize={[2048, 2048]}
         // `bias` corrige l'acne de profondeur, `normalBias` le decollement sur
@@ -89,7 +89,7 @@ function Lumiere() {
           Le contraste d'une photo d'architecture n'est pas clair contre
           sombre, il est CHAUD contre FROID : le soleil bas est ambre, et ce
           qu'il ne touche pas n'est eclaire que par le bleu du ciel. */}
-      <hemisphereLight args={["#000000", "#3d4653", 0.45]} />
+      <hemisphereLight args={["#000000", "#3d4653", 0.10]} />
     </>
   );
 }
@@ -207,33 +207,35 @@ export default function Scene({ locale }: { locale: Locale }) {
         turbidity={8.0}
         rayleigh={0.9}
       />
-      {/* L'ENVIRONNEMENT, cuit une fois a partir du ciel lui-meme.
+      {/* L'ENVIRONNEMENT : une HDRI de couchant, pour la LUMIERE seulement.
       
-          Sans lui, un materiau lisse n'a rien a refleter : les baies rendaient
-          des rectangles noirs, ce qui est le contraire de ce qu'une vitre fait
-          en exterieur. `<Environment preset=...>` irait chercher une HDRI sur
-          un CDN tiers, que `connect-src 'self'` bloque ; en lui donnant le
-          `<Sky>` procedural pour enfant, on obtient la meme carte sans un octet
-          de reseau et sans elargir la CSP.
+          Le ciel procedural cuit en carte d'environnement donnait une ambiante
+          juste mais morte — un degrade bleu n'a ni soleil chaud d'un cote ni
+          ciel froid de l'autre, donc il eclaire tout pareil. Une vraie capture
+          de fin d'apres-midi apporte ce que la geometrie ne peut pas simuler :
+          le rebond chaud du sol, la variation azimutale, le reflet du soleil
+          dans les vitres.
       
-          `frames={1}` : le ciel ne bouge pas, la cuisson n'a donc lieu qu'une
-          fois — meme raisonnement que pour la carte d'ombres. */}
+          512 x 256 pixels et 315 Ko. La finesse ne compte pas : three
+          pre-filtre la carte avant qu'elle eclaire quoi que ce soit, et le
+          filtrage jette de toute façon le detail. Elle ne compterait que si la
+          carte servait AUSSI de fond visible — ce n'est pas le cas, le ciel
+          reste procedural et donc gratuit.
+      
+          `files` et jamais `preset` : ce dernier va chercher l'HDRI sur un CDN
+          tiers, que `connect-src 'self'` bloque. */}
       <Environment
-        frames={1}
-        resolution={128}
-        // A UN, la carte du ciel eclaire la scene autant qu'un plein jour
-        // couvert : la premiere version rendait un beton presque blanc et
-        // effacait les ombres qu'on venait d'obtenir. Elle n'est pas ici pour
-        // eclairer — les directionnelles s'en chargent — mais pour DONNER
-        // QUELQUE CHOSE A REFLETER aux surfaces lisses.
-        environmentIntensity={0.3}
-      >
-        <Sky
-          sunPosition={SOLEIL as unknown as THREE.Vector3Tuple}
-          turbidity={8.0}
-          rayleigh={0.9}
-        />
-      </Environment>
+        files="/hdr/couchant.hdr"
+        background={false}
+        // 0,4 et pas 0,85. Montee a 0,85 en meme temps que le soleil baissait,
+        // elle a repris a la directionnelle exactement ce qu'on venait de lui
+        // donner : l'ambiante dominait, les ombres portees disparaissaient, et
+        // la villa rendait plus plate qu'avant la HDRI. Une carte
+        // d'environnement remplit les ombres — elle ne les creuse jamais. Elle
+        // apporte la COULEUR de la lumiere indirecte, le soleil apporte sa
+        // DIRECTION, et il faut les doser en sens inverse.
+        environmentIntensity={0.4}
+      />
       <Lumiere />
       <Sol />
       <CameraRig />
