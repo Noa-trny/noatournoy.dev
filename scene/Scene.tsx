@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { CameraRig } from "./camera/CameraRig";
 import { House } from "./house/House";
 import { Vitrines } from "./vitrines/Vitrines";
+import { Stele } from "./textes/Stele";
 import type { Locale } from "@/content/routes";
 import { journey } from "./scroll/journeyStore";
 
@@ -99,6 +100,7 @@ export default function Scene({ locale }: { locale: Locale }) {
       <Suspense fallback={null}>
         <Vitrines locale={locale} />
       </Suspense>
+      <Stele locale={locale} />
     </Canvas>
   );
 }

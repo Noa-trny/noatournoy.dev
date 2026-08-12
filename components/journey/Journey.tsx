@@ -7,6 +7,7 @@ import { useScrollBridge } from "@/scene/scroll/useScrollBridge";
 import { journey } from "@/scene/scroll/journeyStore";
 import { scroll } from "@/scene/scroll/scrollState";
 import { FocusVitrines } from "./FocusVitrines";
+import { Beats } from "./Beats";
 
 const Scene = lazy(() => import("@/scene/Scene"));
 
@@ -97,9 +98,14 @@ export function Journey({
           </div>
         </div>
       ) : null}
-      {/* Le contenu du site, toujours rendu et jamais retire : c'est lui qui
-          porte les six liens vers les travaux, le texte et la structure. La
-          scene passe DERRIERE, elle ne le remplace pas. */}
+      {/* Les quelques mots de la visite : trois blocs sur toute la hauteur,
+          pas un site. Marques aria-hidden — ils reprennent du texte qui vit
+          deja dans le contenu complet ci-dessous, et le dupliquer dans l'arbre
+          d'accessibilite le ferait lire deux fois. */}
+      {actif ? <Beats locale={locale} /> : null}
+      {/* Le contenu complet, toujours rendu et jamais retire : c'est lui qui
+          porte les six liens vers les travaux, le referencement et le clavier.
+          Invisible quand la scene est la, il revient au focus. */}
       <div className="journey-dom">{children}</div>
       {actif ? <FocusVitrines /> : null}
     </div>

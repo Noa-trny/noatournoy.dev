@@ -1425,63 +1425,146 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 
 .journey-dom { position: relative; z-index: 1; }
 
-/* LE CONTENU S'ECARTE, IL NE SE REND PAS TRANSPARENT.
+/* LE CONTENU EST DANS LA SCENE, PAS DEVANT ELLE.
 
-   Premiere tentative : voiler les bandes a 82 %. Resultat, la scene se
-   devinait sans jamais se voir — un lavis uniforme, ni un site ni une visite.
+   Deux tentatives ecartees avant celle-ci : voiler les bandes (la scene se
+   devinait sans se voir), puis poser des panneaux flottants (« une page
+   par-dessus »). Les deux gardaient le site DEVANT la scene.
 
-   Ici les bandes pleine largeur disparaissent et chaque bloc de contenu devient
-   un panneau translucide pose sur la scene. Entre deux panneaux, la scene est
-   entierement visible : c'est ce qui fait la difference entre « le site avec un
-   fond » et « une visite ou le contenu apparait ».
+   Ici le DOM devient invisible et c'est la scene qui porte le contenu : le nom
+   sur une stele de beton a l'entree, les six travaux sur leurs vitrines.
 
-   Les jetons restent ceux du site — meme panneau, meme rayon, meme vert. */
-.journey[data-3d="on"] .band-sec,
-.journey[data-3d="on"] .hero.light {
-  background: none;
-  /* De l'air entre les blocs : c'est cet espace qui laisse voir la scene. */
-  padding-block: clamp(5rem, 16vh, 11rem);
+   MAIS IL RESTE DANS LE FLUX, et c'est essentiel a trois titres :
+   — il donne au document sa hauteur, donc au voyage sa duree ;
+   — il garde les six liens dans le HTML livre, pour les moteurs ;
+   — il reste atteignable au clavier, et REDEVIENT VISIBLE au focus.
+
+   `opacity: 0` et non `display: none` ni `visibility: hidden` : ces deux-la
+   retirent l'element de l'ordre de tabulation, ce qui est exactement l'inverse
+   du but. Meme ruse que le lien d'evitement du site. */
+.journey[data-3d="on"] .journey-dom {
+  opacity: 0;
+  transition: opacity 0.25s ease;
 }
-.journey[data-3d="on"] .band-sec::after,
-.journey[data-3d="on"] .hero::after { display: none; }
-
-.journey[data-3d="on"] .band-sec > .wrap,
-.journey[data-3d="on"] .hero .hero-in {
-  background: rgba(10, 11, 11, 0.80);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: var(--r);
-  padding: clamp(1.6rem, 4vw, 3.2rem);
+.journey[data-3d="on"] .journey-dom:focus-within {
+  opacity: 1;
 }
-
-/* Tous les blocs deviennent sombres, y compris ceux qui etaient clairs :
-   au-dessus d'une scene qui change en permanence, un panneau clair et un
-   panneau sombre alternes donneraient deux regimes de lisibilite differents. */
-.journey[data-3d="on"] .band-sec.light,
-.journey[data-3d="on"] .band-sec.light .sec-title,
-.journey[data-3d="on"] .band-sec.light .row-title a,
-.journey[data-3d="on"] .band-sec.light .cert-name,
-.journey[data-3d="on"] .hero h1 { color: var(--fg); }
-.journey[data-3d="on"] .band-sec.light .label,
-.journey[data-3d="on"] .band-sec.light .row-tags,
-.journey[data-3d="on"] .band-sec.light .note,
-.journey[data-3d="on"] .band-sec.light .ghost-items { color: var(--dim); }
-.journey[data-3d="on"] .band-sec.light .row { border-color: var(--line); }
-
-/* La carte Eclosion ferait doublon : deux images concurrentes au meme endroit,
-   dont l'une bouge. */
-.journey[data-3d="on"] .hero-card { display: none; }
-.journey[data-3d="on"] .hero-grid { grid-template-columns: 1fr; }
-
-/* Le pied de page garde son fond plein : c'est la fin de la visite. */
-.journey[data-3d="on"] .foot { background: var(--bg); }
+/* Rien ne doit intercepter le pointeur au-dessus de la scene, sauf quand le
+   contenu est revenu pour le clavier. */
+.journey[data-3d="on"] .journey-dom { pointer-events: none; }
+.journey[data-3d="on"] .journey-dom:focus-within { pointer-events: auto; }
 
 @media (prefers-reduced-motion: reduce) {
-  /* La garde de capacite refuse deja la scene sous cette preference : ceci
-     n'est qu'une ceinture, si la classe restait posee. */
-  .journey[data-3d="on"] .band-sec > .wrap,
-  .journey[data-3d="on"] .hero .hero-in {
-    background: none;
-    border: 0;
-    padding: 0;
-  }
+  /* Ceinture : si la classe restait posee, le contenu doit rester visible. */
+  .journey[data-3d="on"] .journey-dom { opacity: 1; pointer-events: auto; }
+}
+
+/* ---------- les mots de la visite ---------- */
+
+/* Trois blocs poses sur toute la hauteur du voyage. Leur position en
+   pourcentage les synchronise avec la camera sans une ligne de JavaScript par
+   frame : ils defilent avec la page, la scene reste collante derriere. */
+.journey-beats {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.beat {
+  position: absolute;
+  width: min(30rem, 42vw);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  color: #f5f6f2;
+  /* Une ombre portee plutot qu'un cartouche : le beton est clair par endroits
+     et sombre par d'autres, un fond plein trancherait mal partout. */
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+.beat-gauche { left: var(--gut); }
+.beat-droite { right: var(--gut); text-align: right; }
+
+/* Un halo doux DERRIERE le texte, pas un cartouche.
+   La scene passe du ciel clair au beton sombre selon le moment : une ombre
+   portee seule ne suffit pas au-dessus du ciel, et un fond plein tranche
+   franchement au-dessus du beton. Un degrade sans bord tient les deux. */
+.beat::before {
+  content: "";
+  position: absolute;
+  inset: -2.5rem -3rem;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(6, 8, 7, 0.62) 0%,
+    rgba(6, 8, 7, 0.42) 45%,
+    rgba(6, 8, 7, 0) 78%
+  );
+}
+
+.beat-etiq {
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  /* Le vert vif du site ne tient pas au-dessus d'un ciel clair : on le remonte
+     en luminosite plutot que de poser un fond derriere lui. */
+  color: #d6ff62;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.85), 0 0 3px rgba(0, 0, 0, 0.6);
+}
+.beat-titre {
+  margin: 0;
+  font-size: clamp(1.7rem, 4vw, 3.1rem);
+  font-weight: 800;
+  font-variation-settings: "wght" 800, "wdth" 78;
+  line-height: 1.02;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+.beat-titre em { font-style: normal; color: var(--acid); }
+
+/* Les liens reprennent la main sur le pointeur : ce sont les seuls elements
+   cliquables de cette couche. */
+.beat-lien,
+.beat-liens a {
+  pointer-events: auto;
+  color: #f5f6f2;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(194, 245, 63, 0.5);
+  padding-bottom: 0.15rem;
+  font-size: var(--t-sm);
+  align-self: flex-start;
+}
+.beat-droite .beat-lien { align-self: flex-end; }
+.beat-lien:hover,
+.beat-liens a:hover { border-bottom-color: var(--acid); color: var(--acid); }
+.beat-liens { display: flex; flex-wrap: wrap; gap: 1.1rem; }
+
+.beat-amorce {
+  position: absolute;
+  top: calc(100svh - 5.5rem);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: #eceee8;
+  font-size: var(--t-label);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.7);
+}
+.beat-amorce i {
+  width: 1px;
+  height: 2.2rem;
+  background: linear-gradient(to bottom, var(--acid), transparent);
+}
+
+@media (max-width: 48rem) {
+  .beat { width: min(22rem, 78vw); }
+  .beat-droite { text-align: left; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-beats { display: none; }
 }
