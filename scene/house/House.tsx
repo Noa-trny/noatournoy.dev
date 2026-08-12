@@ -9,16 +9,16 @@ import { GLASS_T, GLASS_BANDE } from "../camera/path";
 
 // La maison.
 //
-// Le modele vient de RenderRite (CC BY 4.0), retexture en beton banche et
-// recentre sur sa baie : le vitrage est a l'origine, le plancher a Y = 0, et la
-// camera arrive des Z positifs. Toute la trajectoire se lit donc en nombres qui
-// veulent dire quelque chose.
+// Le modele vient de Visthetique (CC BY 4.0), retexture en beton banche,
+// remis a l'echelle du metre — il arrivait a 7,90x — et recentre sur sa baie.
+// Les reperes utiles sont dans `scene/camera/path.ts`, tous MESURES sur le
+// fichier reellement servi.
 //
-// Il est compresse en EXT_meshopt_compression — 2,9 Mo la ou l'export brut en
-// faisait 9,7. C'est ce qui impose `'wasm-unsafe-eval'` dans la CSP, et c'est
-// documente dans proxy.ts.
+// Il est compresse en EXT_meshopt_compression — 2,7 Mo pour 137 000 triangles,
+// la ou la source en faisait 119 et 948 000. C'est ce qui impose
+// `'wasm-unsafe-eval'` dans la CSP, et c'est documente dans proxy.ts.
 
-const MODELE = "/models/maison.glb";
+const MODELE = "/models/villa.glb";
 
 export function House() {
   const { scene } = useGLTF(MODELE);
@@ -45,7 +45,11 @@ export function House() {
       const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
       for (const m of mats) {
         if (!m) continue;
-        if (m.name === "Glass") {
+        // TOUT ce qui commence par « glass », pas le nom exact. Le modele
+        // livre `Glass` ET `Glassend` ; ne traiter que le premier laissait la
+        // moitie du vitrage opaque au franchissement, c'est-a-dire un mur
+        // transparent qui reste en travers du chemin.
+        if (m.name.toLowerCase().startsWith("glass")) {
           // On isole une copie par materiau de verre : le fondu au
           // franchissement ne doit pas modifier le cache de useGLTF.
           // Le verre ne porte pas d'ombre : une vitre qui projetterait une

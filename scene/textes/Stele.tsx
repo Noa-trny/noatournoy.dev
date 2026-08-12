@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import type { Locale } from "@/content/routes";
 import { home } from "@/content/home";
+import { NIVEAUX } from "../camera/path";
 import { texteTexture } from "./texteTexture";
 import { policePrete } from "../vitrines/panelTexture";
 
@@ -62,10 +63,16 @@ export function Stele({ locale }: { locale: Locale }) {
 
   return (
     // Placement contraint par la focale, pas par le gout : en 30 degres, a
-    // 3,5 m devant la camera, le champ ne fait que 1,7 m de demi-largeur — la
-    // premiere position, a 3,4 m sur le cote, tombait hors cadre. A 8 m elle en
-    // fait 3,8, et la stele tient dans l'image tout en laissant le passage.
-    <group position={[-2.3, -0.31, 14.5]} rotation={[0, 0.26, 0]}>
+    // 3,5 m devant la camera, le champ ne fait que 1,7 m de demi-largeur — une
+    // premiere position, a 3,4 m sur le cote, tombait hors cadre.
+    //
+    // Elle est desormais AU PIED DE L'ESCALIER, et ce n'est plus seulement une
+    // contrainte de cadrage : une plaque se lit a l'entree d'un batiment, pas
+    // au milieu de son allee. La camera part a treize metres de la, ou le nom
+    // n'est qu'une inscription lointaine, et le croise au moment ou elle
+    // s'appreterait a monter les marches. Cote droit, pour laisser le garage et
+    // la voiture occuper le gauche.
+    <group position={[2.5, NIVEAUX.garage, 9.4]} rotation={[0, -0.34, 0]}>
       {/* Le monolithe. Legerement fruite — une face parfaitement verticale
           lit comme un panneau publicitaire, pas comme du beton coule. */}
       <mesh position={[0, HAUTEUR / 2, 0]} castShadow receiveShadow raycast={() => {}}>

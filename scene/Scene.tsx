@@ -10,7 +10,7 @@ import { Vitrines } from "./vitrines/Vitrines";
 import { Stele } from "./textes/Stele";
 import type { Locale } from "@/content/routes";
 import { journey } from "./scroll/journeyStore";
-import { SOL_PARVIS } from "./vitrines/placement";
+import { NIVEAUX } from "./camera/path";
 
 // La scene. Phase 7 : la maison et le trajet de camera. Les vitrines viennent
 // en phase 8, le garage et la voiture en phase 9.
@@ -136,15 +136,20 @@ function OmbresGelees() {
  * d'autant plus depuis que les ombres existent, l'interieur du trou etant
  * masque par son propre rebord.
  *
- * Cale trois centimetres sous le parvis, le meme cercle se lit comme du
- * dallage. Trois centimetres et non zero : a hauteur egale les deux surfaces se
- * disputeraient le tampon de profondeur.
+ * Cale trois centimetres sous le parvis, un percement du dallage se lit comme
+ * du dallage. Trois centimetres et non zero : a hauteur egale les deux surfaces
+ * se disputeraient le tampon de profondeur.
+ *
+ * Le parvis de reference est celui du BAS — le niveau du garage, ou la camera
+ * commence — et non le plancher du sejour. La villa s'etage sur quatre niveaux
+ * la ou le pavillon etait de plain-pied ; poser le sol au niveau du sejour
+ * aurait noye l'escalier et la voiture sous une dalle.
  */
 function Sol() {
   return (
     <mesh
       rotation={[-Math.PI / 2, 0, 0]}
-      position={[0, SOL_PARVIS - 0.03, 0]}
+      position={[0, NIVEAUX.garage - 0.03, 0]}
       receiveShadow
       raycast={() => {}}
     >

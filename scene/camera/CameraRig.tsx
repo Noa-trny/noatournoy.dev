@@ -44,7 +44,23 @@ export function CameraRig() {
     // porte sur ce qu'on regarde, pas sur le chemin parcouru.
     const d = Math.max(camera.position.distanceTo(vise.current), 0.5);
     const fige = 2 * Math.atan(HAUTEUR_CADREE / (2 * d)) * THREE.MathUtils.RAD2DEG;
-    const fov = THREE.MathUtils.lerp(FOV_BASE, fige, scroll.dolly);
+    // BORNE, et ce n'est pas une precaution de principe.
+    //
+    // La focale figee varie en 1/d, donc elle DIVERGE quand le point vise se
+    // rapproche. Sur l'ancien modele on entrait dans un couloir qui prolongeait
+    // la marche, le sujet restait loin devant et la formule se tenait toute
+    // seule. Ici le sejour s'ouvre lateralement : la camera tourne, le point
+    // vise passe a un metre et demi, et le champ demande atteignait plus de
+    // cent degres — c'est-a-dire une image ou les murs s'etirent aux bords et
+    // ou le plan proche tranche les cloisons.
+    //
+    // 46 degres reste un grand-angle franc, assez pour que le franchissement se
+    // sente ; au-dela on ne lit plus un vertigo, on lit un defaut.
+    const fov = THREE.MathUtils.clamp(
+      THREE.MathUtils.lerp(FOV_BASE, fige, scroll.dolly),
+      20,
+      46
+    );
 
     // `updateProjectionMatrix` est obligatoire apres toute ecriture de fov,
     // near, far, aspect ou zoom — R3F ne le fait que sur changement de PROP, il
