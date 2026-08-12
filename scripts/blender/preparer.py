@@ -135,6 +135,13 @@ PROFILS = {
         # vivent dans la texture et demandent une passe de peinture. Mais les
         # noms partent dans le glTF servi, donc dans quelque chose d'indexable,
         # et ça c'est gratuit a corriger.
+        # Le debadgeage visuel. Renommer les maillages ne suffisait pas : les
+        # marques sont PEINTES dans l'atlas de carrosserie — ecusson de
+        # Stuttgart sur le capot, lettrage du hayon, cache-moyeux, moyeu de
+        # volant, etriers de frein graves. `scripts/atelier/debadger.py` les
+        # recouvre en echantillonnant la mediane du pourtour de chaque zone,
+        # pour que la piece garde la couleur de son voisinage.
+        "remplacer_textures": {"SportsCarBody": "carrosserie-debadgee.png"},
         "renommer": {
             "911Body": "SportsCarBody",
             "911Glass": "SportsCarGlass",
@@ -242,6 +249,73 @@ def mettre_a_l_echelle():
     bpy.context.view_layer.update()
     print(f"  echelle      : x{ECHELLE:.5f} sur {len(racines)} racine(s)"
           f" (le modele arrivait a {1/ECHELLE:.2f}x)")
+
+
+# ------------------------------------------------- 1 quater. remplacer des cartes
+
+def atteint_base_color(arbre, depart, profondeur=6):
+    """Le noeud alimente-t-il, directement ou non, l'entree de couleur de base ?
+
+    LA COMPARAISON SE FAIT PAR NOM, ET C'EST OBLIGATOIRE. Les objets que `bpy`
+    rend sont des enveloppes transitoires autour des donnees de Blender : le
+    noeud obtenu en parcourant `nodes` et celui rendu par `link.from_node`
+    decrivent la meme chose sans etre le meme objet Python. `is` y repond donc
+    toujours faux — y compris sur un lien qui va droit du noeud a l'entree
+    cherchee. Le remplacement annonçait zero carte sur un materiau qui en avait
+    une, reliee directement, et rien dans le graphe n'expliquait pourquoi.
+    """
+    front = [depart.name]
+    for _ in range(profondeur):
+        suivants = []
+        for nom in front:
+            for l in arbre.links:
+                if l.from_node.name != nom:
+                    continue
+                if l.to_socket.name == "Base Color":
+                    return True
+                suivants.append(l.to_node.name)
+        if not suivants:
+            return False
+        front = suivants
+    return False
+
+
+def remplacer_textures(table):
+    """Substitue une image de base a celle d'un materiau, par nom.
+
+    Sert au debadgeage : la carrosserie porte ses marques dans sa texture, pas
+    dans sa geometrie. On ne peut donc pas les retirer en supprimant un
+    maillage — il faut repeindre l'atlas et le reinjecter ici, pour que
+    l'operation se rejoue a chaque preparation au lieu d'etre un fichier
+    retouche a la main qu'on oublie de refaire.
+    """
+    if not table:
+        return
+    n = 0
+    for mat in bpy.data.materials:
+        cible = next((v for k, v in table.items() if k in (mat.name or "")), None)
+        if not cible or not mat.use_nodes:
+            continue
+        chemin = os.path.join(TEX, cible)
+        if not os.path.exists(chemin):
+            print(f"  ATTENTION   : {cible} introuvable, {mat.name} garde ses marques")
+            continue
+        img = bpy.data.images.load(chemin, check_existing=True)
+        for noeud in mat.node_tree.nodes:
+            if noeud.bl_idname != "ShaderNodeTexImage":
+                continue
+            # Uniquement la carte de COULEUR : remplacer une carte de relief ou
+            # de rugosite par une image de couleur donnerait n'importe quoi.
+            #
+            # On SUIT LE GRAPHE au lieu de tester le lien direct. L'importateur
+            # glTF intercale un noeud de melange des qu'un facteur de couleur de
+            # base accompagne la texture — le premier test, qui cherchait une
+            # arete allant droit sur « Base Color », ne trouvait donc jamais rien
+            # et le remplacement annonçait zero carte.
+            if atteint_base_color(mat.node_tree, noeud):
+                noeud.image = img
+                n += 1
+    print(f"  debadgeage   : {n} carte(s) de couleur remplacee(s)")
 
 
 # --------------------------------------------------------------- 2. decimer
@@ -643,6 +717,7 @@ def main():
 
     jeter_le_terrain()
     renommer(prof.get("renommer"))
+    remplacer_textures(prof.get("remplacer_textures"))
     mettre_a_l_echelle()
     decimer()
     souder_et_lisser()
