@@ -8,6 +8,7 @@ import { journey } from "@/scene/scroll/journeyStore";
 import { scroll } from "@/scene/scroll/scrollState";
 import { FocusVitrines } from "./FocusVitrines";
 import { Beats } from "./Beats";
+import { Chargement } from "./Chargement";
 
 const Scene = lazy(() => import("@/scene/Scene"));
 
@@ -98,6 +99,10 @@ export function Journey({
           </div>
         </div>
       ) : null}
+      {/* L'ecran de chargement. Monte AVANT la scene et hors de sa frontiere de
+          suspension : il doit s'afficher pendant que le chunk R3F lui-meme
+          arrive, pas seulement pendant que le modele se telecharge. */}
+      {actif ? <Chargement locale={locale} /> : null}
       {/* Les quelques mots de la visite : trois blocs sur toute la hauteur,
           pas un site. Marques aria-hidden — ils reprennent du texte qui vit
           deja dans le contenu complet ci-dessous, et le dupliquer dans l'arbre

@@ -16,6 +16,17 @@ export const ui = {
   menuClose: { fr: "Fermer", en: "Close" } satisfies L<string>,
   menuNav: { fr: "Sections", en: "Sections" } satisfies L<string>,
 
+  /**
+   * L'ecran de chargement de la visite. Il vit ici et non dans `home.ts` parce
+   * que c'est de l'habillage, pas de la copie d'accueil — et parce que
+   * `home.ts` est genere, donc une chaine ecrite a la main y serait perdue au
+   * prochain passage du generateur.
+   */
+  chargement: {
+    fr: "Chargement de la visite",
+    en: "Loading the tour",
+  } satisfies L<string>,
+
   /** Le titre masque qui ancre la section de navigation en bas des fiches. */
   suite: { fr: "Suite", en: "Next" } satisfies L<string>,
   /**

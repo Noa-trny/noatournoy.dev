@@ -48,6 +48,11 @@ html {
   background: var(--bg);
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  /* La gouttiere est reservee en permanence. L'ecran de chargement bloque le
+     defilement par `overflow: hidden` ; sans reservation, la barre disparait a
+     ce moment-la et toute la page saute de sa largeur — un decalage visible,
+     pile au moment ou l'on regarde. */
+  scrollbar-gutter: stable;
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
@@ -1562,4 +1567,87 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   .journey-beats { display: none; }
+}
+
+
+/* ---------------------------------------------------------------------------
+   L'ECRAN DE CHARGEMENT DE LA VISITE
+
+   Pas un sablier : la meme typographie et le meme vert que le reste, pour que
+   l'attente fasse partie du site plutot que de le precéder. Le nom d'abord, le
+   filet qui se remplit ensuite, le pourcentage en dernier — l'ordre de lecture
+   va du permanent au passager.
+
+   `position: fixed` et un plan tres haut : il doit couvrir le canvas collant
+   ET le contenu du document, qui vivent tous deux plus bas dans l'arbre.
+--------------------------------------------------------------------------- */
+.chargement {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: var(--bg);
+  padding-inline: var(--gut);
+  /* Il ne disparait pas d'un coup : la scene est deja prete derriere, et un
+     fondu court laisse l'oeil s'y poser au lieu d'y etre jete. */
+  animation: chargement-entree 0.24s ease-out both;
+}
+
+@keyframes chargement-entree {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.chargement-bloc {
+  width: min(30rem, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.chargement-nom {
+  margin: 0;
+  font-size: clamp(2.25rem, 6vw, 3.5rem);
+  line-height: 0.94;
+  font-variation-settings: "wght" 800, "wdth" 74;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+/* Le nom sur deux lignes sans balise de rupture : c'est du texte, pas une
+   image, donc il doit rester selectionnable et lisible d'une traite. */
+.chargement-nom span { display: block; }
+
+.chargement-piste {
+  height: 2px;
+  background: color-mix(in srgb, var(--fg) 14%, transparent);
+  overflow: hidden;
+}
+.chargement-piste i {
+  display: block;
+  height: 100%;
+  background: var(--acid);
+  /* `scaleX` et non `width` : la largeur relayoute, la transformation non.
+     C'est la meme regle que partout ailleurs sur ce site. */
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.chargement-etat {
+  margin: 0;
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim-2);
+}
+.chargement-etat b {
+  font-variation-settings: "wght" 700;
+  color: var(--fg);
+}
+
+/* Le mouvement reduit coupe la 3D entierement, donc cet ecran n'apparait
+   jamais dans ce cas — la regle est la par principe, pas par necessite. */
+@media (prefers-reduced-motion: reduce) {
+  .chargement { animation: none; }
+  .chargement-piste i { transition: none; }
 }
