@@ -6,6 +6,7 @@ import { refusDe3D } from "@/scene/capability";
 import { useScrollBridge } from "@/scene/scroll/useScrollBridge";
 import { journey } from "@/scene/scroll/journeyStore";
 import { scroll } from "@/scene/scroll/scrollState";
+import { FocusVitrines } from "./FocusVitrines";
 
 const Scene = lazy(() => import("@/scene/Scene"));
 
@@ -120,6 +121,9 @@ export function Journey({
         </div>
       ) : null}
       <div className="journey-dom">{children}</div>
+      {/* Le focus clavier allume la vitrine correspondante. Uniquement quand la
+          scene existe : sans elle il n'y a rien a allumer. */}
+      {actif ? <FocusVitrines /> : null}
     </div>
   );
 }
