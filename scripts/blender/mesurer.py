@@ -151,16 +151,29 @@ def rapport(chemin):
         print("    aucun — c'est probablement une coquille exterieure")
 
     print("\n=== DEGAGEMENT RECTILIGNE A HAUTEUR D'OEIL ===")
-    segs = degagement(objets, mn, mx)
+    pas = max(mx.x - mn.x, mx.y - mn.y) / 220.0
+    segs = degagement(objets, mn, mx, pas=pas)
     if not segs:
-        print("    aucun vide borne des deux cotes : coquille exterieure")
+        print("    aucun vide borne des deux cotes ET couvert : coquille exterieure")
     else:
-        for longueur, axe, transverse, milieu in segs[:8]:
+        # Un seul representant par hauteur : sans ça, les huit premieres lignes
+        # sont huit tranches voisines du meme couloir.
+        vues = set()
+        montres = 0
+        for longueur, axe, z, transverse, milieu, plafond in segs:
+            cle = (axe, round(z, 1))
+            if cle in vues:
+                continue
+            vues.add(cle)
             print(
-                f"    {longueur:6.2f} m  le long de {axe}"
-                f"   (autre axe = {transverse:7.2f}, milieu = {milieu:7.2f})"
+                f"    {longueur:7.2f}  le long de {axe}   sol {z:7.2f}"
+                f"   plafond +{plafond:5.2f}"
+                f"   (autre axe = {transverse:8.2f}, milieu = {milieu:8.2f})"
             )
-        print(f"    -> le plus long fait {segs[0][0]:.2f} m ; il en faut ~20")
+            montres += 1
+            if montres >= 10:
+                break
+        print(f"    -> le plus long fait {segs[0][0]:.2f} unites de modele")
 
     print("\n=== BAIES VITREES VERTICALES ===")
     vitrages = baies(objets)
@@ -190,7 +203,7 @@ def rapport(chemin):
     return objets
 
 
-def degagement(objets, mn, mx, hauteur_oeil=1.70, pas=0.5):
+def degagement(objets, mn, mx, hauteurs=None, pas=0.5):
     """
     LE DEGAGEMENT RECTILIGNE — la mesure qui manquait.
 
@@ -206,14 +219,39 @@ def degagement(objets, mn, mx, hauteur_oeil=1.70, pas=0.5):
     vide BORNE AUX DEUX BOUTS par de la matiere est un couloir, alors qu'un vide
     ouvert d'un cote n'est que le dehors.
 
-    Renvoie les plus longs, tries, avec leur axe et leur position.
+    UN COULOIR A UN PLAFOND, et c'est ce qui le distingue d'une allee. La version
+    precedente ne testait que « borne aux deux bouts » ; sur un terrain paysage
+    ça decrit aussi bien un vide entre deux arbres, et le rapport remontait
+    trente metres de jardin comme s'il s'agissait d'un couloir. On tire donc un
+    rayon vers le HAUT depuis trois points du segment : si les trois butent sur
+    quelque chose, on est dedans.
+
+    Renvoie les plus longs, tries, avec leur axe, leur hauteur, leur position et
+    la hauteur sous plafond.
+
+    LA HAUTEUR DE BALAYAGE EST BALAYEE, ELLE AUSSI. La premiere version prenait
+    « le bas de l'emprise plus 1,70 m », ce qui suppose que le bas de l'emprise
+    est le plancher. Sur un modele pose dans un terrain — une villa a flanc de
+    colline, par exemple — le bas de l'emprise est le fond du terrain, et le
+    balayage passe soixante metres sous la maison. Le rapport annonce alors
+    « coquille exterieure » sur un modele qui a un canapé et des pots d'epices
+    dans la cuisine.
+
+    On ne sait pas ou est le plancher : on le CHERCHE, en echantillonnant des
+    hauteurs sur toute la course verticale. Les niveaux ressortent d'eux-memes,
+    puisque ce sont les seules hauteurs ou des vides bornes apparaissent.
     """
     import bpy
     from mathutils import Vector
 
     depsgraph = bpy.context.evaluated_depsgraph_get()
     scene = bpy.context.scene
-    z = mn.z + hauteur_oeil
+    if hauteurs is None:
+        # Vingt-quatre tranches sur toute la course verticale. Assez fin pour
+        # qu'un etage de 2,5 m ne passe pas entre deux tranches sur un modele
+        # de gabarit courant, et assez grossier pour tenir en quelques secondes.
+        n = 24
+        hauteurs = [mn.z + (mx.z - mn.z) * (i + 0.5) / n for i in range(n)]
     segments = []
 
     def marcher(depart, direction, longueur):
@@ -244,22 +282,52 @@ def degagement(objets, mn, mx, hauteur_oeil=1.70, pas=0.5):
         ("X", Vector((1.0, 0.0, 0.0)), mn.x, mx.x, mn.y, mx.y),
         ("Y", Vector((0.0, 1.0, 0.0)), mn.y, mx.y, mn.x, mx.x),
     )
-    for nom, direction, a0, a1, b0, b1 in axes:
-        longueur = (a1 - a0) + 2.0
-        b = b0
-        while b <= b1:
-            depart = (
-                Vector((a0 - 1.0, b, z)) if nom == "X" else Vector((b, a0 - 1.0, z))
-            )
-            impacts = marcher(depart, direction, longueur)
-            # Un vide borne des deux cotes : entre l'impact i et l'impact i+1.
-            for i in range(len(impacts) - 1):
-                vide = impacts[i + 1] - impacts[i]
-                if vide < 3.0:
-                    continue
-                milieu = a0 - 1.0 + (impacts[i] + impacts[i + 1]) / 2.0
-                segments.append((vide, nom, b, milieu))
-            b += pas
+    HAUT = Vector((0.0, 0.0, 1.0))
+
+    def sous_plafond(point, portee):
+        """Distance au premier obstacle au-dessus, ou None a ciel ouvert."""
+        touche, impact, _, _, _, _ = scene.ray_cast(
+            depsgraph, point + Vector((0.0, 0.0, 0.01)), HAUT, distance=portee
+        )
+        return (impact - point).length if touche else None
+
+    # Un couloir doit faire au moins ce quart de la plus grande dimension
+    # horizontale pour meriter d'etre rapporte. Un seuil en metres serait faux
+    # sur un modele qui n'est pas a l'echelle — et celui-ci ne l'est pas.
+    seuil = max(mx.x - mn.x, mx.y - mn.y) * 0.02
+
+    for z in hauteurs:
+        for nom, direction, a0, a1, b0, b1 in axes:
+            longueur = (a1 - a0) + 2.0
+            b = b0
+            while b <= b1:
+                depart = (
+                    Vector((a0 - 1.0, b, z)) if nom == "X" else Vector((b, a0 - 1.0, z))
+                )
+                impacts = marcher(depart, direction, longueur)
+                # Un vide borne des deux cotes : entre l'impact i et l'impact i+1.
+                for i in range(len(impacts) - 1):
+                    vide = impacts[i + 1] - impacts[i]
+                    if vide < seuil:
+                        continue
+                    debut = a0 - 1.0 + impacts[i]
+                    milieu = a0 - 1.0 + (impacts[i] + impacts[i + 1]) / 2.0
+                    # Trois sondes plutot qu'une : un auvent ou un arbre isole
+                    # suffirait a couvrir le seul point median.
+                    portee = (mx.z - mn.z) * 0.12
+                    hauteurs_p = []
+                    for f in (0.25, 0.5, 0.75):
+                        t = debut + vide * f
+                        pt = Vector((t, b, z)) if nom == "X" else Vector((b, t, z))
+                        h = sous_plafond(pt, portee)
+                        if h is None:
+                            hauteurs_p = None
+                            break
+                        hauteurs_p.append(h)
+                    if hauteurs_p is None:
+                        continue
+                    segments.append((vide, nom, z, b, milieu, min(hauteurs_p)))
+                b += pas
 
     segments.sort(reverse=True)
     return segments
