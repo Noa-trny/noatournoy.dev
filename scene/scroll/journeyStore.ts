@@ -20,11 +20,23 @@ import { useSyncExternalStore } from "react";
  * ou l'on est DEDANS.
  */
 export type Phase = "approche" | "transit" | "dedans";
+
+/**
+ * L'etat du contexte de rendu.
+ *
+ * Il vit ici parce que celui qui SAIT n'est pas celui qui DECIDE : la scene
+ * possede le contexte, le conteneur possede le repli. Faire remonter
+ * l'information par le magasin evite au conteneur d'espionner des evenements
+ * dont il ne peut pas dire de quel canvas ils viennent — ce qui etait
+ * precisement le defaut.
+ */
+export type Contexte = "vivant" | "perdu";
 export type CarState = "idle" | "prefetch" | "mount" | "ready";
 export type Tier = "haut" | "bas";
 
 type State = {
   readonly phase: Phase;
+  readonly contexte: Contexte;
   readonly carState: CarState;
   readonly tier: Tier;
   /** Le travail survolé ou focalisé, s'il y en a un. */
@@ -33,6 +45,7 @@ type State = {
 
 let state: State = {
   phase: "approche",
+  contexte: "vivant",
   carState: "idle",
   tier: "haut",
   activeId: null,
@@ -60,7 +73,8 @@ export const journey = {
     return () => listeners.delete(l);
   },
   reset() {
-    state = { phase: "approche", carState: "idle", tier: "haut", activeId: null };
+    state = { phase: "approche",
+      contexte: "vivant", carState: "idle", tier: "haut", activeId: null };
     listeners.forEach((l) => l());
   },
 };

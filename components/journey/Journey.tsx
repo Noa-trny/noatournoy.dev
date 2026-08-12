@@ -4,7 +4,7 @@ import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/content/routes";
 import { refusDe3D } from "@/scene/capability";
 import { useScrollBridge } from "@/scene/scroll/useScrollBridge";
-import { journey } from "@/scene/scroll/journeyStore";
+import { journey, useJourney } from "@/scene/scroll/journeyStore";
 import { scroll } from "@/scene/scroll/scrollState";
 import { FocusVitrines } from "./FocusVitrines";
 import { Beats } from "./Beats";
@@ -62,77 +62,36 @@ export function Journey({
     return () => mq.removeEventListener("change", evaluer);
   }, []);
 
-  // LA PERTE DE CONTEXTE WEBGL, ET SA RECUPERATION.
+  // LE REPLI SUR PERTE DE CONTEXTE, DECIDE PAR L'ATTENTE ET NON PAR L'INSTANT.
   //
-  // La premiere version abandonnait des la premiere perte : elle appelait
-  // `preventDefault()` — ce qui demande au navigateur de PREPARER une
-  // restauration — puis coupait la 3D avant que cette restauration arrive.
-  // Autrement dit elle demandait le retour du contexte et n'en faisait rien.
+  // Trois versions ont echoue avant celle-ci, et chacune pour la meme raison de
+  // fond : le conteneur essayait de juger un evenement qu'il ne pouvait pas
+  // attribuer.
   //
-  // Or une perte n'est pas forcement fatale. Sur un portable a deux cartes
-  // graphiques, le navigateur bascule d'un GPU a l'autre peu apres la creation
-  // du contexte, le perd, et le rend une fraction de seconde plus tard. Le
-  // symptome vu par l'utilisateur etait exactement celui-la : la maison
-  // s'affiche, puis disparait, et le site d'avant reapparait dessous.
+  //   1. Couper des la premiere perte. Le code appelait `preventDefault()` —
+  //      qui demande au navigateur de PREPARER une restauration — puis coupait
+  //      la 3D a la ligne suivante. Il reclamait le retour du contexte et n'en
+  //      faisait rien.
+  //   2. Attendre la restauration. Un contexte DETRUIT ne revient jamais : le
+  //      garde-fou finissait par tuer la scene, avec quatre secondes de retard.
+  //   3. Ignorer les canvas retires du document. React retire le noeud APRES le
+  //      nettoyage, donc le canvas jete est encore connecte quand il emet.
   //
-  // On attend donc la restauration, et on ne se replie que si elle ne vient
-  // pas — ou si les pertes se repetent, signe d'un pilote qui ne tiendra pas.
-  const pertes = useRef(0);
+  // Ce qui marche ne demande pas de savoir quel canvas est mort : il suffit de
+  // regarder si un canvas VIVANT reapparait. Le mode strict en remonte un
+  // aussitot, une vraie panne de pilote n'en remonte aucun. On laisse donc
+  // passer le temps, et c'est lui qui tranche.
+  const contexte = useJourney((s) => s.contexte);
   useEffect(() => {
-    if (!actif) return;
-    const el = conteneur.current;
-    if (!el) return;
-    let minuterie: number | undefined;
-
-    const perdu = (e: Event) => {
-      // UN CANVAS DEJA RETIRE DU DOCUMENT NE COMPTE PAS, et c'est le coeur du
-      // defaut rapporte.
-      //
-      // En developpement, le mode strict de React monte, demonte puis remonte
-      // chaque composant. Le premier canvas est donc jete — et un canvas jete
-      // emet `webglcontextlost`. L'ecouteur, pose en capture sur le conteneur,
-      // recevait l'evenement du canvas MORT et coupait la 3D du vivant.
-      //
-      // Attendre la restauration ne suffisait pas non plus : un contexte
-      // detruit ne revient jamais, donc le garde-fou de quatre secondes
-      // finissait par tuer la scene de toute façon. Il faut distinguer les deux
-      // situations, et `isConnected` le fait exactement.
-      const source = e.target as HTMLCanvasElement | null;
-      if (source && !source.isConnected) return;
-
-      // Sans `preventDefault`, le navigateur ne restaure JAMAIS le contexte :
-      // c'est l'appel qui signale qu'on souhaite le recuperer.
-      e.preventDefault();
-      pertes.current += 1;
-      console.warn(
-        `[voyage] contexte WebGL perdu (${pertes.current}) — attente de restauration`
-      );
-      if (pertes.current > 2) {
-        console.warn("[voyage] trop de pertes, repli sur le site sans 3D");
-        setActif(false);
-        journey.reset();
-        return;
-      }
-      minuterie = window.setTimeout(() => {
-        console.warn("[voyage] contexte non restaure en 4 s, repli");
-        setActif(false);
-        journey.reset();
-      }, 4000);
-    };
-
-    const revenu = () => {
-      window.clearTimeout(minuterie);
-      console.warn("[voyage] contexte WebGL restaure");
-    };
-
-    el.addEventListener("webglcontextlost", perdu, true);
-    el.addEventListener("webglcontextrestored", revenu, true);
-    return () => {
-      window.clearTimeout(minuterie);
-      el.removeEventListener("webglcontextlost", perdu, true);
-      el.removeEventListener("webglcontextrestored", revenu, true);
-    };
-  }, [actif]);
+    if (!actif || contexte !== "perdu") return;
+    console.warn("[voyage] contexte de rendu perdu — attente d'un remplacant");
+    const t = window.setTimeout(() => {
+      console.warn("[voyage] aucun contexte apres 5 s, repli sur le site sans 3D");
+      setActif(false);
+      journey.reset();
+    }, 5000);
+    return () => window.clearTimeout(t);
+  }, [actif, contexte]);
 
   useEffect(() => {
     if (process.env.NODE_ENV === "production") return;

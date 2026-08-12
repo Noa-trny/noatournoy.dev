@@ -198,6 +198,26 @@ export default function Scene({ locale }: { locale: Locale }) {
       // Un clic dans le vide eteint le survol : R3F ne relance un lancer de
       // rayon que sur evenement pointeur, jamais parce que la camera a bouge.
       onPointerMissed={() => journey.set({ activeId: null })}
+      // LES EVENEMENTS DE CONTEXTE SONT ECOUTES ICI, sur le canvas que R3F
+      // vient de creer, et non sur le conteneur en amont.
+      //
+      // Poses en capture sur le conteneur, ils arrivaient sans qu'on puisse
+      // dire de quel canvas ils venaient — or en developpement le mode strict
+      // de React en fabrique deux, monte le premier, le jette, puis monte le
+      // second. On coupait la 3D du vivant sur l'agonie du mort. Ici la
+      // fermeture capture le bon canvas par construction.
+      onCreated={({ gl }) => {
+        const toile = gl.domElement;
+        journey.set({ contexte: "vivant" });
+        toile.addEventListener("webglcontextlost", (e) => {
+          // Sans cet appel, le navigateur ne restaure JAMAIS le contexte.
+          e.preventDefault();
+          journey.set({ contexte: "perdu" });
+        });
+        toile.addEventListener("webglcontextrestored", () => {
+          journey.set({ contexte: "vivant" });
+        });
+      }}
     >
       <color attach="background" args={["#b9c3cf"]} />
       {/* LA BRUME, et son vrai role n'est pas l'ambiance.
