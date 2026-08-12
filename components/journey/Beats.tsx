@@ -44,7 +44,10 @@ export function Beats({ locale }: { locale: Locale }) {
     {
       // Quand la camera longe la file de vitrines, sur le parvis bas.
       t: T_TRAVAUX,
-      cote: "droite",
+      // A GAUCHE, alors que la file de vitrines occupe la droite. Le bloc de
+      // texte se posait par-dessus les panneaux et masquait justement ce qu'il
+      // annonçait.
+      cote: "gauche",
       contenu: (
         <>
           <span className="beat-etiq">{c.labels.travaux}</span>

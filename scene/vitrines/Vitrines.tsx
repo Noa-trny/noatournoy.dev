@@ -26,9 +26,13 @@ const VERT = "#c2f53f";
 
 // Geometries partagees : six socles identiques n'ont aucune raison d'allouer
 // six fois la meme chose.
-const G_SOCLE = new THREE.BoxGeometry(1.9, 1.0, 0.5);
-const G_CADRE = new THREE.BoxGeometry(1.78, 1.04, 0.12);
-const G_PANNEAU = new THREE.PlaneGeometry(1.68, 0.945);
+// PLUS GRANDES DE MOITIE. A 1,68 m de large vues a huit metres et de biais,
+// les captures etaient illisibles et le titre tronque : on distinguait un
+// rectangle noir, pas un travail. Le socle monte aussi, pour que le panneau
+// arrive a hauteur de regard au lieu de se presenter en contre-plongee.
+const G_SOCLE = new THREE.BoxGeometry(2.6, 1.15, 0.55);
+const G_CADRE = new THREE.BoxGeometry(2.48, 1.44, 0.12);
+const G_PANNEAU = new THREE.PlaneGeometry(2.36, 1.33);
 
 function Vitrine({
   emplacement,
@@ -60,7 +64,7 @@ function Vitrine({
     if (groupe.current) {
       groupe.current.position.y = THREE.MathUtils.damp(
         groupe.current.position.y,
-        emplacement.position[1] + (actif ? 0.04 : 0),
+        emplacement.position[1] + (actif ? 0.05 : 0),
         8,
         dt
       );
@@ -78,7 +82,7 @@ function Vitrine({
           a chaque mouvement de pointeur. */}
       <mesh
         geometry={G_SOCLE}
-        position={[0, 0.5, 0]}
+        position={[0, 0.575, 0]}
         castShadow
         receiveShadow
         raycast={() => {}}
@@ -88,7 +92,7 @@ function Vitrine({
 
       <mesh
         geometry={G_CADRE}
-        position={[0, 1.62, 0]}
+        position={[0, 1.87, 0]}
         castShadow
         receiveShadow
         raycast={() => {}}
@@ -107,7 +111,7 @@ function Vitrine({
           zone que l'oeil identifie comme cliquable. */}
       <mesh
         geometry={G_PANNEAU}
-        position={[0, 1.62, 0.062]}
+        position={[0, 1.87, 0.062]}
         onPointerOver={(e) => {
           e.stopPropagation();
           journey.set({ activeId: projet.slug });

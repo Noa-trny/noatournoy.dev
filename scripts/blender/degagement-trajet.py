@@ -49,7 +49,17 @@ DIRECTIONS = [
 # marge confortable — une surface a moins de 30 cm remplit deja tout le cadre et
 # se lit comme un accident, meme sans etre coupee.
 PROCHE = 0.30
-FRANCHISSEMENT = 0.06  # tolerance autour du vitrage, qu'on traverse expres
+# Tolerance autour d'un vitrage, qu'on traverse expres.
+#
+# ELLE ETAIT DIX FOIS TROP LARGE. A 0,06 sur une trajectoire de quarante-cinq
+# metres, la fenetre d'exclusion couvrait pres de trois metres de chemin de part
+# et d'autre de chaque franchissement — assez pour que la camera traverse le MUR
+# a cote de la baie sans que rien ne le signale. Le controle rendait « aucun
+# passage sous le seuil » sur un trajet ou l'on passe visiblement dans un mur.
+#
+# A 0,008, l'exclusion ne couvre plus qu'un point d'echantillonnage de chaque
+# cote, soit la vitre elle-meme et rien d'autre.
+FRANCHISSEMENT = 0.008
 
 alertes = []
 mini = (1e9, None, None)

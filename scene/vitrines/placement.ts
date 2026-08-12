@@ -1,5 +1,5 @@
 import { SLUGS, type Slug } from "@/content/routes";
-import { NIVEAUX } from "../camera/path";
+import { CHEMIN, NIVEAUX } from "../camera/path";
 
 // Ou se posent les six vitrines.
 //
@@ -36,7 +36,7 @@ export const SOL_PARVIS = NIVEAUX.garage;
  * une file de panneaux qui borde la montee d'un cote, la voiture et le garage
  * de l'autre — deux sujets, deux cotes, aucun encombrement.
  */
-const ECART = 4.2;
+const ECART = 3.5;
 
 /** Un leger evasement : la file s'ouvre a mesure qu'on avance. */
 const EVASEMENT = 0.22;
@@ -68,18 +68,50 @@ const Z_DEPART = 25.0;
 // bord au moment ou on la decouvre.
 const Z_PAS = 3.4;
 
+/**
+ * A quel moment du voyage la camera passe-t-elle au plus pres de ce point, et
+ * d'ou le regarde-t-elle alors ?
+ *
+ * On echantillonne la courbe et on garde le minimum. Grossier, mais exact a la
+ * tolerance de l'echantillonnage — et surtout DERIVE : le jour ou le trajet
+ * change, les six vitrines se replacent sans que personne y pense.
+ */
+function rencontre(x: number, z: number) {
+  const N = 400;
+  let meilleur = { t: 0, d2: Infinity, cx: 0, cz: 0 };
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const p = CHEMIN.getPointAt(t);
+    const d2 = (p.x - x) ** 2 + (p.z - z) ** 2;
+    if (d2 < meilleur.d2) meilleur = { t, d2, cx: p.x, cz: p.z };
+  }
+  return meilleur;
+}
+
 export const EMPLACEMENTS: readonly Emplacement[] = SLUGS.map((slug, i) => {
+  const x = ECART + i * EVASEMENT;
   const z = Z_DEPART - i * Z_PAS;
+  const { t, cx, cz } = rencontre(x, z);
   return {
     slug,
-    position: [ECART + i * EVASEMENT, SOL_PARVIS, z] as const,
-    // Legerement de biais plutot que de face : un panneau strictement
-    // perpendiculaire au passage n'offre sa surface qu'un instant.
-    rotation: -Math.PI * 0.38,
-    // Les beats suivent l'approche. Elle occupe environ les deux cinquiemes du
-    // defilement : le trajet monte ensuite l'escalier, franchit la baie et
-    // s'ouvre dans le sejour, ce que le pavillon de plain-pied ne faisait pas.
-    beat: 0.06 + i * 0.055,
+    position: [x, SOL_PARVIS, z] as const,
+    // CHAQUE VITRINE SE TOURNE VERS LA CAMERA, a l'instant ou celle-ci passe
+    // au plus pres. L'angle n'est pas ecrit, il est CALCULE depuis la courbe :
+    // retoucher le trajet reoriente les six sans y penser.
+    //
+    // C'etait le defaut principal. Toutes orientees pareil, elles etaient
+    // prises de biais et a moitie hors cadre — on lisait des panneaux plantes
+    // au bord d'une route, pas une presentation.
+    //
+    // `atan2` sur le vecteur vitrine -> camera, parce que le panneau regarde
+    // son +Z local. Le petit decalage evite le strictement perpendiculaire, qui
+    // n'offre sa surface qu'un instant et se presente de profil juste avant et
+    // juste apres.
+    rotation: Math.atan2(cx - x, cz - z) - 0.16,
+    // Le beat est CALCULE lui aussi, au lieu d'etre reparti a la main. Les
+    // ancres du DOM tombent donc quand la vitrine est reellement a l'ecran —
+    // c'est ce qui fait que tabuler vers un projet y amene la camera.
+    beat: t,
   };
 });
 

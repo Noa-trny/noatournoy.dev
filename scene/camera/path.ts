@@ -53,8 +53,16 @@ export const BAIE = { x: -0.15, y: 1.27, z: -2.95 } as const;
 export const VITRAGES = [
   /** L'entree, en facade, cote arrivee. Verifie expose sur le dehors. */
   { x: -2.99, y: 1.58, z: 3.45 },
-  /** La verriere arriere, sur la terrasse. C'est elle, le climax. */
-  { x: BAIE.x, y: BAIE.y, z: BAIE.z },
+  /**
+   * La verriere arriere, sur la terrasse. C'est elle, le climax.
+   *
+   * Le panneau de GAUCHE, pas le central. La fenetre d'entree donne dans la
+   * piece ouest, et une cloison la separe du couloir central : viser le panneau
+   * central obligeait a traverser cette cloison — c'est le mur que l'on voyait
+   * passer. Le balayage du degagement montre en revanche un passage continu a
+   * x ~ -3,2 depuis l'entree jusqu'a la verriere, et ce panneau-la est au bout.
+   */
+  { x: -4.01, y: BAIE.y, z: BAIE.z },
 ] as const;
 
 /**
@@ -112,18 +120,21 @@ export const CHEMIN = courbe([
   [VITRAGES[0].x, VITRAGES[0].y, VITRAGES[0].z], // le premier vitrage
 
   // L'INTERIEUR est un passage etroit, pas une salle : le degagement a hauteur
-  // d'oeil n'y fait qu'un metre et demi de large, autour de x = 0.
-  [-0.9, NIVEAUX.sejour + OEIL, 2.4],
-  [0.0, NIVEAUX.sejour + OEIL, 0.6],
-  [BAIE.x, NIVEAUX.sejour + OEIL, BAIE.z], // la verriere arriere
+  // d'oeil n'y fait qu'un metre et demi de large. On suit la piece ouest, dans
+  // laquelle la fenetre d'entree debouche, jusqu'a la verriere.
+  [-3.15, NIVEAUX.sejour + OEIL, 2.2],
+  [-3.3, NIVEAUX.sejour + OEIL, 0.4],
+  [-3.7, NIVEAUX.sejour + OEIL, -1.6],
+  [VITRAGES[1].x, NIVEAUX.sejour + OEIL, VITRAGES[1].z], // la verriere arriere
 
   // LA TERRASSE, et c'est la que les 12,60 m mesures se depensent enfin. On
   // sort de la maison au lieu de s'y arreter, et le balayage lateral se fait
   // face au large.
-  [0.5, NIVEAUX.sejour + OEIL, -4.2],
-  [2.3, NIVEAUX.sejour + OEIL, -4.5],
-  [4.0, NIVEAUX.sejour + OEIL - 0.03, -4.3],
-  [5.3, NIVEAUX.sejour + OEIL - 0.05, -4.0], // 1.00  au bout de la terrasse
+  [-3.0, NIVEAUX.sejour + OEIL, -4.4],
+  [-0.6, NIVEAUX.sejour + OEIL, -4.9],
+  [1.9, NIVEAUX.sejour + OEIL, -4.8],
+  [4.2, NIVEAUX.sejour + OEIL - 0.03, -4.4],
+  [5.8, NIVEAUX.sejour + OEIL - 0.05, -3.9], // 1.00  au bout de la terrasse
 ]);
 
 /**
@@ -136,14 +147,14 @@ export const CHEMIN = courbe([
  */
 export const VISEE = courbe([
   [0.0, 1.1, 7.0],
-  [-2.4, 1.5, 2.0],
-  [-0.6, 1.6, -1.4],
-  [0.2, 1.5, -6.2],
+  [-2.9, 1.5, 2.4],
+  [-3.6, 1.6, -1.6],
+  [-3.4, 1.5, -6.4],
   // Une fois dehors, la visee precede la camera dans le balayage : c'est ce
   // decalage entre les deux courbes qui donne un panoramique la ou une visee
   // calquee sur le trajet donnerait un simple travelling.
-  [3.0, 1.45, -7.4],
-  [9.4, 1.4, -5.2],
+  [1.2, 1.45, -7.6],
+  [9.0, 1.4, -5.4],
 ]);
 
 /**
