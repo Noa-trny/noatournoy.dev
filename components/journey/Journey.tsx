@@ -62,36 +62,33 @@ export function Journey({
     return () => mq.removeEventListener("change", evaluer);
   }, []);
 
-  // LE REPLI SUR PERTE DE CONTEXTE, DECIDE PAR L'ATTENTE ET NON PAR L'INSTANT.
+  // PERTE DE CONTEXTE : ON RECONSTRUIT, ON NE RENONCE PAS.
   //
-  // Trois versions ont echoue avant celle-ci, et chacune pour la meme raison de
-  // fond : le conteneur essayait de juger un evenement qu'il ne pouvait pas
-  // attribuer.
+  // La chronologie relevee au harnais est sans ambiguite : un seul canvas du
+  // debut a la fin, contexte sain pendant vingt et une secondes, puis
+  // « THREE.WebGLRenderer: Context Lost » sur une page immobile. Le mode strict
+  // de React n'y est pour rien — deux corrections ont vise ce fantome.
   //
-  //   1. Couper des la premiere perte. Le code appelait `preventDefault()` —
-  //      qui demande au navigateur de PREPARER une restauration — puis coupait
-  //      la 3D a la ligne suivante. Il reclamait le retour du contexte et n'en
-  //      faisait rien.
-  //   2. Attendre la restauration. Un contexte DETRUIT ne revient jamais : le
-  //      garde-fou finissait par tuer la scene, avec quatre secondes de retard.
-  //   3. Ignorer les canvas retires du document. React retire le noeud APRES le
-  //      nettoyage, donc le canvas jete est encore connecte quand il emet.
+  // Un contexte perdu ne revient pas de lui-meme et `webglcontextrestored`
+  // n'arrive jamais : three abandonne son renderer. Mais rien n'empeche d'en
+  // fabriquer un neuf. On remonte donc la scene entiere sous une nouvelle cle,
+  // ce qui cree un canvas neuf et un contexte neuf.
   //
-  // Ce qui marche ne demande pas de savoir quel canvas est mort : il suffit de
-  // regarder si un canvas VIVANT reapparait. Le mode strict en remonte un
-  // aussitot, une vraie panne de pilote n'en remonte aucun. On laisse donc
-  // passer le temps, et c'est lui qui tranche.
+  // Une seule fois. Si le second contexte meurt a son tour, la machine ne tient
+  // pas cette scene, et insister ferait clignoter le site indefiniment.
   const contexte = useJourney((s) => s.contexte);
+  const [generation, setGeneration] = useState(0);
   useEffect(() => {
     if (!actif || contexte !== "perdu") return;
-    console.warn("[voyage] contexte de rendu perdu — attente d'un remplacant");
-    const t = window.setTimeout(() => {
-      console.warn("[voyage] aucun contexte apres 5 s, repli sur le site sans 3D");
-      setActif(false);
-      journey.reset();
-    }, 5000);
-    return () => window.clearTimeout(t);
-  }, [actif, contexte]);
+    if (generation === 0) {
+      console.warn("[voyage] contexte perdu — reconstruction de la scene");
+      const t = window.setTimeout(() => setGeneration(1), 400);
+      return () => window.clearTimeout(t);
+    }
+    console.warn("[voyage] contexte perdu une seconde fois — repli definitif");
+    setActif(false);
+    journey.reset();
+  }, [actif, contexte, generation]);
 
   useEffect(() => {
     if (process.env.NODE_ENV === "production") return;
@@ -115,7 +112,9 @@ export function Journey({
         <div className="journey-collant" aria-hidden="true">
           <div className="journey-canvas">
             <Suspense fallback={null}>
-              <Scene locale={locale} />
+              {/* La cle porte la generation : la changer jette le canvas mort
+                  et en fabrique un neuf, avec son contexte. */}
+              <Scene key={generation} locale={locale} />
             </Suspense>
           </div>
         </div>

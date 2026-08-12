@@ -61,7 +61,12 @@ function Lumiere() {
         intensity={3.7}
         color="#ffdcb2"
         castShadow
-        shadow-mapSize={[2048, 2048]}
+        // 1024 et non 2048. La carte d'ombres est GELEE des la maison
+        // chargee, donc sa finesse ne se paie qu'une fois — mais sa MEMOIRE se
+        // paie tout le temps, et diviser le cote par deux divise l'empreinte
+        // par quatre. Sur une scene qui perd son contexte au bout de vingt
+        // secondes, chaque megaoctet compte.
+        shadow-mapSize={[1024, 1024]}
         // `bias` corrige l'acne de profondeur, `normalBias` le decollement sur
         // les surfaces vues de biais. Il faut les deux : la premiere seule
         // oblige a une valeur si forte que les ombres se detachent du pied des
@@ -181,7 +186,9 @@ export default function Scene({ locale }: { locale: Locale }) {
         // Laisse le navigateur retenter au lieu d'abandonner l'onglet.
         failIfMajorPerformanceCaveat: false,
       }}
-      dpr={[1, 1.75]}
+      // Plafond ramene de 1,75 a 1,5 : au-dela on quadruple le nombre de
+      // pixels pour un gain que l'antialiasing rend imperceptible.
+      dpr={[1, 1.5]}
       // DE VRAIES OMBRES PORTEES, et c'est le changement qui fait tout le
       // reste. Sans elles la directionnelle « rasante » n'eclairait que la
       // face qu'elle touchait, sans rien projeter : la maison, les vitrines
