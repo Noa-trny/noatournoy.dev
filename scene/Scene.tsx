@@ -215,6 +215,17 @@ export default function Scene({ locale }: { locale: Locale }) {
       // fermeture capture le bon canvas par construction.
       onCreated={({ gl }) => {
         const toile = gl.domElement;
+        // Sonde de mise au point. Elle expose le renderer pour qu'un harnais
+        // puisse lire `gl.info` — nombre de geometries, de textures, d'appels
+        // de dessin — et voir si quelque chose FUIT dans le temps. C'est la
+        // seule maniere de distinguer « la scene est trop lourde » de « la
+        // scene grossit », et les deux demandent des corrections opposees.
+        //
+        // En developpement seulement : garder une reference au renderer dans
+        // `window` empecherait sa liberation apres demontage.
+        if (process.env.NODE_ENV !== "production") {
+          (window as unknown as Record<string, unknown>).__gl = gl;
+        }
         journey.set({ contexte: "vivant" });
         toile.addEventListener("webglcontextlost", (e) => {
           // Sans cet appel, le navigateur ne restaure JAMAIS le contexte.
