@@ -1,16 +1,13 @@
-import { HomeBody } from "@/components/HomeBody";
-import { Journey } from "@/components/journey/Journey";
+import { Home } from "@/components/home/Home";
 
 // L'accueil francais. Tout son contenu vit dans content/home.ts et
 // content/projects.ts ; la page ne fait que choisir la langue.
 //
-// Les metadonnees sont portees par le layout racine du groupe (fr), l'accueil
-// etant la page dont il decrit deja le titre et la description.
+// La scene 3D a ete retiree. Elle avait coute beaucoup et ne servait pas le
+// propos : une villa mediterraneenne photorealiste ne dit rien d'un ingenieur
+// en cybersecurite, et les projets y etaient des panneaux plantes dans un
+// jardin. Le code reste dans le depot, sous `scene/`, non monte.
 
 export default function Accueil() {
-  return (
-    <Journey locale="fr">
-      <HomeBody locale="fr" />
-    </Journey>
-  );
+  return <Home locale="fr" />;
 }

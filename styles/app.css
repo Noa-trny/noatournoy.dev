@@ -1,0 +1,147 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   LA POLICE EST DECLAREE ICI, PAS PAR `next/font`.
+
+   `next/font` injecte une balise `<style>` dans le document. La CSP du site est
+   `style-src 'self' 'nonce-…'` — sans `unsafe-inline` — et cette propriete a
+   coute le refactor de quatorze attributs `style=` : on ne la rend pas pour une
+   commodite d'import. Un `@font-face` dans la feuille compilee ne cree aucun
+   style en ligne.
+
+   Chemin ABSOLU, jamais relatif. `../fonts/…` se resout par rapport a l'URL de
+   la feuille ; une fois servie depuis `/_next/static/css/`, elle pointerait a
+   cote et la page rendrait en `system-ui` sans rien signaler.
+--------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------------------
+   LES JETONS
+
+   Un seul accent, et il ne sert qu'aux etats : survol, focus, lien actif,
+   pastille de disponibilite. Partout ailleurs, des gris. C'est ce qui distingue
+   un accent d'une couleur de marque — s'il est partout, il ne signale plus rien.
+--------------------------------------------------------------------------- */
+@theme {
+  --color-bg: #0a0b0d;
+  --color-surface: #101216;
+  --color-surface-2: #15181e;
+  --color-line: #1e222a;
+  --color-fg: #e9ecf1;
+  --color-mid: #a2abb8;
+  --color-dim: #6b7480;
+  --color-accent: #3b82f6;
+  --color-accent-soft: #60a5fa;
+  --color-good: #34d399;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 0.875rem;
+
+  /* Les respirations verticales des sections, nommees pour rester constantes
+     d'une section a l'autre — c'est ce qui fait tenir une page sobre. */
+  --spacing-section: 7rem;
+}
+
+/* ---------------------------------------------------------------------------
+   BASE
+--------------------------------------------------------------------------- */
+@layer base {
+  html {
+    background: var(--color-bg);
+    scroll-behavior: smooth;
+    /* La gouttiere est reservee en permanence : sans elle, l'ouverture d'un
+       tiroir qui bloque le defilement fait sauter toute la page de la largeur
+       d'une barre. */
+    scrollbar-gutter: stable;
+    -webkit-text-size-adjust: 100%;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  body {
+    margin: 0;
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.65;
+    font-feature-settings: "cv05" 1, "ss03" 1;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Un anneau de focus VISIBLE, et pas seulement pour la conformite : c'est le
+     seul retour dont dispose quelqu'un qui navigue au clavier. */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--color-accent) 32%, transparent);
+    color: #fff;
+  }
+
+  h1, h2, h3 {
+    letter-spacing: -0.028em;
+    text-wrap: balance;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   UTILITAIRES DE COMPOSITION
+
+   Trois seulement. Tout le reste est ecrit en classes Tailwind sur place :
+   inventer une couche de composants au-dessus revient a refaire une feuille de
+   style a la main, ce qu'on vient justement de retirer.
+--------------------------------------------------------------------------- */
+@utility surface {
+  background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  /* Le verre depoli n'est pose QUE sur les cartes qui recouvrent quelque
+     chose. Un flou d'arriere-plan sur un fond uni ne floute rien et coute une
+     couche de composition a chaque image. */
+  backdrop-filter: blur(10px);
+}
+
+/* La lueur d'accent au survol : une bordure qui s'eclaire, pas une ombre
+   portee coloree — celle-ci baverait sur le fond sombre. */
+@utility lueur {
+  transition: border-color 220ms ease, background-color 220ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Revelation au defilement, pilotee par un IntersectionObserver minuscule
+   plutot que par une bibliotheque d'animation. Voir components/ui/Reveal.tsx
+   pour le raisonnement. */
+@utility revele {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 620ms ease, transform 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@utility revele-vu {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revele,
+  .revele-vu {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .lueur {
+    transition: none;
+  }
+}

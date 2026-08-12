@@ -4,7 +4,7 @@ import { alternates, pair } from "@/content/routes";
 import { Kinetics } from "@/components/motion/Kinetics";
 import { MenuBehaviour } from "@/components/motion/MenuBehaviour";
 import { FontPreload, sharedMetadata } from "../shared-head";
-import "@/styles/spec.css";
+import "@/styles/app.css";
 
 // Layout racine du groupe anglais. Le pendant de app/(fr)/layout.tsx.
 //

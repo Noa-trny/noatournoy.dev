@@ -27,6 +27,29 @@ export const ui = {
     en: "Loading the tour",
   } satisfies L<string>,
 
+  // --- La refonte sombre -----------------------------------------------
+  //
+  // Ces chaines vivent ici et non dans `home.ts` : ce sont des libelles
+  // d'interface, pas de la copie d'accueil, et `home.ts` est genere — une
+  // chaine ecrite a la main y serait perdue au prochain passage du generateur.
+
+  dispo: {
+    fr: "Disponible — alternance dès octobre 2026",
+    en: "Open to work — apprenticeship from October 2026",
+  } satisfies L<string>,
+  voirProjets: { fr: "Voir les projets", en: "View projects" } satisfies L<string>,
+  meContacter: { fr: "Me contacter", en: "Get in touch" } satisfies L<string>,
+  aPropos: { fr: "À propos", en: "About" } satisfies L<string>,
+  projetsTitre: { fr: "Projets", en: "Projects" } satisfies L<string>,
+  codeSource: { fr: "Code source", en: "Source code" } satisfies L<string>,
+  enLigne: { fr: "En ligne", en: "Live" } satisfies L<string>,
+  maintenant: { fr: "En cours", en: "Current" } satisfies L<string>,
+  ecrire: { fr: "M'écrire", en: "Email me" } satisfies L<string>,
+  parlonsEn: {
+    fr: "Un projet, une alternance, ou juste une question ?",
+    en: "A project, an apprenticeship, or just a question?",
+  } satisfies L<string>,
+
   /** Le titre masque qui ancre la section de navigation en bas des fiches. */
   suite: { fr: "Suite", en: "Next" } satisfies L<string>,
   /**
