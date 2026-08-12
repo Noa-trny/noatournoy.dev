@@ -29,37 +29,97 @@ TEX = os.environ.get(
 )
 SORTIE = os.environ.get("PREP_OUT", os.path.expanduser("~/prep"))
 
-# --- ce qui part -----------------------------------------------------------
-# Le terrain et ses accessoires. La scene web posera son propre sol.
-MATERIAUX_TERRAIN = {"Grass", "Soil", "Gravel", "Water"}
+# --- LES PROFILS ------------------------------------------------------------
+#
+# Un profil par modele source, plutot qu'une copie du script par modele. Les
+# noms de materiaux sont la seule chose qui change vraiment d'un fichier a
+# l'autre ; tout le reste — jeter, decimer, retexturer, recentrer — est le meme
+# travail. Dupliquer le script aurait fait diverger les corrections, et il y en
+# a eu beaucoup.
 
-# --- ce qui devient du beton ----------------------------------------------
-# L'enveloppe : maçonnerie, peintures de façade, bardage. `Concrete` y est
-# aussi — le materiau d'origine n'a pas de texture digne de ce nom.
-# Reperes par ORIENTATION plutot que par nom : une analyse des surfaces
-# verticales a montre que les noms trompent. `Colorsteel__Sandstone_Grey`, que
-# je prenais pour le bardage, fait 1876 m2 horizontaux contre 137 verticaux —
-# c'est la terrasse. Le vrai mur, 662 m2 verticaux sur toute la hauteur, est
-# `Metal__Bronze` : le beige des murs ET le bandeau dore.
-MATERIAUX_ENVELOPPE = {
-    "Metal__Bronze",              # les murs et le bandeau — le plus visible
-    "Paint__White",               # 418 m2 verticaux
-    "Wood__Plywood",              # 263 m2 verticaux, panneaux et sous-faces
-    "Masonry_Block",
-    "Concrete",
-    "Paint__Gray__170",
-    "Paint__Gray__190",
-    "Colorsteel__Sandstone_Grey", # la terrasse : du beton lui va bien
-    "Colorsteel__Flaxpod",
-    "Unispan",                    # la dalle
+PROFILS = {
+    # ------------------------------------------------------------- le pavillon
+    # Premier modele. Abandonne : 8 m de degagement interieur la ou il en
+    # fallait vingt. Le profil reste, il documente ce qui a ete appris.
+    "pavillon": {
+        # Le terrain et ses accessoires. La scene web posera son propre sol.
+        "jeter": {"Grass", "Soil", "Gravel", "Water"},
+        # L'enveloppe, reperee par ORIENTATION plutot que par nom : une analyse
+        # des surfaces verticales a montre que les noms trompent.
+        # `Colorsteel__Sandstone_Grey`, que je prenais pour le bardage, fait
+        # 1876 m2 horizontaux contre 137 verticaux — c'est la terrasse. Le vrai
+        # mur, 662 m2 verticaux sur toute la hauteur, est `Metal__Bronze`.
+        "beton": {
+            "Metal__Bronze",              # les murs et le bandeau
+            "Paint__White",               # 418 m2 verticaux
+            "Wood__Plywood",              # 263 m2 verticaux
+            "Masonry_Block",
+            "Concrete",
+            "Paint__Gray__170",
+            "Paint__Gray__190",
+            "Colorsteel__Sandstone_Grey", # la terrasse
+            "Colorsteel__Flaxpod",
+            "Unispan",                    # la dalle
+        },
+        "echelle": None,
+        "plafond_petit": 4000,
+        "plafond_grand": 12000,
+        "projection": "BOX",
+    },
+    # ----------------------------------------------------------------- la villa
+    # Modele retenu : 17,4 m de degagement rectiligne interieur, sur deux
+    # niveaux, avec une 911 deja garee devant le garage.
+    "villa": {
+        # La vegetation et le terrain, qui pesent a eux seuls plus de 170 000
+        # triangles pour des objets que la camera longe sans les regarder. Le
+        # chene fait 69 000 triangles a lui tout seul, les cornouillers 98 000 a
+        # eux trois.
+        "jeter": {
+            "LC_Oak_Tree_Material", "LC_Oak_Tree_Material1",
+            "LC_Dogwood_Tree_Material", "LC_Dogwood_Tree_Material1",
+            "ferns_1", "trop_leav_4", "trop_leav_5",
+            "GG050089", "GG050091",                    # les bonsais, 21 800 tri piece
+            "Rock05", "Rock08", "rock_wall_11_disp_2k",
+            "stone_pathway_02", "Ground003", "Water",
+            "PDM_Ceramic_Wallscape_Planters_Material_13",
+            "PDM_Ceramic_Wallscape_Planters_Material_14",
+            "PDM_Ceramic_Wallscape_Planters_Material_15",
+            "PDM_Galvanized_Planters_Material_05",
+            # Le detail de cuisine. Il coute deux fois : en triangles — le
+            # robinet dore en fait 53 000, la passoire 45 000, le pot d'epices
+            # 35 000 — et en textures, chacun de ces objets minuscules trainant
+            # ses trois cartes en 1024. Une camera qui traverse un couloir en
+            # 30 degres n'en verra jamais un seul.
+            "Faucet2Brass", "Faucet2Plastic", "Gold",
+            "Sink2", "Sink2Metal", "Sink3Colander", "Sink3Gird", "Sink3Metal",
+            "Sink3OutMetal", "Sink3Wood", "Sink_3_Wood2",
+            "SpiceJarGlass", "SpicejarMetal", "SpicyRackMetal",
+            "CayennePepper", "BlackPepper", "Oregano", "Salt",
+        },
+        # Le beton porte toute la lecture de la matiere : c'est la seule texture
+        # que la camera regarde de pres, et la seule qui garde 1024 px.
+        "textures_fines": {"beton_diffuse", "beton_normal", "beton_rough"},
+        "projection": "UV",
+        # `Plaster` porte la coquille entiere — 17 x 21 m sur 8,5 m de haut —
+        # donc la passer en beton banche fait basculer l'interieur AUSSI, ce
+        # qui est exactement le but : un couloir de beton, pas un salon peint.
+        "beton": {"Concrete048", "Plaster"},
+        # Le modele est livre a 7,90 fois l'echelle reelle. Mesure et non
+        # devinee : la 911 du fichier fait 35,70 unites pour 4,519 m reels, et
+        # la verification tombe a 2 % sur les deux autres axes.
+        "echelle": 1.0 / 7.90,
+        "plafond_petit": 3000,
+        "plafond_grand": 14000,
+    },
 }
 
-# --- decimation ------------------------------------------------------------
-# Un plafond par maillage plutot qu'un ratio global : un ratio uniforme
-# abimerait la façade autant que les poignees, alors que tout le gras est
-# concentre dans une dizaine d'objets minuscules et absurdement denses.
-PLAFOND_PETIT = 4000    # objets de moins de 5 m
-PLAFOND_GRAND = 12000   # au-dela, on est sur des elements d'architecture
+# Rempli par main() une fois le profil choisi.
+MATERIAUX_TERRAIN = set()
+MATERIAUX_ENVELOPPE = set()
+PLAFOND_PETIT = 4000
+PLAFOND_GRAND = 12000
+ECHELLE = None
+PROJECTION = "BOX"
 
 
 def maillages():
@@ -97,6 +157,33 @@ def jeter_le_terrain():
             bpy.data.objects.remove(o, do_unlink=True)
             partis += 1
     print(f"  terrain      : {partis} maillage(s) retire(s), {tris} triangles")
+
+
+# ------------------------------------------------------- 1 bis. mettre a l'echelle
+
+def mettre_a_l_echelle():
+    """
+    Ramene le modele au metre.
+
+    Un modele hors d'echelle ne se voit pas : il rend exactement pareil, et tout
+    ce qu'on ecrit ensuite est faux d'un facteur constant — hauteur d'oeil,
+    vitesse de camera, distance de plan proche, portee des ombres. La villa est
+    livree a 7,90x, ce qui n'apparait dans aucune fiche.
+
+    On met a l'echelle les RACINES de la scene, pas les maillages : l'importateur
+    glTF range tout sous une hierarchie de noeuds vides, si bien qu'aucun
+    maillage n'est sans parent. La meme erreur avait rendu le recentrage inerte
+    sur le modele precedent — il annonçait un deplacement sans rien deplacer.
+    """
+    if not ECHELLE or abs(ECHELLE - 1.0) < 1e-6:
+        return
+    racines = [o for o in bpy.context.scene.objects if o.parent is None]
+    for o in racines:
+        o.scale *= ECHELLE
+        o.location *= ECHELLE
+    bpy.context.view_layer.update()
+    print(f"  echelle      : x{ECHELLE:.5f} sur {len(racines)} racine(s)"
+          f" (le modele arrivait a {1/ECHELLE:.2f}x)")
 
 
 # --------------------------------------------------------------- 2. decimer
@@ -139,8 +226,11 @@ def carte(nt, nom_fichier, coord, non_couleur=False):
     # pour ses propres textures, pas pour les notres. Une projection triplanaire
     # depuis les coordonnees objet donne un beton a l'echelle reelle sur toutes
     # les faces, sans dependre d'un depliage qu'on ne controle pas.
-    n.projection = "BOX"
-    n.projection_blend = 0.30
+    if PROJECTION == "UV":
+        n.projection = "FLAT"
+    else:
+        n.projection = "BOX"
+        n.projection_blend = 0.30
     n.extension = "REPEAT"
     nt.links.new(coord, n.inputs["Vector"])
     return n
@@ -157,8 +247,34 @@ def materiau_beton(repere):
                         # donc pas de l'origine de chaque objet
     mapping = nt.nodes.new("ShaderNodeMapping")
     # Une dalle de coffrage fait environ 2,4 m : c'est l'echelle qu'on vise.
-    mapping.inputs["Scale"].default_value = (0.42, 0.42, 0.42)
-    nt.links.new(tc.outputs["Object"], mapping.inputs["Vector"])
+    #
+    # ET ELLE SE CORRIGE DU FACTEUR D'ECHELLE DU MODELE. La coordonnee vient de
+    # `Texture Coordinate -> Object`, qui rend des unites de MODELE et non des
+    # metres : mettre la villa a 1/7,9 ne change donc rien aux coordonnees de
+    # texture, et le beton se retrouve repete pres de soixante fois par mur.
+    # Le rendu ne montrait meme pas un motif trop petit, mais de fines rayures
+    # verticales — un repliement pur et simple, la texture repetant plusieurs
+    # fois par pixel.
+    #
+    # Le diagnostic est venu d'une elimination en trois rendus : beton en gris
+    # uni (rayures parties, donc ce n'est pas la geometrie), carte diffuse
+    # seule (rayures revenues, donc ce n'est pas la carte de relief), puis
+    # balayage de l'echelle (0,42 et 3,3 rendent presque la meme image, donc le
+    # probleme n'est pas dans la plage essayee mais deux ordres plus bas).
+    e = float(os.environ.get("BETON_ECHELLE", "0.42")) * (ECHELLE or 1.0)
+    mapping.inputs["Scale"].default_value = (e, e, e)
+    # DEUX ORIGINES POSSIBLES POUR LA COORDONNEE, et le bon choix depend de la
+    # provenance du modele.
+    #
+    # Le pavillon etait un export CAO : ses UV servaient ses propres textures et
+    # ne valaient rien pour les notres, d'ou la projection triplanaire depuis un
+    # repere commun. La villa est modelisee sous Blender et depliee proprement —
+    # la meme projection triplanaire y rendait de fines rayures verticales que
+    # ni l'echelle ni le choix des cartes n'expliquaient. Ses UV, elles,
+    # existent et sont justes.
+    nt.links.new(
+        tc.outputs["UV" if PROJECTION == "UV" else "Object"], mapping.inputs["Vector"]
+    )
     v = mapping.outputs["Vector"]
 
     diff = carte(nt, "beton_diffuse.jpg", v)
@@ -193,7 +309,10 @@ def retexturer():
 
     # Le verre reste nomme `Glass` : c'est la poignee qui servira, cote web,
     # a le faire disparaitre au franchissement.
-    verres = [m for m in bpy.data.materials if m.name == "Glass"]
+    # Tout ce qui COMMENCE par « glass », pas seulement le nom exact. La villa
+    # livre `Glass` et `Glassend` ; ne traiter que le premier laissait la moitie
+    # du vitrage opaque au franchissement.
+    verres = [m for m in bpy.data.materials if m.name.lower().startswith("glass")]
     for m in verres:
         if not m.use_nodes:
             continue
@@ -204,7 +323,8 @@ def retexturer():
         b.inputs["Metallic"].default_value = 0.0
         if "Transmission Weight" in b.inputs:
             b.inputs["Transmission Weight"].default_value = 0.9
-    print(f"  verre        : {len(verres)} materiau(x) conserve(s) sous le nom Glass")
+    print(f"  verre        : {len(verres)} materiau(x) conserve(s) — "
+          + ", ".join(sorted(m.name for m in verres)))
 
 
 # ------------------------------------------------------------------ rendu
@@ -221,7 +341,8 @@ def recentrer():
     """
     objets = maillages()
     verres = [o for o in objets
-              if any(s.material and s.material.name == "Glass" for s in o.material_slots)]
+              if any(s.material and s.material.name.lower().startswith("glass")
+                     for s in o.material_slots)]
     cible = verres or objets
 
     mn = Vector((1e9,) * 3); mx = Vector((-1e9,) * 3)
@@ -255,7 +376,7 @@ def recentrer():
     print(f"                 baie desormais en (0, 0), sol a 0")
 
 
-def redimensionner_textures(cote=1024):
+def redimensionner_textures(cote=1024, fines=(), cote_fin=1024):
     """
     Redimensionne les images DANS Blender, avant l'export.
 
@@ -266,18 +387,23 @@ def redimensionner_textures(cote=1024):
     """
     n = 0
     for img in bpy.data.images:
+        # Deux resolutions, pas une. Tout ramener a 1024 laissait 68 cartes en
+        # 1024 pour quatre megaoctets, alors qu'une seule matiere est regardee
+        # de pres. Le beton garde sa finesse, le reste passe en dessous — un
+        # facteur deux sur le cote, donc quatre sur les octets.
+        vise = cote_fin if any(f in img.name for f in fines) else cote
         # Surtout PAS de garde sur `has_data` : sans rendu prealable il vaut
         # False, et le redimensionnement ne touchait alors AUCUNE image — le
         # fichier partait avec des cartes en 2048, soit 22 Mo de VRAM chacune.
         w, h = img.size
         if w == 0 or h == 0:
             continue
-        if max(w, h) <= cote:
+        if max(w, h) <= vise:
             continue
-        f = cote / max(w, h)
+        f = vise / max(w, h)
         img.scale(max(1, int(w * f)), max(1, int(h * f)))
         n += 1
-    print(f"  textures     : {n} image(s) ramenee(s) a {cote} px")
+    print(f"  textures     : {n} image(s) ramenee(s) — {cote} px, {cote_fin} pour le beton")
 
 
 def eclairer_et_cadrer():
@@ -303,7 +429,8 @@ def rendre(dossier):
     # 90 m qui decentrait tout. Le verre, lui, n'existe que dans la maison —
     # c'est l'ancrage le plus fiable, et il ne demande aucun seuil arbitraire.
     ancres = [o for o in maillages()
-              if any(s.material and s.material.name == "Glass" for s in o.material_slots)]
+              if any(s.material and s.material.name.lower().startswith("glass")
+                     for s in o.material_slots)]
     obj = ancres or maillages()
     mn = Vector((1e9, 1e9, 1e9)); mx = Vector((-1e9, -1e9, -1e9))
     for o in obj:
@@ -357,12 +484,39 @@ def main():
     src = argv[0]
     os.makedirs(SORTIE, exist_ok=True)
 
+    global MATERIAUX_TERRAIN, MATERIAUX_ENVELOPPE, ECHELLE, PROJECTION
+    global PLAFOND_PETIT, PLAFOND_GRAND
+    if "--profil" in argv:
+        nom_profil = argv[argv.index("--profil") + 1]
+    else:
+        # Devine d'apres le nom du fichier, mais n'invente jamais : un profil
+        # inconnu doit s'arreter, pas retomber sur celui d'un autre modele et
+        # produire en silence un resultat faux.
+        base = os.path.basename(src).lower()
+        nom_profil = next((k for k in PROFILS if k[:5] in base), None)
+        if nom_profil is None and "hillside" in base:
+            nom_profil = "villa"
+    if nom_profil not in PROFILS:
+        raise SystemExit(
+            f"profil inconnu pour « {os.path.basename(src)} » ; "
+            f"precisez --profil parmi {sorted(PROFILS)}"
+        )
+    prof = PROFILS[nom_profil]
+    MATERIAUX_TERRAIN = prof["jeter"]
+    MATERIAUX_ENVELOPPE = prof["beton"]
+    ECHELLE = prof["echelle"]
+    PROJECTION = prof.get("projection", "BOX")
+    PLAFOND_PETIT = prof["plafond_petit"]
+    PLAFOND_GRAND = prof["plafond_grand"]
+    print(f"\n  profil       : {nom_profil}")
+
     bpy.ops.wm.read_factory_settings(use_empty=True)
     bpy.ops.import_scene.gltf(filepath=src)
     print(f"\n  importe      : {len(maillages())} maillages, "
           f"{sum(triangles(o) for o in maillages())} triangles")
 
     jeter_le_terrain()
+    mettre_a_l_echelle()
     decimer()
     retexturer()
     eclairer_et_cadrer()
@@ -376,7 +530,9 @@ def main():
 
     if "--export" in argv:
         recentrer()
-        redimensionner_textures(1024)
+        redimensionner_textures(
+            cote=512, fines=prof.get("textures_fines", ()), cote_fin=1024
+        )
         cible = argv[argv.index("--export") + 1]
         os.makedirs(os.path.dirname(cible), exist_ok=True)
         bpy.ops.export_scene.gltf(
