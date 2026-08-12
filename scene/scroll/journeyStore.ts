@@ -10,7 +10,16 @@ import { useSyncExternalStore } from "react";
 // avant cette semaine. Un abonnement pour quatre changements d'état ne justifie
 // pas un paquet de plus.
 
-export type Phase = "approche" | "transit" | "garage";
+/**
+ * Les trois temps du voyage.
+ *
+ * La derniere s'appelait « garage », d'apres un plan ou la camera finissait sa
+ * course devant la voiture. La villa a decide autrement : son garage est au
+ * pied de la colline, donc du cote de l'arrivee, et le trajet le depasse dans
+ * les premieres secondes. Le nom mentait donc sur ce qu'il designe — le moment
+ * ou l'on est DEDANS.
+ */
+export type Phase = "approche" | "transit" | "dedans";
 export type CarState = "idle" | "prefetch" | "mount" | "ready";
 export type Tier = "haut" | "bas";
 

@@ -9,6 +9,7 @@ import { scroll } from "@/scene/scroll/scrollState";
 import { FocusVitrines } from "./FocusVitrines";
 import { Beats } from "./Beats";
 import { Chargement } from "./Chargement";
+import { Contact } from "./Contact";
 
 const Scene = lazy(() => import("@/scene/Scene"));
 
@@ -112,6 +113,10 @@ export function Journey({
           porte les six liens vers les travaux, le referencement et le clavier.
           Invisible quand la scene est la, il revient au focus. */}
       <div className="journey-dom">{children}</div>
+      {/* Le contact, revele a l'arrivee dans le sejour. Hors de `.journey-dom`
+          et donc jamais masque avec lui : c'est le seul bloc du voyage qui doit
+          rester cliquable. */}
+      {actif ? <Contact locale={locale} /> : null}
       {actif ? <FocusVitrines /> : null}
     </div>
   );

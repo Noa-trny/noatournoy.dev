@@ -41,7 +41,7 @@ export const SEUILS = {
 } as const;
 
 const phasePour = (p: number): Phase =>
-  p >= SEUILS.dedans ? "garage" : p >= SEUILS.transit ? "transit" : "approche";
+  p >= SEUILS.dedans ? "dedans" : p >= SEUILS.transit ? "transit" : "approche";
 
 // Le pont entre le défilement et la scène. C'est le SEUL endroit où l'on crée
 // un ScrollTrigger qui touche la 3D.

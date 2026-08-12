@@ -1651,3 +1651,83 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   .chargement { animation: none; }
   .chargement-piste i { transition: none; }
 }
+
+
+/* ---------------------------------------------------------------------------
+   LE CONTACT, AU BOUT DU VOYAGE
+
+   Fixe et non absolu : la camera est quasi immobile a l'arrivee dans le sejour,
+   donc une surcouche fixe et un panneau ancre dans la scene sont
+   indiscernables — et la surcouche ne coute rien par image.
+
+   Le contraire exact du traitement reserve aux liens vers les travaux. Ceux-la
+   restent atteignables au clavier a tout moment, parce que c'est le focus qui
+   fait avancer la camera jusqu'a eux. Ici rien ne doit reveler le contact avant
+   la fin, d'ou `visibility` et `inert` plutot qu'une simple transparence.
+--------------------------------------------------------------------------- */
+.journey-contact {
+  position: fixed;
+  z-index: 40;
+  right: var(--gut);
+  bottom: clamp(3rem, 12vh, 7rem);
+  width: min(26rem, calc(100% - 2 * var(--gut)));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1rem;
+  text-align: right;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(0.75rem);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s linear 0.5s;
+}
+.journey-contact[data-ouvert="oui"] {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+  transition-delay: 0s, 0s, 0s;
+}
+
+.journey-contact-etiq {
+  margin: 0;
+  font-size: var(--t-label);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #d6ff62;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.85);
+}
+
+.journey-contact-titre {
+  margin: 0;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  line-height: 1.02;
+  font-variation-settings: "wght" 800, "wdth" 74;
+  letter-spacing: -0.015em;
+  color: #f4f5f2;
+  /* Une ombre portee et pas de cartouche : la lecon des blocs de texte du
+     voyage, ou toute forme sombre posee derriere se lisait comme une tache. */
+  text-shadow: 0 1px 16px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.7);
+}
+
+.journey-contact-liens {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+/* Les boutons reprennent `.btn` du site ; seul le fond change, parce qu'ils se
+   posent sur une image et non sur une bande de couleur. */
+.journey-contact-liens .btn {
+  backdrop-filter: blur(6px);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+}
+.journey-contact-liens .btn.ghost {
+  background: rgba(10, 12, 10, 0.4);
+  color: #f4f5f2;
+  border-color: rgba(244, 245, 242, 0.4);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-contact { transition: none; }
+}
