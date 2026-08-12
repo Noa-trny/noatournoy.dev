@@ -1485,22 +1485,17 @@ html.menu-open, html.menu-open body { overflow: hidden; }
 .beat-gauche { left: var(--gut); }
 .beat-droite { right: var(--gut); text-align: right; }
 
-/* Un halo doux DERRIERE le texte, pas un cartouche.
-   La scene passe du ciel clair au beton sombre selon le moment : une ombre
-   portee seule ne suffit pas au-dessus du ciel, et un fond plein tranche
-   franchement au-dessus du beton. Un degrade sans bord tient les deux. */
-.beat::before {
-  content: "";
-  position: absolute;
-  inset: -2.5rem -3rem;
-  z-index: -1;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(6, 8, 7, 0.62) 0%,
-    rgba(6, 8, 7, 0.42) 45%,
-    rgba(6, 8, 7, 0) 78%
-  );
-}
+/* PAS de halo derriere le texte.
+   J'en ai pose un — une ellipse en degrade — et la capture est sans appel :
+   au-dessus d'un ciel plat, toute forme sombre se lit comme une tache, meme
+   sans bord franc. Le degrade ne disparait pas, il devient un nuage sale.
+   La lisibilite se regle sur le FOND, pas sur un cache. J'ai essaye de densifier
+   le ciel : sans effet, parce que la camera vise l'horizon et que la bande
+   d'horizon est delavee dans tout modele de ciel physique — ce n'est pas un
+   reglage de diffusion, c'est un probleme de CADRAGE. Tant que le tiers haut du
+   cadre est du ciel, le texte y sera fragile. L'ombre portee tient le milieu du
+   trajet, ou le fond est du beton ; la premiere etape demande une camera plus
+   pres, pas un cache de plus. */
 
 .beat-etiq {
   font-size: var(--t-label);
@@ -1509,7 +1504,7 @@ html.menu-open, html.menu-open body { overflow: hidden; }
   /* Le vert vif du site ne tient pas au-dessus d'un ciel clair : on le remonte
      en luminosite plutot que de poser un fond derriere lui. */
   color: #d6ff62;
-  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.85), 0 0 3px rgba(0, 0, 0, 0.6);
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.9), 0 0 4px rgba(0, 0, 0, 0.75);
 }
 .beat-titre {
   margin: 0;
