@@ -76,11 +76,23 @@ function Vitrine({
       {/* Le socle et le cadre ne sont PAS interactifs : poser un gestionnaire
           dessus ferait entrer tout leur sous-arbre dans le parcours de rayons
           a chaque mouvement de pointeur. */}
-      <mesh geometry={G_SOCLE} position={[0, 0.5, 0]} raycast={() => {}}>
+      <mesh
+        geometry={G_SOCLE}
+        position={[0, 0.5, 0]}
+        castShadow
+        receiveShadow
+        raycast={() => {}}
+      >
         <meshStandardMaterial color="#6f6d67" roughness={0.9} metalness={0} />
       </mesh>
 
-      <mesh geometry={G_CADRE} position={[0, 1.62, 0]} raycast={() => {}}>
+      <mesh
+        geometry={G_CADRE}
+        position={[0, 1.62, 0]}
+        castShadow
+        receiveShadow
+        raycast={() => {}}
+      >
         <meshStandardMaterial
           ref={cadre}
           color="#121312"

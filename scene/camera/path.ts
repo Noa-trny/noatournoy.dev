@@ -48,7 +48,13 @@ export const CHEMIN = courbe([
 
 /** Ce que la camera regarde. Plus lisse que le trajet lui-meme. */
 export const VISEE = courbe([
-  [  0.0, 2.05,  12.0 ],
+  // Le premier point vise BAS, sous la camera. Ce n'est pas un effet : a viser
+  // l'horizon, le tiers haut du cadre etait du ciel vide, et la maison — 40 m
+  // de long pour 6 de haut — n'a aucune chance de le remplir depuis 26 m de
+  // recul en 30 degres. Piquer de cinq degres remonte la ligne de toiture
+  // d'environ un sixieme de la hauteur d'image et fait entrer le parvis, qui
+  // est justement l'endroit ou les ombres longues se lisent.
+  [  0.0, 0.90,  12.0 ],
   [  0.0, 1.95,   2.0 ],
   [  0.4, 1.80,  -4.0 ],
   [  0.8, 1.70, -10.0 ],

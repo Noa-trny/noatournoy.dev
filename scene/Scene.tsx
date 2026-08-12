@@ -1,14 +1,16 @@
 "use client";
 
-import { Canvas } from "@react-three/fiber";
-import { ContactShadows, Sky } from "@react-three/drei";
-import { Suspense } from "react";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Environment, Sky } from "@react-three/drei";
+import { Suspense, useRef } from "react";
+import * as THREE from "three";
 import { CameraRig } from "./camera/CameraRig";
 import { House } from "./house/House";
 import { Vitrines } from "./vitrines/Vitrines";
 import { Stele } from "./textes/Stele";
 import type { Locale } from "@/content/routes";
 import { journey } from "./scroll/journeyStore";
+import { SOL_PARVIS } from "./vitrines/placement";
 
 // La scene. Phase 7 : la maison et le trajet de camera. Les vitrines viennent
 // en phase 8, le garage et la voiture en phase 9.
@@ -22,51 +24,133 @@ import { journey } from "./scroll/journeyStore";
 //   invaliderait le prechauffage des shaders — le piege de cle de cache qui a
 //   coute 617 ms de pire frame sur Eclosion.
 
+// LE SOLEIL, declare une seule fois.
+//
+// La meme position sert a `<Sky>` et a la directionnelle. Deux constantes
+// auraient diverge a la premiere retouche, et un ciel dont le soleil n'est pas
+// la ou les ombres disent qu'il est se lit faux immediatement, sans qu'on
+// sache dire pourquoi.
+//
+// Dix-huit metres de haut pour trente-cinq de cote : environ 27 degres
+// d'elevation. Ce choix n'est pas decoratif. Le beton brut n'a ni couleur ni
+// motif — il n'a que du relief, et le relief ne devient visible qu'en lumiere
+// rasante.
+//
+// L'angle a ete trouve par MESURE, pas au gout, et deux essais ont servi de
+// bornes. A 31 degres sans ombres portees : un aplat gris. A 14 degres : la
+// facade entiere disparaissait dans l'ombre du debord de toiture, et la
+// lumiere ne se lisait plus que sur le sol.
+//
+// La contrainte s'ecrit d'ailleurs en une ligne. Un debord de profondeur p pose
+// sur la facade une bande d'ombre de hauteur p / tan(elevation) ; pour qu'il en
+// reste sous la bande, il faut tan(elevation) > p / hauteur de facade. Avec le
+// debord de ce modele, cela place le plancher aux alentours de 27 degres — soit
+// exactement assez pour que la bande soit franche sans tout avaler.
+const SOLEIL: readonly [number, number, number] = [-30, 18, 18];
+
 function Lumiere() {
   return (
     <>
-      {/* Rasant, venant de l'avant-gauche : c'est cette incidence qui creuse
-          les debords et pose l'ombre horizontale sous la dalle. */}
-      <directionalLight position={[-18, 16, 24]} intensity={2.4} />
-      {/* Une seconde directionnelle, faible et opposee, pour que les faces a
-          contre-jour gardent du modele. Sans elle le beton s'y aplatit. */}
-      <directionalLight position={[22, 9, -18]} intensity={0.55} />
-      {/* Le ciel comme lumiere d'appoint. Sans lui les faces a l'ombre
-          tombent au noir et la maison se lit en decoupage. */}
-      <hemisphereLight args={["#b9c9e2", "#57544d", 1.25]} />
+      {/* La seule lumiere qui porte une ombre. Chaude, parce qu'un soleil bas
+          traverse plus d'atmosphere — et parce que le froid du ciel dans les
+          ombres n'existe comme contraste que s'il a du chaud en face. */}
+      <directionalLight
+        position={SOLEIL as unknown as THREE.Vector3Tuple}
+        intensity={3.6}
+        color="#ffe9cf"
+        castShadow
+        shadow-mapSize={[2048, 2048]}
+        // `bias` corrige l'acne de profondeur, `normalBias` le decollement sur
+        // les surfaces vues de biais. Il faut les deux : la premiere seule
+        // oblige a une valeur si forte que les ombres se detachent du pied des
+        // objets.
+        shadow-bias={-0.0006}
+        shadow-normalBias={0.06}
+        // Le troncon cadre le parvis et la maison, pas le monde : une ortho
+        // large gaspille la resolution de la carte la ou personne ne regarde.
+        shadow-camera-near={1}
+        shadow-camera-far={110}
+        shadow-camera-left={-38}
+        shadow-camera-right={38}
+        shadow-camera-top={28}
+        shadow-camera-bottom={-28}
+      />
+      {/* L'appoint froid, a contre-jour et faible. Il empeche les faces a
+          l'ombre de tomber au noir sans jamais combler les ombres portees —
+          c'est la difference entre du modele et de la bouillie. */}
+      <directionalLight position={[26, 14, -14]} intensity={0.5} color="#86a6d6" />
+      {/* Le rebond du sol, et RIEN DE PLUS. L'appoint du ciel est desormais
+          fourni par la carte d'environnement ; garder une hemispherique a
+          pleine puissance a cote reviendrait a compter deux fois la meme
+          lumiere, ce qui est exactement ce qui a delave la scene au premier
+          essai. Il ne reste ici que le demi-ciel du BAS — le froid qui remonte
+          du dallage — la moitie haute etant mise a zero.
+
+          Le contraste d'une photo d'architecture n'est pas clair contre
+          sombre, il est CHAUD contre FROID : le soleil bas est ambre, et ce
+          qu'il ne touche pas n'est eclaire que par le bleu du ciel. */}
+      <hemisphereLight args={["#000000", "#3d4653", 0.45]} />
     </>
   );
+}
+
+/**
+ * Les ombres, calculees une fois puis gelees.
+ *
+ * Ni le soleil ni la maison ne bougent : recalculer la carte d'ombres a chaque
+ * image reviendrait a payer une passe de rendu complete pour reobtenir
+ * exactement la meme image. On laisse tourner quelques images — le temps que le
+ * modele soit reellement dans la scene — puis on coupe la mise a jour.
+ *
+ * Monte DANS la frontiere de suspension de la maison, et c'est tout l'interet :
+ * il ne peut donc pas geler la carte avant que le GLB soit arrive.
+ */
+function OmbresGelees() {
+  const gl = useThree((s) => s.gl);
+  const restant = useRef(8);
+  useFrame(() => {
+    if (restant.current <= 0) return;
+    restant.current -= 1;
+    if (restant.current === 0) gl.shadowMap.autoUpdate = false;
+  });
+  return null;
 }
 
 /**
  * Le sol.
  *
  * Le terrain du modele a ete retire — 92 x 75 m de pelouse que la camera ne
- * verra jamais. Restait un vide blanc sous l'esplanade, qui la faisait
- * flotter. Un plan suffit : la camera ne s'en approche jamais assez pour
- * demander une texture.
+ * verra jamais. Restait un vide blanc sous l'esplanade, qui la faisait flotter.
+ * Un plan suffit : la camera ne s'en approche jamais assez pour demander une
+ * texture.
+ *
+ * L'ombre de contact cuite qui vivait ici a ete retiree. Elle etait un
+ * substitut a des ombres portees ; maintenant qu'il y en a de vraies, elle ne
+ * ferait que doubler l'assombrissement sous la dalle.
+ *
+ * SA HAUTEUR EST LE REGLAGE QUI COMPTE, et je l'avais fausse. Le plan etait a
+ * -2,99, soit la hauteur de l'ancien terrain. Or le parvis est perce d'un
+ * cercle a l'endroit ou le modele posait un bassin, que la suppression du
+ * terrain a laisse ouvert : on voyait donc le sol deux metres soixante-dix plus
+ * bas, ce qui se lisait comme une fosse noire en plein milieu du cadre — et
+ * d'autant plus depuis que les ombres existent, l'interieur du trou etant
+ * masque par son propre rebord.
+ *
+ * Cale trois centimetres sous le parvis, le meme cercle se lit comme du
+ * dallage. Trois centimetres et non zero : a hauteur egale les deux surfaces se
+ * disputeraient le tampon de profondeur.
  */
 function Sol() {
   return (
-    <>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -2.99, 0]} raycast={() => {}}>
-        <planeGeometry args={[400, 400]} />
-        <meshStandardMaterial color="#8e8c85" roughness={0.95} metalness={0} />
-      </mesh>
-      {/* Une ombre de contact cuite en UNE fois plutot qu'a chaque frame :
-          c'est elle qui pose vraiment la maison au sol, la ou une ombre portee
-          en temps reel couterait une passe complete par image. */}
-      <ContactShadows
-        frames={1}
-        position={[0, -2.96, 0]}
-        scale={140}
-        far={9}
-        blur={2.4}
-        opacity={0.55}
-        resolution={1024}
-        color="#2a2926"
-      />
-    </>
+    <mesh
+      rotation={[-Math.PI / 2, 0, 0]}
+      position={[0, SOL_PARVIS - 0.03, 0]}
+      receiveShadow
+      raycast={() => {}}
+    >
+      <planeGeometry args={[400, 400]} />
+      <meshStandardMaterial color="#8a857b" roughness={0.95} metalness={0} />
+    </mesh>
   );
 }
 
@@ -76,7 +160,15 @@ export default function Scene({ locale }: { locale: Locale }) {
       camera={{ fov: 30, near: 0.1, far: 400, position: [0, 1.9, 24] }}
       gl={{ antialias: true, powerPreference: "high-performance" }}
       dpr={[1, 1.75]}
-      shadows={false}
+      // DE VRAIES OMBRES PORTEES, et c'est le changement qui fait tout le
+      // reste. Sans elles la directionnelle « rasante » n'eclairait que la
+      // face qu'elle touchait, sans rien projeter : la maison, les vitrines
+      // et la stele flottaient au meme gris. Le cout est nul en regime
+      // etabli, la carte etant gelee des la maison chargee.
+      //
+      // PCF simple et non PCFSoft : three deprecie le second, qui retombe de
+      // toute facon sur le premier en emettant un avertissement.
+      shadows={{ type: THREE.PCFShadowMap }}
       // Purement decoratif : jamais dans l'arbre d'accessibilite, jamais un
       // arret de tabulation. Toute la navigation vit dans le DOM, a cote.
       aria-hidden="true"
@@ -85,8 +177,42 @@ export default function Scene({ locale }: { locale: Locale }) {
       // rayon que sur evenement pointeur, jamais parce que la camera a bouge.
       onPointerMissed={() => journey.set({ activeId: null })}
     >
-      <color attach="background" args={["#aebdd2"]} />
-      <Sky sunPosition={[-18, 16, 24]} turbidity={5} rayleigh={1.4} />
+      <color attach="background" args={["#b9c3cf"]} />
+      {/* Turbidite plus haute que par defaut : c'est la brume, et c'est
+          elle qui donne au soleil bas son halo chaud au-dessus de
+          l'horizon. */}
+      <Sky
+        sunPosition={SOLEIL as unknown as THREE.Vector3Tuple}
+        turbidity={6.5}
+        rayleigh={1.1}
+      />
+      {/* L'ENVIRONNEMENT, cuit une fois a partir du ciel lui-meme.
+      
+          Sans lui, un materiau lisse n'a rien a refleter : les baies rendaient
+          des rectangles noirs, ce qui est le contraire de ce qu'une vitre fait
+          en exterieur. `<Environment preset=...>` irait chercher une HDRI sur
+          un CDN tiers, que `connect-src 'self'` bloque ; en lui donnant le
+          `<Sky>` procedural pour enfant, on obtient la meme carte sans un octet
+          de reseau et sans elargir la CSP.
+      
+          `frames={1}` : le ciel ne bouge pas, la cuisson n'a donc lieu qu'une
+          fois — meme raisonnement que pour la carte d'ombres. */}
+      <Environment
+        frames={1}
+        resolution={128}
+        // A UN, la carte du ciel eclaire la scene autant qu'un plein jour
+        // couvert : la premiere version rendait un beton presque blanc et
+        // effacait les ombres qu'on venait d'obtenir. Elle n'est pas ici pour
+        // eclairer — les directionnelles s'en chargent — mais pour DONNER
+        // QUELQUE CHOSE A REFLETER aux surfaces lisses.
+        environmentIntensity={0.3}
+      >
+        <Sky
+          sunPosition={SOLEIL as unknown as THREE.Vector3Tuple}
+          turbidity={6.5}
+          rayleigh={1.1}
+        />
+      </Environment>
       <Lumiere />
       <Sol />
       <CameraRig />
@@ -94,6 +220,7 @@ export default function Scene({ locale }: { locale: Locale }) {
           il aura la sienne, et sa suspension ne figera pas ce qui est deja la. */}
       <Suspense fallback={null}>
         <House />
+        <OmbresGelees />
       </Suspense>
       {/* Les vitrines ont leur propre frontiere : leurs captures ne doivent pas
           retarder l'apparition de la maison. */}

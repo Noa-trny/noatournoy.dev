@@ -68,7 +68,7 @@ export function Stele({ locale }: { locale: Locale }) {
     <group position={[-2.3, -0.31, 14.5]} rotation={[0, 0.26, 0]}>
       {/* Le monolithe. Legerement fruite — une face parfaitement verticale
           lit comme un panneau publicitaire, pas comme du beton coule. */}
-      <mesh position={[0, HAUTEUR / 2, 0]} raycast={() => {}}>
+      <mesh position={[0, HAUTEUR / 2, 0]} castShadow receiveShadow raycast={() => {}}>
         <boxGeometry args={[LARGEUR, HAUTEUR, EPAISSEUR]} />
         <meshStandardMaterial color="#6e6c66" roughness={0.92} metalness={0} />
       </mesh>

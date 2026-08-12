@@ -39,8 +39,8 @@ export function House() {
       // gestionnaires en phase 8. Sans ce retrait, R3F parcourrait tout le
       // sous-arbre a chaque evenement de pointeur.
       mesh.raycast = () => {};
-      mesh.castShadow = false;
-      mesh.receiveShadow = false;
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
 
       const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
       for (const m of mats) {
@@ -48,6 +48,10 @@ export function House() {
         if (m.name === "Glass") {
           // On isole une copie par materiau de verre : le fondu au
           // franchissement ne doit pas modifier le cache de useGLTF.
+          // Le verre ne porte pas d'ombre : une vitre qui projetterait une
+          // ombre pleine plongerait l'interieur dans le noir, ce qui est
+          // l'inverse de ce qu'une baie fait. Il en RECOIT, en revanche.
+          mesh.castShadow = false;
           const copie = m.clone();
           copie.transparent = true;
           copie.depthWrite = false;
