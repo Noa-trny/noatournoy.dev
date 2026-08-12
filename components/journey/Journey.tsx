@@ -82,7 +82,17 @@ export function Journey({
     if (!actif || contexte !== "perdu") return;
     if (generation === 0) {
       console.warn("[voyage] contexte perdu — reconstruction de la scene");
-      const t = window.setTimeout(() => setGeneration(1), 400);
+      const t = window.setTimeout(() => {
+        // REMETTRE L'ETAT A « VIVANT » AVANT DE REMONTER, sinon l'effet se
+        // relance aussitot sur `generation` et lit encore « perdu » — le
+        // nouveau canvas n'etant pas ne. Il declarait alors de lui-meme une
+        // seconde perte, quatre cents millisecondes apres la premiere, et
+        // repliait definitivement. La trace du harnais montrait les deux
+        // avertissements a 15 734 et 16 152 ms : ce n'etait pas la scene qui
+        // mourait deux fois, c'etait moi qui comptais deux fois.
+        journey.set({ contexte: "vivant" });
+        setGeneration(1);
+      }, 400);
       return () => window.clearTimeout(t);
     }
     console.warn("[voyage] contexte perdu une seconde fois — repli definitif");

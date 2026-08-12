@@ -17,6 +17,42 @@
  * empêcher la vraie scène de s'ouvrir.
  */
 let sondeWebGL: boolean | null = null;
+let sondeLogiciel: boolean | null = null;
+
+/**
+ * Le rendu est-il LOGICIEL ?
+ *
+ * Question decisive, et qui ne se devine pas : `getContext('webgl2')` reussit
+ * aussi bien sur une vraie carte que sur l'emulation logicielle de Chrome, et
+ * rien dans l'API standard ne les distingue. Il faut l'extension
+ * `WEBGL_debug_renderer_info`, qui rend la chaine du pilote.
+ *
+ * Pourquoi ça compte ici : mesure au harnais, cette scene perd son contexte au
+ * bout d'une quinzaine de secondes en rendu logiciel, sur une page immobile. Le
+ * visiteur voit alors la maison, puis un ecran noir, puis le site sans 3D — la
+ * pire des trois issues possibles, parce qu'elle promet puis retire.
+ *
+ * Chrome bascule en logiciel tout seul quand son processus graphique a plante
+ * plusieurs fois, et l'utilisateur n'en sait rien. Autant refuser d'emblee et
+ * servir le site complet, qui lui fonctionne partout.
+ */
+function rendLogiciel(gl: WebGL2RenderingContext): boolean {
+  if (sondeLogiciel !== null) return sondeLogiciel;
+  try {
+    const ext = gl.getExtension("WEBGL_debug_renderer_info");
+    const nom = ext
+      ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) ?? "")
+      : String(gl.getParameter(gl.RENDERER) ?? "");
+    if (process.env.NODE_ENV !== "production" || typeof window !== "undefined") {
+      console.info(`[voyage] rendu par : ${nom || "(inconnu)"}`);
+    }
+    sondeLogiciel = /swiftshader|software|llvmpipe|basic render|microsoft basic/i.test(nom);
+    return sondeLogiciel;
+  } catch {
+    sondeLogiciel = false;
+    return false;
+  }
+}
 
 function hasWebGL2(): boolean {
   // MEMORISE pour toute la duree de la page.
@@ -37,6 +73,8 @@ function hasWebGL2(): boolean {
       sondeWebGL = false;
       return false;
     }
+    // On profite du contexte de sonde, deja ouvert, pour lire le pilote.
+    logicielVu = rendLogiciel(gl);
     // On libere immediatement : le contexte de sonde ne doit pas compter dans
     // le budget de celui dont la scene aura besoin.
     gl.getExtension("WEBGL_lose_context")?.loseContext();
@@ -47,6 +85,8 @@ function hasWebGL2(): boolean {
     return false;
   }
 }
+
+let logicielVu = false;
 
 type NavigatorPlus = Navigator & {
   deviceMemory?: number;
@@ -61,7 +101,8 @@ export type Refus =
   | "reseau-lent"
   | "peu-de-coeurs"
   | "peu-de-memoire"
-  | "webgl2-absent";
+  | "webgl2-absent"
+  | "rendu-logiciel";
 
 export function refusDe3D(): Refus | null {
   if (typeof window === "undefined") return "serveur";
@@ -82,6 +123,17 @@ export function refusDe3D(): Refus | null {
     return "peu-de-memoire";
   }
   if (!hasWebGL2()) return "webgl2-absent";
+  // Apres `hasWebGL2`, qui renseigne le drapeau au passage.
+  //
+  // `?force3d` passe outre. C'est la seule maniere de MESURER la scene : le
+  // harnais de capture tourne en SwiftShader — un navigateur sans interface n'a
+  // pas de carte graphique a sa disposition — et se verrait donc refuser la 3D
+  // qu'il est charge de photographier. L'echappatoire ne concerne que celui qui
+  // l'ecrit dans l'adresse, et elle n'allege rien : elle laisse simplement
+  // entrer, avec les consequences.
+  const force =
+    typeof location !== "undefined" && /(^|[?&])force3d(=|&|$)/.test(location.search);
+  if (logicielVu && !force) return "rendu-logiciel";
 
   return null;
 }
