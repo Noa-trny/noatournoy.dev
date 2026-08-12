@@ -36,11 +36,22 @@ const phasePour = (p: number): Phase =>
  * qui suit la molette cran par cran. D'où ce tween sur un objet fantoche : il
  * n'anime rien de visible, il ne sert qu'à obtenir une progression lissée.
  */
-export function useScrollBridge(scope: RefObject<HTMLElement | null>) {
+export function useScrollBridge(
+  scope: RefObject<HTMLElement | null>,
+  /**
+   * Vrai quand le voyage occupe reellement de la hauteur.
+   *
+   * Sans ce drapeau, le declencheur se cree au montage — alors que le
+   * conteneur a encore une hauteur NULLE, la 3D n'etant activee qu'ensuite par
+   * un effet. Il mesure donc un element vide, `start` et `end` se confondent,
+   * et la progression reste bloquee a zero : on defile et rien ne bouge.
+   */
+  pret: boolean
+) {
   useGSAP(
     () => {
       const el = scope.current;
-      if (!el) return;
+      if (!el || !pret) return;
 
       // Les positions de declenchement sont mesurees a la creation. A ce
       // moment la, la fonte variable n'est pas encore substituee et les images
@@ -87,6 +98,8 @@ export function useScrollBridge(scope: RefObject<HTMLElement | null>) {
       // n'etait jamais atteinte. Une seule source de verite supprime cette
       // classe d'erreur.
     },
-    { scope, dependencies: [] }
+    // `pret` en dependance : `useGSAP` reverte tout et reconstruit quand il
+    // change, ce qui remesure le conteneur a sa vraie hauteur.
+    { scope, dependencies: [pret], revertOnUpdate: true }
   );
 }

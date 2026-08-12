@@ -74,7 +74,7 @@ export function Journey({ locale }: { locale: Locale }) {
     };
   }, [actif]);
 
-  useScrollBridge(conteneur);
+  useScrollBridge(conteneur, actif);
 
   const c = home[locale];
 
