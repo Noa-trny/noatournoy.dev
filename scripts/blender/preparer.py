@@ -277,6 +277,54 @@ def decimer():
           f"({100 * total_apres / max(total_avant, 1):.0f} %)")
 
 
+# --------------------------------------------------- 2 bis. souder et lisser
+
+def souder_et_lisser(seuil=0.0001, angle_deg=35.0):
+    """
+    Fusionne les sommets confondus et repasse en ombrage par angle.
+
+    LE PLUS GROS POSTE DU FICHIER, et il ne se voit nulle part. Le bonsai
+    sortait a 48 000 triangles pour 144 000 sommets — exactement trois par
+    triangle, donc AUCUN sommet partage. Un maillage non indexe coute trois
+    fois sa position, sa normale et sa coordonnee de texture.
+
+    La soudure de `gltf-transform` n'y pouvait rien : elle ne fusionne que des
+    sommets dont TOUS les attributs coincident, et ici les normales different
+    corner par corner — heritage de l'ombrage plat et des normales
+    personnalisees que la decimation laisse derriere elle. Elle recuperait
+    0,12 Mo sur 6,9.
+
+    Il faut donc traiter la cause, du cote Blender : effacer les normales
+    personnalisees, fusionner par distance, puis reconstruire l'ombrage a partir
+    d'un angle. Les aretes vives de l'architecture sont conservees — un angle de
+    35 degres les depasse largement — et les surfaces organiques, feuillages en
+    tete, retrouvent des sommets partageables.
+    """
+    from math import radians
+
+    avant = sum(len(o.data.vertices) for o in maillages())
+    for o in maillages():
+        bpy.context.view_layer.objects.active = o
+        bpy.ops.object.select_all(action="DESELECT")
+        o.select_set(True)
+        try:
+            bpy.ops.mesh.customdata_custom_splitnormals_clear()
+        except Exception:
+            pass
+        bpy.ops.object.mode_set(mode="EDIT")
+        bpy.ops.mesh.select_all(action="SELECT")
+        bpy.ops.mesh.remove_doubles(threshold=seuil)
+        bpy.ops.object.mode_set(mode="OBJECT")
+        try:
+            # Blender 4.1 a retire `use_auto_smooth` au profit d'un operateur.
+            bpy.ops.object.shade_smooth_by_angle(angle=radians(angle_deg))
+        except Exception:
+            bpy.ops.object.shade_smooth()
+    apres = sum(len(o.data.vertices) for o in maillages())
+    print(f"  soudure      : {avant} -> {apres} sommets "
+          f"({100 * apres / max(avant, 1):.0f} %)")
+
+
 # ------------------------------------------------------------ 3. retexturer
 
 def carte(nt, nom_fichier, coord, non_couleur=False):
@@ -597,6 +645,7 @@ def main():
     renommer(prof.get("renommer"))
     mettre_a_l_echelle()
     decimer()
+    souder_et_lisser()
     retexturer()
     eclairer_et_cadrer()
 
