@@ -25,25 +25,31 @@ function courbe(points: [number, number, number][]) {
 
 /** Le trajet : la rue, la baie, l'interieur. */
 export const CHEMIN = courbe([
-  [  0.0, 1.75,  42.0 ],  // 0.00  la facade tient dans le cadre
-  [ -2.5, 1.70,  26.0 ],
-  [ -1.0, 1.68,  13.0 ],
-  [  0.0, 1.66,   5.5 ],  // ~0.30 la baie grandit
-  [  0.0, 1.64,   0.0 ],  // ~0.34 DANS le plan du vitrage
-  [  0.4, 1.62,  -4.5 ],
-  [  1.2, 1.60,  -8.5 ],
-  [  0.8, 1.58, -11.5 ],  // 1.00  le fond de la maison
+  // A 42 m la maison occupait un timbre-poste au bas du cadre : elle ne fait
+  // que 6,5 m de haut, et le ciel prenait les trois quarts de l'image.
+  [  0.0, 1.90,  24.0 ],  // 0.00  la facade tient le cadre
+  [ -1.6, 1.84,  16.0 ],
+  [ -0.6, 1.78,   9.0 ],
+  [  0.0, 1.74,   4.0 ],  // ~0.28 la baie grandit
+  [  0.0, 1.72,   0.0 ],  // ~0.34 DANS le plan du vitrage
+  [  0.4, 1.70,  -4.5 ],
+  [  1.0, 1.68,  -8.5 ],
+  [  0.8, 1.66, -11.5 ],  // 1.00  le fond de la maison
 ]);
 
 /** Ce que la camera regarde. Plus lisse que le trajet lui-meme. */
 export const VISEE = courbe([
-  [  0.0, 2.20,  10.0 ],
-  [  0.0, 2.00,  -2.0 ],
-  [  0.5, 1.75,  -9.0 ],
-  [  0.9, 1.60, -16.0 ],
+  [  0.0, 2.05,   4.0 ],
+  [  0.0, 1.95,  -3.0 ],
+  [  0.5, 1.78,  -9.0 ],
+  [  0.9, 1.66, -16.0 ],
 ]);
 
-export const FOV_BASE = 40;
+// 30 et non 40 : a 24 m une maison de 3,5 m de haut ne remplit qu'un cinquieme
+// du cadre en 40 degres, et le ciel prend le reste. Une focale plus longue
+// resserre, aplatit la perspective — ce qui sert le brutalisme — et rend le
+// dolly zoom plus lisible, l'ecart entre les deux focales etant plus grand.
+export const FOV_BASE = 30;
 
 /**
  * L'extension verticale du monde visible a la distance de depart.
@@ -53,7 +59,7 @@ export const FOV_BASE = 40;
  * ensuite pour le conserver.
  */
 export const HAUTEUR_CADREE =
-  2 * 40.0 * Math.tan(THREE.MathUtils.degToRad(FOV_BASE) / 2);
+  2 * 24.0 * Math.tan(THREE.MathUtils.degToRad(FOV_BASE) / 2);
 
 /**
  * L'enveloppe du vertigo : nulle aux deux bouts, pleine a la traversee.
