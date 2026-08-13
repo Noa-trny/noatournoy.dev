@@ -1,5 +1,8 @@
 "use client";
 
+import { useMemo } from "react";
+import * as THREE from "three";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { Forme } from "../croquis/Forme";
 
 // LES PIECES DU BUREAU.
@@ -126,19 +129,130 @@ export function Portable({
   );
 }
 
+/**
+ * LE CLAVIER, TOUCHE PAR TOUCHE.
+ *
+ * C'etait une plaque posee sur une boite : de loin ça passait, de pres — et le
+ * defilement amene desormais tout en gros plan — c'etait une savonnette. Un
+ * clavier se reconnait a une seule chose, la GRILLE, et une grille ne se suggere
+ * pas.
+ *
+ * POURQUOI PAS UN MODELE IMPORTE. C'est la question qu'on se pose naturellement
+ * ici, et le clavier est justement l'objet ou elle se tranche le plus vite : un
+ * clavier EST une grille de boites. Un `.glb` de bonne facture pese entre
+ * trois cent et huit cents kilooctets, arrive avec ses propres materiaux qu'il
+ * faudrait remplacer un a un pour retrouver le rendu croquis, et impose une
+ * licence a suivre. Celui-ci pese zero octet, herite du style sans rien faire,
+ * et se remodele en changeant un tableau de nombres. Reste que pour un objet
+ * VRAIMENT organique — une main, un fauteuil, un casque bien dessine — le
+ * raisonnement s'inverse, et la chaine d'import est prete pour ça.
+ *
+ * TOUT EST FUSIONNE EN UNE SEULE GEOMETRIE. Soixante-dix touches en soixante-dix
+ * maillages, ce serait cent quarante appels de rendu avec les contours — plus
+ * que toute la scene actuelle, pour un seul objet. Fusionnees, c'est deux. Elles
+ * ne bougent jamais les unes par rapport aux autres : la fusion ne coute donc
+ * rien, la ou des instances imposeraient un tampon de matrices a maintenir.
+ */
+
+/**
+ * Le plan de touches, en unites de pas (1u = un pas de touche).
+ *
+ * Un nombre negatif est un ECART et non une touche : c'est ce qui separe les
+ * blocs de fonctions, et sans quoi la rangee du haut se lit comme une barre
+ * continue. Les largeurs sont celles d'un clavier reel — la barre d'espace fait
+ * six unites et quart, le retour chariot deux et quart — parce qu'un oeil
+ * reconnait ces proportions avant de compter les touches.
+ */
+const RANGEES: readonly (readonly number[])[] = [
+  [1, -1, 1, 1, 1, 1, -0.5, 1, 1, 1, 1, -0.5, 1, 1, 1, 1],
+  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
+  [1.5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5],
+  [1.75, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2.25],
+  [2.25, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2.75],
+  [1.25, 1.25, 1.25, 6.25, 1.25, 1.25, 1.25, 1.25],
+];
+
+/** Le pas d'un clavier reel, en metres. Tout le reste en decoule. */
+const PAS = 0.019;
+/** Le jeu entre deux capuchons : sans lui, la grille redevient une plaque. */
+const JEU = 0.0028;
+
+function useTouches() {
+  return useMemo(() => {
+    const morceaux: THREE.BufferGeometry[] = [];
+    // La rangee de fonctions est un peu plus basse et plus fine que les autres,
+    // comme sur un vrai clavier : c'est ce qui empeche le bloc de se lire comme
+    // un damier regulier.
+    RANGEES.forEach((rangee, r) => {
+      const fonction = r === 0;
+      let u = 0;
+      for (const w of rangee) {
+        if (w < 0) {
+          u += -w;
+          continue;
+        }
+        const g = new THREE.BoxGeometry(
+          w * PAS - JEU,
+          fonction ? 0.006 : 0.0085,
+          PAS - JEU,
+        );
+        g.translate(
+          (u + w / 2) * PAS,
+          fonction ? 0.003 : 0.00425,
+          // La rangee 0 est au fond : l'axe des z va vers l'observateur, donc
+          // les indices croissants se rapprochent de lui.
+          (r - (RANGEES.length - 1) / 2) * PAS + (fonction ? -0.004 : 0),
+        );
+        morceaux.push(g);
+        u += w;
+      }
+    });
+    // Centre le bloc entier sur l'objet : les rangees ont ete construites a
+    // partir de zero, chacune avec sa propre longueur.
+    const large = 15 * PAS;
+    const fusion = mergeGeometries(morceaux, false);
+    morceaux.forEach((g) => g.dispose());
+    fusion.translate(-large / 2, 0, 0);
+    return fusion;
+  }, []);
+}
+
 /** Clavier et souris : ils occupent le devant du plateau et donnent l'echelle. */
 export function Saisie({ position }: { position: [number, number, number] }) {
+  const touches = useTouches();
   return (
     <group position={position}>
-      <Forme reglages={PALETTE.boitier} position={[0, 0.01, 0]} trait={0.0026}>
-        <boxGeometry args={[0.44, 0.02, 0.14]} />
+      {/* Le chassis, legerement plus grand que le bloc de touches. */}
+      <Forme reglages={PALETTE.boitier} position={[0, 0.008, 0]} trait={0.0026}>
+        <boxGeometry args={[0.308, 0.016, 0.134]} />
       </Forme>
-      <Forme reglages={PALETTE.cadre} position={[0, 0.022, 0]} trait={0}>
-        <boxGeometry args={[0.4, 0.006, 0.1]} />
+      {/* La plaque de fond, visible entre les touches : c'est elle qui donne
+          leur profondeur aux capuchons. Sans trait, sinon un contour noir
+          double chaque bord de touche par en dessous. */}
+      <Forme reglages={PALETTE.cadre} position={[0, 0.0165, 0]} trait={0}>
+        <boxGeometry args={[0.296, 0.001, 0.122]} />
       </Forme>
-      <Forme reglages={PALETTE.boitier} position={[0.36, 0.014, 0.01]} trait={0.0026}>
-        <boxGeometry args={[0.06, 0.028, 0.1]} />
+      <Forme reglages={PALETTE.pied} position={[0, 0.017, 0]} trait={0.0016}>
+        <primitive object={touches} attach="geometry" />
       </Forme>
+
+      {/* La souris : un dos bombe, pas une boite. C'est le seul objet du bureau
+          qui n'a aucune arete vive, et c'est precisement ce qui le fait
+          reconnaitre — une boite de six centimetres a cote d'un clavier peut
+          etre n'importe quoi.
+
+          UNE DEMI-SPHERE MISE A L'ECHELLE, et non une geometrie dediee. Le
+          contour s'inflate le long des NORMALES en espace de vue ; three
+          recalcule la matrice des normales a partir de la matrice de vue-modele,
+          donc une echelle non uniforme reste correctement cernee. */}
+      <group position={[0.235, 0, 0.012]} scale={[1, 0.85, 1.4]}>
+        <Forme reglages={PALETTE.boitier} position={[0, 0.001, 0]} trait={0.0024}>
+          <sphereGeometry args={[0.031, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        </Forme>
+        <Forme reglages={PALETTE.cadre} position={[0, 0.03, -0.012]} trait={0}>
+          <boxGeometry args={[0.005, 0.006, 0.013]} />
+        </Forme>
+      </group>
     </group>
   );
 }
