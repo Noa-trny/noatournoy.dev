@@ -34,19 +34,19 @@ export default function ContactEn() {
               Contact
             </h1>
 
-            <a className="contact-line" href="mailto:noa.tournoy@supinfo.com">
+            <a className="lueur inline-block text-[clamp(1.5rem,4.2vw,2.6rem)] font-medium tracking-[-0.02em] text-fg underline decoration-line underline-offset-8 transition-colors hover:decoration-accent-soft hover:text-accent-soft" href="mailto:noa.tournoy@supinfo.com">
               noa.tournoy@supinfo.com
             </a>
 
-            <ul className="elsewhere">
+            <ul className="mt-8 flex flex-wrap gap-2">
               <li>
-                <a href="https://www.linkedin.com/in/noa-tournoy/">LinkedIn</a>
+                <a className="lueur rounded-full border border-line px-4 py-2 text-sm text-mid transition-colors hover:border-accent/60 hover:text-fg" href="https://www.linkedin.com/in/noa-tournoy/">LinkedIn</a>
               </li>
               <li>
-                <a href="https://github.com/Noa-trny">GitHub</a>
+                <a className="lueur rounded-full border border-line px-4 py-2 text-sm text-mid transition-colors hover:border-accent/60 hover:text-fg" href="https://github.com/Noa-trny">GitHub</a>
               </li>
               <li>
-                <a href="https://eclosion.noatournoy.dev">Éclosion</a>
+                <a className="lueur rounded-full border border-line px-4 py-2 text-sm text-mid transition-colors hover:border-accent/60 hover:text-fg" href="https://eclosion.noatournoy.dev">Éclosion</a>
               </li>
             </ul>
           </div>
