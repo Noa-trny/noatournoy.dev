@@ -1,3 +1,4 @@
+import { connection } from "next/server";
 import type { Metadata, Viewport } from "next";
 import { FontPreload } from "./shared-head";
 import "@/styles/app.css";
@@ -25,7 +26,19 @@ export const viewport: Viewport = {
   themeColor: "#fbfbfc",
 };
 
-export default function GlobalNotFound() {
+// `connection()` COMME DANS LES DEUX LAYOUTS, et pour la meme raison — mais
+// elle manquait ici, ce qui rendait cette page la seule du site a violer sa
+// propre CSP.
+//
+// Le nonce est tire a chaque requete par le proxy. Une page PRERENDUE au build
+// n'a pas de requete au moment de son rendu : Next ne pouvait donc poser aucun
+// nonce sur ses deux <script> d'amorçage, que le navigateur bloquait ensuite.
+// Mesure sur le HTML servi : deux scripts en ligne nonces sur l'accueil, zero
+// sur la 404. La page s'affichait quand meme — elle est statique — mais sans
+// JavaScript, donc sans navigation cote client, et en jetant une erreur de
+// securite dans la console de chaque visiteur qui se trompe d'adresse.
+export default async function GlobalNotFound() {
+  await connection();
   return (
     <html lang="fr">
       <head>
