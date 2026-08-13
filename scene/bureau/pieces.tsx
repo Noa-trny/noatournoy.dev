@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { Forme } from "../croquis/Forme";
+import { Importe } from "../croquis/Importe";
 
 // LES PIECES DU BUREAU.
 //
@@ -458,7 +459,26 @@ export function Livres({
   );
 }
 
-/** Le casque sur son support : un objet qui dit « on y passe des heures ». */
+/**
+ * LE CASQUE : le premier objet importe de la scene, et la demonstration du
+ * moment ou le procedural cesse d'etre le bon outil.
+ *
+ * L'ancienne version etait un demi-tore et deux cylindres. Elle disait
+ * « casque » comme un pictogramme dit « telephone » — on comprenait, on ne
+ * reconnaissait pas. Un arceau reel n'est pas un tore : il s'aplatit sur le
+ * dessus, s'affine aux tempes, et les coques pivotent. Aucune primitive
+ * n'approche ça, et les empiler pour y arriver aurait coute plus de lignes que
+ * le fichier ne pese d'octets.
+ *
+ * VINGT-SIX KILOOCTETS, une seule primitive, aucune texture. Ce qu'on est venu
+ * chercher est la GEOMETRIE, rien d'autre : les materiaux du modele sont
+ * retires a la preparation et remplaces au chargement par le materiau croquis,
+ * sans quoi on poserait un objet photographie au milieu d'une scene dessinee —
+ * plus detaille que tout le reste, et faux pour cette raison meme.
+ *
+ * Le support, lui, reste en primitives. Un pied et un montant SONT un cylindre
+ * et un cylindre.
+ */
 export function Casque({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
@@ -468,21 +488,17 @@ export function Casque({ position }: { position: [number, number, number] }) {
       <Forme reglages={PALETTE.pied} position={[0, 0.11, 0]} trait={0.0022}>
         <cylinderGeometry args={[0.009, 0.009, 0.2, 10]} />
       </Forme>
-      {/* L'arceau : un DEMI-tore, d'ou `thetaLength` a PI. */}
-      <Forme reglages={PALETTE.boitier} position={[0, 0.2, 0]} trait={0.0024}>
-        <torusGeometry args={[0.075, 0.011, 8, 20, Math.PI]} />
-      </Forme>
-      {[-0.075, 0.075].map((x) => (
-        <Forme
-          key={x}
-          reglages={PALETTE.boitier}
-          position={[x, 0.185, 0]}
-          rotation={[Math.PI / 2, 0, 0]}
-          trait={0.0024}
-        >
-          <cylinderGeometry args={[0.032, 0.032, 0.026, 14]} />
-        </Forme>
-      ))}
+      {/* Pose sur le montant plutot que suspendu : l'arceau vient coiffer le
+          haut du pied, ce qui est exactement la façon dont un casque tient sur
+          un support et evite d'avoir a modeliser un crochet. */}
+      <Importe
+        url="/models/casque.glb"
+        reglages={PALETTE.boitier}
+        trait={0.0022}
+        position={[0, 0.1, 0]}
+        rotation={[0, -0.5, 0]}
+        scale={1.35}
+      />
     </group>
   );
 }

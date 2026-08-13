@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { Suspense, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import type { Locale } from "@/content/routes";
 import { Rig } from "./Rig";
@@ -304,7 +304,15 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             chacun apporte une hauteur differente — c'est la variation de
             hauteur qui fait un plateau vecu plutot qu'un plan de travail. */}
         <Livres position={[1.36, 0.7675, 0.18]} rotation={[0, -0.42, 0]} />
-        <Casque position={[0.92, 0.7675, -0.52]} />
+        {/* SA PROPRE FRONTIERE DE SUSPENSE, et non celle de la scene. Le
+            casque est le seul objet qui se telecharge ; partager la frontiere
+            du monde ferait attendre le bureau entier — couloir compris — sur
+            vingt-six kilooctets. Le repli est `null` et non un element du DOM :
+            dans un canvas, React reconcilie des objets three, pas des balises,
+            et un div en repli fait planter le reconciliateur. */}
+        <Suspense fallback={null}>
+          <Casque position={[0.92, 0.7675, -0.52]} />
+        </Suspense>
         <Feuillets position={[0.58, 0.7675, 0.42]} />
 
         <Halo />
