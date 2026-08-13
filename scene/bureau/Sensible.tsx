@@ -34,7 +34,6 @@ export function Sensible({
   rotation?: [number, number, number];
 }) {
   const ouverte = useBureau((e) => e.ouverte);
-  const enVol = useBureau((e) => e.enVol);
   const survol = useBureau((e) => e.survol);
 
   // Le curseur se pose sur le DOCUMENT et non sur la boite : `onPointerOut` ne
@@ -47,10 +46,17 @@ export function Sensible({
     };
   }, [survol]);
 
-  // Zone neutralisee quand un panneau est ouvert ou pendant un vol : sinon on
-  // peut cliquer sur un objet qu'on ne voit plus, et la camera part ailleurs
-  // au milieu de son trajet.
-  const actif = ouverte === null && !enVol;
+  // LA BOITE S'EFFACE DEVANT SON PROPRE CONTENU, et c'est la seule condition.
+  //
+  // Elle enveloppe l'objet, donc elle est PLUS PRES de la camera que la dalle
+  // qu'il porte : arrivee a la station, elle intercepterait chaque clic destine
+  // a une ligne de projet, et les six liens seraient morts. Une fois sur place,
+  // elle se retire — l'objet est deja atteint, elle n'a plus rien a offrir.
+  //
+  // Les AUTRES restent vives tout du long : le trajet est un defilement, pas un
+  // couloir a sens unique, et l'on doit pouvoir sauter d'un objet a l'autre sans
+  // repasser par le plan large.
+  const actif = ouverte !== id;
 
   return (
     <mesh

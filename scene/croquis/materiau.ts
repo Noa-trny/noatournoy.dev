@@ -58,7 +58,22 @@ const APRES_ECLAIRAGE = /* glsl */ `
   // noir absolu et la scene se lit comme un decoupage de papier noir. Un dessin
   // garde de la matiere dans ses ombres — c'est meme la que le trait se voit.
   quant = max(quant, uPlancher);
-  gl_FragColor.rgb *= quant / pas;
+
+  // MAIS LE FACTEUR EST BORNE, et c'est ce qui manquait.
+  //
+  // Relever un pixel jusqu'au plancher revient a MULTIPLIER ses trois canaux.
+  // Un pixel a l'ombre valant deux centiemes de luminosite se voyait donc
+  // multiplier par seize : le canal le plus fort saturait, les deux autres non,
+  // et la teinte partait avec. Tout ce que la lampe n'atteignait pas prenait la
+  // couleur du remplissage froid, en neon — un boitier gris anthracite rendait
+  // bleu electrique. Le defaut ne se voyait que de pres, donc il est reste
+  // invisible tant que la scene etait un plan large ; le defilement, qui
+  // amene a chaque station un gros plan, l'a mis au premier plan.
+  //
+  // Trois, parce que c'est le facteur au-dela duquel la derive de teinte
+  // devient lisible : les demi-tons, qui passent sous cette borne, gardent
+  // exactement le rendu d'avant.
+  gl_FragColor.rgb *= min(quant / pas, 3.0);
 
   // --- Grain de papier ---------------------------------------------------
   //

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Locale } from "@/content/routes";
 import { useBureau } from "@/scene/bureau/etat";
 import { ZONES, zonePar } from "@/scene/bureau/zones";
@@ -22,6 +22,19 @@ export function Repere({ locale }: { locale: Locale }) {
   const survol = useBureau((e) => e.survol);
   const ouverte = useBureau((e) => e.ouverte);
   const z = survol ? zonePar(survol) : null;
+
+  // L'INVITE A DEFILER. Une scene qui remplit l'ecran sans montrer de barre —
+  // le canvas est fixe, la piste est vide — ne dit nulle part qu'elle continue.
+  // Sans ce mot, un visiteur regarde une image et s'en va. Il disparait des le
+  // premier quart d'ecran parcouru : une invite qui reste apres avoir ete suivie
+  // devient un element de decor.
+  const [debut, setDebut] = useState(true);
+  useEffect(() => {
+    const lire = () => setDebut(window.scrollY < window.innerHeight * 0.22);
+    lire();
+    window.addEventListener("scroll", lire, { passive: true });
+    return () => window.removeEventListener("scroll", lire);
+  }, []);
 
   // LE RETOUR EN ARRIERE. Sans panneau a fermer, il faut un chemin explicite
   // pour reculer — sinon on approche un objet et l'on reste coince dessus.
@@ -45,6 +58,18 @@ export function Repere({ locale }: { locale: Locale }) {
       >
         {z ? z.titre[locale] : ""}
         <span className="ml-2 text-dim">{z ? z.objet[locale] : ""}</span>
+      </div>
+
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none fixed bottom-10 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-2 text-xs tracking-[0.16em] text-dim uppercase transition-opacity duration-500 tactile:bottom-30 ${
+          debut && !z ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {locale === "fr" ? "Descendez" : "Scroll down"}
+        {/* Un trait qui descend, et non un chevron qui rebondit : le rebond
+            appartient aux applications de telephone, le trait au cinema. */}
+        <span className="h-8 w-px bg-gradient-to-b from-dim to-transparent" />
       </div>
 
       {/* Le bouton de retour, visible seulement quand on est approche. */}

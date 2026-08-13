@@ -5,7 +5,6 @@ import { Canvas } from "@react-three/fiber";
 import type { Locale } from "@/content/routes";
 import { Rig } from "./Rig";
 import { CHAMP } from "./zones";
-import { bureau } from "./etat";
 import { useRouter } from "next/navigation";
 import { routes } from "@/content/routes";
 import { PROJECTS } from "@/content/projects";
@@ -136,10 +135,10 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         // image au premier rendu.
         dpr={[1, 1.5]}
         shadows={{ type: THREE.PCFShadowMap }}
-        // Un clic hors de tout objet recule. R3F ne relance un lancer de rayon
-        // que sur evenement de pointeur, jamais parce que la camera a bouge :
-        // c'est donc le seul endroit ou l'on apprend qu'on a vise le vide.
-        onPointerMissed={() => bureau.fermer()}
+        // LE CLIC DANS LE VIDE NE FAIT PLUS RIEN. Il ramenait au plan large,
+        // ce qui avait un sens quand un clic ouvrait un panneau ; maintenant
+        // qu'il fait defiler, le meme geste renverrait au debut du trajet a la
+        // moindre maladresse. On recule en defilant, comme on avance.
       >
         <color attach="background" args={["#0a0b0d"]} />
         {/* La brume s'ouvre : a 0,19 elle mangeait le fond de la piece des un

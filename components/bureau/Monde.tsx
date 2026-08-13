@@ -3,6 +3,7 @@
 import { Suspense, lazy, useEffect, useState } from "react";
 import type { Locale } from "@/content/routes";
 import { refusDe3D } from "@/scene/capability";
+import { STATIONS, brancher } from "@/scene/bureau/defilement";
 import { Repere } from "./Repere";
 
 const Bureau = lazy(() => import("@/scene/bureau/Bureau"));
@@ -47,6 +48,13 @@ export function Monde({
     return () => mq.removeEventListener("change", evaluer);
   }, []);
 
+  // La lecture de la barre n'est branchee QUE si la scene l'est : sans canvas,
+  // la page n'a pas de piste a parcourir et l'ecouteur n'ecrirait dans le vide.
+  useEffect(() => {
+    if (!actif) return;
+    return brancher();
+  }, [actif]);
+
   return (
     <div data-3d={actif ? "on" : "off"} className="monde">
       {actif ? (
@@ -55,6 +63,24 @@ export function Monde({
         </Suspense>
       ) : null}
       {actif ? <Repere locale={locale} /> : null}
+
+      {/* LA PISTE : un ecran de hauteur par station, et rien d'autre.
+
+          C'est ce qui donne a la page de quoi defiler alors que le canvas est
+          fixe. Un seul bloc de « 600vh » aurait fait le meme effet, mais le
+          nombre aurait vecu dans la feuille de style pendant que les stations
+          vivent dans `defilement.ts` : ajouter une section aurait allonge le
+          trajet sans allonger la piste, et la derniere station serait devenue
+          inatteignable. Ici les deux comptent la meme liste.
+
+          `h-screen`, donc 100vh et non 100dvh : sur telephone, la hauteur
+          dynamique change quand la barre d'adresse se retracte, ce qui
+          modifierait la progression en plein defilement. */}
+      {actif
+        ? STATIONS.map((id, i) => (
+            <div key={id ?? "large"} aria-hidden="true" className="h-screen" data-station={i} />
+          ))
+        : null}
 
       {/* Le site complet, TOUJOURS rendu et jamais retire. Invisible quand le
           bureau est la, il revient au focus — `opacity` et non `display: none`,

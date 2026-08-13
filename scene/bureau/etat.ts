@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { allerA, indexDe } from "./defilement";
 import type { IdZone } from "./zones";
 
 // L'etat du bureau : quelle zone est survolee, laquelle est ouverte.
@@ -17,12 +18,20 @@ import type { IdZone } from "./zones";
 
 type Etat = {
   readonly survol: IdZone | null;
+  /**
+   * La station ou l'on se trouve, ou `null` entre deux.
+   *
+   * ECRITE PAR LE RIG, jamais par un gestionnaire de clic : c'est une lecture de
+   * la barre de defilement, pas une intention. Le drapeau `enVol` a disparu avec
+   * la meme logique — il existait pour ignorer les clics pendant un vol de
+   * camera, et il n'y a plus de vol : il y a un defilement, qu'on peut
+   * interrompre a tout moment parce que c'est la main de l'utilisateur qui le
+   * tient.
+   */
   readonly ouverte: IdZone | null;
-  /** Vrai pendant le vol de camera : on ignore les clics le temps du trajet. */
-  readonly enVol: boolean;
 };
 
-let etat: Etat = { survol: null, ouverte: null, enVol: false };
+let etat: Etat = { survol: null, ouverte: null };
 const abonnes = new Set<() => void>();
 
 function poser(suite: Partial<Etat>) {
@@ -43,14 +52,17 @@ function poser(suite: Partial<Etat>) {
 export const bureau = {
   get: () => etat,
   set: poser,
+  // OUVRIR NE POSE PLUS D'ETAT : ça fait defiler. La camera a une seule source,
+  // et c'est la barre — un clic sur un objet est donc un raccourci de
+  // defilement, pas une seconde commande. `ouverte` redevient ce qu'il aurait
+  // toujours du etre : la lecture de la station ou l'on se trouve, ecrite par
+  // le rig, jamais par un gestionnaire de clic. Sans cette regle, cliquer puis
+  // toucher la molette faisait revenir la camera sur ses pas.
   ouvrir(id: IdZone) {
-    poser({ ouverte: id, survol: null, enVol: true });
+    allerA(indexDe(id));
   },
   fermer() {
-    poser({ ouverte: null, enVol: true });
-  },
-  volFini() {
-    poser({ enVol: false });
+    allerA(0);
   },
   subscribe(f: () => void) {
     abonnes.add(f);
@@ -70,6 +82,6 @@ export function useBureau<T>(choix: (e: Etat) => T): T {
   return useSyncExternalStore(
     bureau.subscribe,
     () => choix(etat),
-    () => choix({ survol: null, ouverte: null, enVol: false })
+    () => choix({ survol: null, ouverte: null })
   );
 }
