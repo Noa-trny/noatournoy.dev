@@ -17,6 +17,13 @@ import { policePrete } from "./peinture";
 // ne fait. Le carnet, lui, est du papier — il prend un materiau standard, passe
 // en `eclaire`.
 
+export type Ligne = {
+  /** Bord superieur de la ligne, dans le repere du peintre. */
+  readonly y0: number;
+  readonly y1: number;
+  readonly faire: () => void;
+};
+
 export function Dalle({
   peindre,
   largeur,
@@ -24,6 +31,8 @@ export function Dalle({
   position,
   rotation,
   eclaire = false,
+  lignes,
+  reference,
 }: {
   /** Le peintre, appele a chaque redessin. */
   peindre: () => THREE.CanvasTexture;
@@ -32,7 +41,12 @@ export function Dalle({
   position?: [number, number, number];
   rotation?: [number, number, number];
   eclaire?: boolean;
+  /** Bandes cliquables, en coordonnees du peintre. */
+  lignes?: readonly Ligne[];
+  /** Le repere du peintre, pour convertir les UV en pixels de toile. */
+  reference?: readonly [number, number];
 }) {
+  const [ligneSurvolee, setLigneSurvolee] = useState<number | null>(null);
   const [version, setVersion] = useState(0);
 
   const tex = useMemo(() => {
@@ -58,13 +72,70 @@ export function Dalle({
 
   if (!tex) return null;
 
+  // LE TEST DE CLIC SE FAIT EN COORDONNEES UV.
+  //
+  // Une surface peinte n'a pas de boutons : il n'y a qu'un maillage et une
+  // image. Mais l'evenement de R3F porte `uv`, c'est-a-dire l'endroit exact de
+  // la texture que le rayon a touche. On le reconvertit en pixels de toile et
+  // l'on sait quelle ligne a ete visee — sans un seul objet supplementaire dans
+  // la scene, donc sans alourdir le lancer de rayons.
+  //
+  // `1 - uv.y` parce que les UV montent quand les pixels de toile descendent.
+  const ligneSous = (uv?: THREE.Vector2 | null): number | null => {
+    if (!uv || !lignes || !reference) return null;
+    const y = (1 - uv.y) * reference[1];
+    const i = lignes.findIndex((l) => y >= l.y0 && y <= l.y1);
+    return i === -1 ? null : i;
+  };
+
+  const interactif = Boolean(lignes && reference);
+
   return (
-    <mesh position={position} rotation={rotation} raycast={() => {}}>
+    <mesh
+      position={position}
+      rotation={rotation}
+      raycast={interactif ? undefined : () => {}}
+      onPointerMove={
+        interactif
+          ? (e) => {
+              const i = ligneSous(e.uv);
+              setLigneSurvolee(i);
+              document.body.style.cursor = i === null ? "" : "pointer";
+            }
+          : undefined
+      }
+      onPointerOut={
+        interactif
+          ? () => {
+              setLigneSurvolee(null);
+              document.body.style.cursor = "";
+            }
+          : undefined
+      }
+      onClick={
+        interactif
+          ? (e) => {
+              const i = ligneSous(e.uv);
+              if (i === null) return;
+              e.stopPropagation();
+              lignes![i]!.faire();
+            }
+          : undefined
+      }
+    >
       <planeGeometry args={[largeur, hauteur]} />
       {eclaire ? (
         <meshStandardMaterial map={tex} roughness={0.95} metalness={0} />
       ) : (
-        <meshBasicMaterial map={tex} toneMapped={false} />
+        // La ligne survolee eclaircit TOUTE la dalle d'un cheveu. Surligner la
+        // ligne elle-meme demanderait de repeindre la toile a chaque mouvement
+        // de souris — quinze fois par seconde pour un retour que ce leger
+        // eclat suffit a donner, le curseur disant deja lequel.
+        <meshBasicMaterial
+          map={tex}
+          toneMapped={false}
+          color={ligneSurvolee === null ? "#ffffff" : "#c9d6ea"}
+        />
       )}
     </mesh>
   );

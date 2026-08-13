@@ -49,6 +49,18 @@ const JETONS = {
   accent: "#3b82f6",
 } as const;
 
+/**
+ * LA GEOMETRIE DES LIGNES, partagee entre le peintre et le test de clic.
+ *
+ * C'est la seule maniere honnete de rendre une surface peinte cliquable : le
+ * dessin et la zone sensible doivent lire les MEMES nombres. Les separer, c'est
+ * garantir qu'un jour la ligne cliquee ne sera plus celle qu'on voit — un
+ * decalage d'un pixel que personne ne remarque avant d'ouvrir le mauvais
+ * projet.
+ */
+export const LIGNES_PROJETS = { haut: 68, hauteur: 78, pas: 86, reference: [1024, 600] as const };
+export const LIGNES_CONTACT = { haut: 216, hauteur: 48, pas: 60, reference: [760, 460] as const };
+
 let REFERENCE: [number, number] = [1024, 600];
 
 function toile(l: number, h: number): [HTMLCanvasElement, Contexte] {
@@ -128,7 +140,7 @@ export function peindreProjets(locale: Locale): THREE.CanvasTexture {
   g.font = '500 17px "Inter", sans-serif';
   g.fillText(locale === "fr" ? "travaux — 6 projets" : "work — 6 projects", 100, 28);
 
-  let y = 68;
+  let y = LIGNES_PROJETS.haut;
   for (const p of PROJECTS) {
     g.fillStyle = JETONS.fondCarte;
     g.beginPath();
@@ -152,7 +164,7 @@ export function peindreProjets(locale: Locale): THREE.CanvasTexture {
     let x = 760;
     for (const t of p.tags.slice(0, 2)) x += pastille(g, x, y + 42, t);
 
-    y += 86;
+    y += LIGNES_PROJETS.pas;
   }
   return texture(c);
 }
@@ -360,7 +372,7 @@ export function peindreContact(locale: Locale): THREE.CanvasTexture {
     y += 44;
   }
 
-  y += 26;
+  y = LIGNES_CONTACT.haut + LIGNES_CONTACT.hauteur - 22;
   for (const l of ["noa.tournoy@supinfo.com", "github.com/Noa-trny", "linkedin.com/in/noa-tournoy"]) {
     g.fillStyle = JETONS.fondCarte;
     g.beginPath();
@@ -369,7 +381,7 @@ export function peindreContact(locale: Locale): THREE.CanvasTexture {
     g.fillStyle = JETONS.mid;
     g.font = '400 20px "Inter", sans-serif';
     g.fillText(l, 64, y + 4);
-    y += 60;
+    y += LIGNES_CONTACT.pas;
   }
   return texture(c);
 }

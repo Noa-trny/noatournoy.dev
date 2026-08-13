@@ -5,6 +5,10 @@ import { Canvas } from "@react-three/fiber";
 import type { Locale } from "@/content/routes";
 import { Rig } from "./Rig";
 import { bureau } from "./etat";
+import { useRouter } from "next/navigation";
+import { routes } from "@/content/routes";
+import { PROJECTS } from "@/content/projects";
+import { LIGNES_CONTACT, LIGNES_PROJETS } from "./peinture";
 import { Dalle } from "./Dalle";
 import {
   peindreApropos,
@@ -50,9 +54,9 @@ import {
 /** Le halo de la lampe : une sphere non eclairee, tres transparente. */
 function Halo() {
   return (
-    <mesh position={[-0.62, 1.24, -0.16]} raycast={() => {}}>
-      <sphereGeometry args={[0.42, 16, 12]} />
-      <meshBasicMaterial color="#ffcf90" transparent opacity={0.055} depthWrite={false} />
+    <mesh position={[-0.62, 1.26, -0.16]} raycast={() => {}}>
+      <sphereGeometry args={[0.52, 16, 12]} />
+      <meshBasicMaterial color="#ffe0b0" transparent opacity={0.04} depthWrite={false} />
     </mesh>
   );
 }
@@ -60,6 +64,48 @@ function Halo() {
 export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
   // Les peintres sont memorises sur la langue : sans ça, chaque rendu de
   // React en fabriquerait de nouveaux et `Dalle` repeindrait cinq toiles.
+  const routeur = useRouter();
+
+  // LES LIGNES CLIQUABLES, derivees de la meme geometrie que le dessin.
+  //
+  // Les projets naviguent par le routeur de Next : sans rechargement, et vers
+  // de vraies URL qui existent aussi dans le document. Les liens externes
+  // passent par `window.open` avec `noopener` — sans lui, la page ouverte
+  // recupere une reference vers celle-ci par `window.opener` et peut la
+  // rediriger.
+  const lignesProjets = useMemo(
+    () =>
+      PROJECTS.map((p, i) => ({
+        y0: LIGNES_PROJETS.haut + i * LIGNES_PROJETS.pas,
+        y1: LIGNES_PROJETS.haut + i * LIGNES_PROJETS.pas + LIGNES_PROJETS.hauteur,
+        faire: () => routeur.push(routes.project[locale](p.slug)),
+      })),
+    [routeur, locale]
+  );
+
+  const lignesContact = useMemo(() => {
+    const cibles: (() => void)[] = [
+      () => {
+        window.location.href = "mailto:noa.tournoy@supinfo.com";
+      },
+      () => {
+        window.open("https://github.com/Noa-trny", "_blank", "noopener,noreferrer");
+      },
+      () => {
+        window.open(
+          "https://www.linkedin.com/in/noa-tournoy/",
+          "_blank",
+          "noopener,noreferrer"
+        );
+      },
+    ];
+    return cibles.map((faire, i) => ({
+      y0: LIGNES_CONTACT.haut + i * LIGNES_CONTACT.pas,
+      y1: LIGNES_CONTACT.haut + i * LIGNES_CONTACT.pas + LIGNES_CONTACT.hauteur,
+      faire,
+    }));
+  }, []);
+
   const peintres = useMemo(
     () => ({
       projets: () => peindreProjets(locale),
@@ -95,17 +141,27 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         onPointerMissed={() => bureau.fermer()}
       >
         <color attach="background" args={["#0a0b0d"]} />
-        <fogExp2 attach="fog" args={["#0a0b0d", 0.19]} />
+        {/* La brume s'ouvre : a 0,19 elle mangeait le fond de la piece des un
+            metre, et tout le decor tombait dans une soupe uniforme. */}
+        <fogExp2 attach="fog" args={["#090a0d", 0.13]} />
 
-        {/* LA LAMPE. Portee, chaude, placee dans l'abat-jour. C'est la seule
+        {/* LA LAMPE. Portee, chaude, placee dans l'abat-jour.
+
+            LA FLAQUE ETAIT UN DISQUE, et c'est `distance` qui la decoupait : au
+            dela, la lumiere s'arrete NET. Une lampe ne s'arrete pas, elle
+            faiblit. On la porte donc assez loin pour que seule la decroissance
+            en carre agisse, et l'on baisse l'intensite d'autant. La couleur est
+            aussi moins ambree : a #ffd6a0 tout le bureau virait a l'orange, y
+            compris ce que la lampe n'atteint pas — signe d'une teinte trop
+            saturee, pas d'une lumiere trop forte. C'est la seule
             source qui projette une ombre : deux lumieres a ombres donneraient
             deux ombres par objet, ce qu'aucun bureau ne fait. */}
         <pointLight
-          position={[-0.62, 1.3, -0.14]}
-          intensity={3.4}
-          distance={4.2}
+          position={[-0.62, 1.32, -0.14]}
+          intensity={2.5}
+          distance={11}
           decay={2}
-          color="#ffd6a0"
+          color="#ffe4c4"
           castShadow
           shadow-mapSize={[1024, 1024]}
           shadow-bias={-0.0012}
@@ -116,17 +172,26 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
 
         {/* La lueur des ecrans, froide, sans ombre : elle remonte sur le clavier
             et sur le visage de celui qui n'est pas la. */}
-        <pointLight position={[0.1, 1.15, -0.35]} intensity={0.9} distance={2.4} decay={2} color="#7fb0ff" />
+        <pointLight
+          position={[0.1, 1.12, -0.3]}
+          intensity={1.35}
+          distance={5}
+          decay={2}
+          color="#8fbcff"
+        />
 
         {/* L'ambiante, tres faible et bleue : elle empeche le noir absolu sans
             eclairer la piece. */}
-        <hemisphereLight args={["#33415c", "#0d0f14", 0.55]} />
+        {/* L'ambiante remonte : le froid doit exister ailleurs que sous les
+            ecrans, sinon le chaud de la lampe n'a rien contre quoi se detacher
+            et l'image entiere passe orange. */}
+        <hemisphereLight args={["#3d4f70", "#0e1116", 0.85]} />
 
         {/* Le sol. Il n'existe que pour recevoir l'ombre du bureau — sans lui,
             le meuble flotte. Sans trait : un contour sur un plan infini
             dessinerait un cadre autour de la scene. */}
         <Forme
-          reglages={{ couleur: "#15171d", paliers: 3, grain: 0.1, plancher: 0.3 }}
+          reglages={{ couleur: "#0f1116", paliers: 3, grain: 0.08, plancher: 0.16 }}
           position={[0, 0, 0]}
           rotation={[-Math.PI / 2, 0, 0]}
           trait={0}
@@ -137,7 +202,14 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
 
         {/* Le mur du fond, juste derriere les ecrans : il donne une butee au
             regard et recoit le halo de la lampe. */}
-        <Forme reglages={{ couleur: "#1b1e26", paliers: 3, grain: 0.12, plancher: 0.28 }} position={[0, 1.4, -1.05]} trait={0}>
+        {/* Le mur descend en valeur. A #1b1e26 avec un plancher a 0,28, il
+            renvoyait presque autant que le plateau eclaire : le bureau n'etait
+            plus un ilot dans le noir, mais un objet pose sur un fond gris. */}
+        <Forme
+          reglages={{ couleur: "#12151b", paliers: 3, grain: 0.1, plancher: 0.14 }}
+          position={[0, 1.4, -1.05]}
+          trait={0}
+        >
           <boxGeometry args={[7, 2.8, 0.06]} />
         </Forme>
 
@@ -146,14 +218,26 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         {/* Les deux ecrans, legerement tournes vers le siege : un ecran droit
             face au monde est un ecran de vitrine, pas de travail. */}
         <Ecran position={[-0.32, 0.7675, -0.34]} rotation={[0, 0.22, 0]}>
-          <Dalle peindre={peintres.projets} largeur={0.58} hauteur={0.34} />
+          <Dalle
+            peindre={peintres.projets}
+            largeur={0.58}
+            hauteur={0.34}
+            lignes={lignesProjets}
+            reference={LIGNES_PROJETS.reference}
+          />
         </Ecran>
         <Ecran position={[0.5, 0.7675, -0.3]} rotation={[0, -0.3, 0]} largeur={0.54} hauteur={0.34}>
           <Dalle peindre={peintres.apropos} largeur={0.5} hauteur={0.3} />
         </Ecran>
 
         <Portable position={[1.02, 0.7675, 0.16]} rotation={[0, -0.62, 0]}>
-          <Dalle peindre={peintres.contact} largeur={0.31} hauteur={0.19} />
+          <Dalle
+            peindre={peintres.contact}
+            largeur={0.31}
+            hauteur={0.19}
+            lignes={lignesContact}
+            reference={LIGNES_CONTACT.reference}
+          />
         </Portable>
         <Saisie position={[-0.18, 0.7675, 0.28]} />
         {/* LE CARNET EST OUVERT, et sa page porte la frise. Ferme, il ne
