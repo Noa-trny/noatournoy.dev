@@ -46,6 +46,16 @@ export type Cert = {
 };
 
 export type HomeCopy = {
+  /**
+   * Le titre principal, en trois morceaux : le nom, le metier, puis la fin
+   * mise en avant. Il est ICI et non dans le composant parce qu'il etait
+   * ecrit en dur, en français, et rendu tel quel sur la page anglaise — dans
+   * un `<html lang="en">`, sous le premier element qu'un lecteur d'ecran
+   * annonce et que les moteurs indexent. Tout le reste de la page passait par
+   * `content/` ; seul lui y echappait, donc le controle de parite ne pouvait
+   * pas le voir.
+   */
+  readonly heroTitre: readonly [string, string, string];
   readonly heroSub: readonly Seg[];
   readonly heroCta: string;
   readonly heroCardLabel: string;
@@ -68,6 +78,7 @@ export type HomeCopy = {
 
 export const home: Readonly<Record<Locale, HomeCopy>> = {
   "fr": {
+    "heroTitre": ["Noa Tournoy,", "développeur full-stack", "& systèmes"],
     "heroSub": [
       {
         "t": "Étudiant ingénieur à Lille, spécialisé en ",
@@ -402,6 +413,7 @@ export const home: Readonly<Record<Locale, HomeCopy>> = {
     ]
   },
   "en": {
+    "heroTitre": ["Noa Tournoy,", "full-stack developer", "& systems"],
     "heroSub": [
       {
         "t": "Engineering student in Lille, France, focused on ",

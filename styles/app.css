@@ -390,6 +390,34 @@
   pointer-events: none;
   transition: opacity 220ms ease;
 }
+/* L'habillage — evitement, barre de navigation, pied — suit la meme regle que
+   les sections : present dans le document, invisible tant que la scene tourne,
+   rendu des qu'un element y prend le focus. FIXE et non seulement transparent,
+   parce qu'un element dans le flux ajouterait sa hauteur a la piste et
+   decalerait la camera de toutes les stations. */
+.monde[data-3d="on"] .chrome-haut,
+.monde[data-3d="on"] .chrome-bas {
+  position: fixed;
+  right: 0;
+  left: 0;
+  z-index: 60;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+.monde[data-3d="on"] .chrome-haut {
+  top: 0;
+}
+.monde[data-3d="on"] .chrome-bas {
+  bottom: 0;
+}
+.monde[data-3d="on"] .chrome-haut:focus-within,
+.monde[data-3d="on"] .chrome-bas:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  background: var(--color-bg);
+}
+
 .monde[data-3d="on"] .station-fond:focus-within {
   opacity: 1;
   pointer-events: auto;

@@ -4,6 +4,8 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import type { Locale } from "@/content/routes";
 import { refusDe3D } from "@/scene/capability";
+import { pair } from "@/content/routes";
+import { Footer, Header, Skip } from "@/components/chrome/Chrome";
 import { STATIONS, brancher } from "@/scene/bureau/defilement";
 import { Repere } from "./Repere";
 
@@ -84,7 +86,22 @@ export function Monde({
       ) : null}
       {actif ? <Repere locale={locale} /> : null}
 
-      <main id="contenu">
+      {/* L'HABILLAGE MANQUAIT ENTIEREMENT SUR L'ACCUEIL, et c'est la refonte de
+          `Monde` qui l'a emporte : lien d'evitement, barre de navigation et
+          SELECTEUR DE LANGUE. Les metadonnees continuaient d'annoncer la paire
+          FR/EN a Google pendant qu'aucun lien de la page n'y menait.
+
+          Il est fixe quand la scene tourne — et non simplement transparent —
+          parce qu'un en-tete dans le flux ajouterait sa hauteur a la piste :
+          les stations valent un ecran chacune, et cinquante-sept pixels de plus
+          decaleraient la camera de toutes les stations d'un cheveu croissant.
+          Fixe, il ne pese rien dans la hauteur du document. */}
+      <div className="chrome-haut">
+        <Skip locale={locale} />
+        <Header pair={pair.home} locale={locale} />
+      </div>
+
+      <main id="contenu" tabIndex={-1}>
         {STATIONS.map((st, i) => {
           const s = sections.find((x) => x.cle === st.cle);
           return (
@@ -98,6 +115,10 @@ export function Monde({
           );
         })}
       </main>
+
+      <div className="chrome-bas">
+        <Footer locale={locale} />
+      </div>
     </div>
   );
 }

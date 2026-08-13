@@ -19,6 +19,7 @@ import { Reveal } from "@/components/ui/Reveal";
 export function Hero({ locale }: { locale: Locale }) {
   const c = home[locale];
   const accroche = c.heroSub.map((s) => s.t).join("");
+  const titre = c.heroTitre;
 
   return (
     <section className="relative mx-auto w-full max-w-6xl px-6 pt-28 pb-20 sm:px-8 sm:pt-36 sm:pb-28">
@@ -43,12 +44,12 @@ export function Hero({ locale }: { locale: Locale }) {
 
       <Reveal delai={60}>
         <h1 className="mt-7 max-w-4xl text-[clamp(2.6rem,7vw,4.75rem)] leading-[1.03] font-semibold">
-          Noa Tournoy,
+          {titre[0]}
           <br />
-          <span className="text-mid">développeur full-stack</span>
+          <span className="text-mid">{titre[1]}</span>
           <br />
           <span className="bg-[linear-gradient(100deg,var(--color-fg),var(--color-accent-soft))] bg-clip-text text-transparent">
-            &amp; systèmes
+            {titre[2]}
           </span>
         </h1>
       </Reveal>
