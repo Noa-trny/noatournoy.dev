@@ -49,7 +49,7 @@ export default async function GlobalNotFound() {
           Aller au contenu
         </a>
 
-        <div className="head-band">
+        <div>
           <header className="tophead wrap">
             <a className="mark" href="/">
               Portfolio
@@ -58,7 +58,7 @@ export default async function GlobalNotFound() {
         </div>
 
         <main id="contenu" tabIndex={-1}>
-          <section className="sec band-sec light" aria-labelledby="titre">
+          <section aria-labelledby="titre">
             <div className="wrap">
               <p className="label">
                 <span>Erreur 404</span>

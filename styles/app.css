@@ -121,6 +121,100 @@
     transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* ---------------------------------------------------------------------------
+   DEUX UTILITAIRES DE PLUS, ET POURQUOI ILS ONT LEUR PLACE ICI
+
+   Le commentaire au-dessus dit « trois seulement », et c'etait vrai tant que
+   tout le contenu etait ecrit en composants. Ces deux-la stylent du HTML LIBRE —
+   des `<dl>` et des `<ul>` ecrits a la main dans six pages — qu'aucune classe
+   Tailwind posee sur le parent n'atteint sans une chaine de variantes
+   `[&_dt]:… [&_dd]:…` recopiee six fois.
+
+   ELLES REPARENT UNE PANNE, ET PAS UNE PREFERENCE. `kv` et `prose` venaient de
+   `spec.css`, retiree a la refonte sombre : depuis, les corps de /contact/ et
+   /savoir-faire/ — dans les deux langues — s'empilaient en texte nu sous un
+   en-tete correctement habille. Les controles automatiques ne l'ont pas vu, et
+   c'est instructif : la page avait bien son en-tete, son pied, son titre, son
+   fond sombre et aucun debordement. Il a fallu la REGARDER.
+--------------------------------------------------------------------------- */
+
+/* Une liste de definitions en deux colonnes : l'etiquette a gauche, la valeur a
+   droite, un filet entre chaque paire. En dessous de 40rem elle s'empile — deux
+   colonnes sur 390 px donneraient six caracteres par ligne. */
+@utility kv {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+
+  & > dt {
+    margin-top: 1.75rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+  }
+  & > dd {
+    margin: 0.4rem 0 0;
+    color: var(--color-mid);
+  }
+
+  @media (width >= 40rem) {
+    grid-template-columns: 13rem minmax(0, 1fr);
+
+    /* Le filet est porte par les DEUX cellules d'une meme ligne, sinon il
+       s'arrete au milieu : dans une grille, une bordure appartient a la cellule
+       et non a la rangee.
+
+       ET LA GOUTTIERE EST DANS L'ETIQUETTE, pas dans la grille. Un
+       `column-gap` coupait le filet en deux troncons separes par un blanc de
+       deux centimetres — la bordure s'arrete au bord de la cellule, pas au
+       bord de la rangee. Le meme espacement, pose en remplissage a droite du
+       `dt`, laisse le trait continu d'un bout a l'autre. */
+    & > dt,
+    & > dd {
+      margin-top: 0;
+      padding-top: 1.25rem;
+      padding-bottom: 1.25rem;
+      border-top: 1px solid var(--color-line);
+    }
+    & > dt {
+      padding-right: 2rem;
+    }
+  }
+}
+
+/* Du texte libre : la meme grammaire que la prose des fiches projet, qui la
+   porte en chaine de variantes sur place. */
+@utility prose {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  color: var(--color-mid);
+
+  & a {
+    color: var(--color-accent-soft);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+  & strong {
+    font-weight: 500;
+    color: var(--color-fg);
+  }
+  & ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0;
+  }
+  & li {
+    margin-left: 1.25rem;
+    list-style: disc;
+  }
+  & p {
+    margin: 0;
+  }
+}
+
 /* Revelation au defilement, pilotee par un IntersectionObserver minuscule
    plutot que par une bibliotheque d'animation. Voir components/ui/Reveal.tsx
    pour le raisonnement. */
