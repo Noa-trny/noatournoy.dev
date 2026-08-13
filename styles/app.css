@@ -174,7 +174,19 @@
      la barre d'adresse se retracte, ce qui deplacerait toutes les stations en
      plein defilement. */
   height: 100vh;
+  /* `relative` parce que la section, en `absolute`, s'y accroche. */
   position: relative;
+  /* ET TRANSPARENTE AUX CLICS, sans quoi la piste avale toute la scene.
+     Le canvas est `fixed`, les stations sont `relative` : deux elements
+     positionnes sans `z-index` s'empilent dans l'ordre du DOM, et `main` vient
+     apres le canvas. Les huit ecrans de piste se posaient donc PAR-DESSUS
+     l'image — invisibles, puisqu'ils ne peignent rien, mais interceptant chaque
+     clic destine a un objet du bureau. `elementsFromPoint` au centre de l'ecran
+     renvoyait `DIV.station` avant `CANVAS`.
+     Un `z-index` sur le canvas aurait marche aussi, et aurait masque la cause :
+     la piste n'est pas une couche d'interface, c'est une entretoise. Elle n'a
+     rien a recevoir. La section, elle, redevient cliquable au focus. */
+  pointer-events: none;
 }
 
 /* La section reste dans le document — jamais `display: none` ni `hidden`, qui
