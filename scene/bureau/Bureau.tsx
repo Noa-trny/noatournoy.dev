@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import type { Locale } from "@/content/routes";
 import { Rig } from "./Rig";
+import { CHAMP } from "./zones";
 import { bureau } from "./etat";
 import { useRouter } from "next/navigation";
 import { routes } from "@/content/routes";
@@ -123,7 +124,7 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         // Trois quarts, legerement en plongee : c'est l'angle d'ou l'on voit un
         // bureau quand on s'en approche, et le seul qui montre a la fois les
         // ecrans et le plateau. De face, les objets poses disparaissent.
-        camera={{ fov: 32, near: 0.05, far: 40, position: [2.35, 1.98, 2.85] }}
+        camera={{ fov: CHAMP, near: 0.05, far: 40, position: [2.35, 1.98, 2.85] }}
         gl={{ antialias: true }}
         // LA CAMERA DOIT VISER, et R3F ne le fait pas pour vous. Sans `lookAt`,
         // elle regarde droit devant elle le long de -Z : placee en hauteur et de

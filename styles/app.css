@@ -147,6 +147,14 @@
 }
 
 
+/* LE POINTEUR GROSSIER, ET NON « MOBILE ».
+
+   La question n'est pas la largeur de l'ecran mais l'existence du SURVOL : sur
+   une dalle tactile, l'etiquette qui nomme l'objet vise ne se declenche jamais,
+   et la scene devient un decor sans mode d'emploi. `hover: none` couvre le
+   telephone, la tablette et l'ecran tactile de bureau ; une largeur, non. */
+@custom-variant tactile (@media (hover: none));
+
 /* ---------------------------------------------------------------------------
    LE MONDE ET SON REPLI
 

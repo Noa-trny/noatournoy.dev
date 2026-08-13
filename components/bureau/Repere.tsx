@@ -59,21 +59,35 @@ export function Repere({ locale }: { locale: Locale }) {
       </button>
 
       {/* LES BOUTONS SOUS LE CANVAS SONT LA VRAIE NAVIGATION.
-      
+
           Le survol et le clic dans la scene sont un agrement ; ceux-ci sont
           atteignables au clavier et lus par un lecteur d'ecran. Ils ne sont pas
           caches par `display: none` — ce qui les sortirait de l'ordre de
-          tabulation — mais rendus transparents et reveles au focus. */}
+          tabulation — mais rendus transparents et reveles au focus.
+
+          AU POINTEUR GROSSIER, ILS SONT LA NAVIGATION TOUT COURT. Deux raisons
+          se rejoignent : sans survol, rien ne dit qu'un objet est vise ; et le
+          cadrage portrait ne peut pas contenir les cinq objets a la fois — leurs
+          2,20 m de plateau demanderaient sept metres de recul (voir zones.ts).
+          Ils passent donc au centre, visibles, plutot que de rester un carre
+          transparent dans un coin — c'est-a-dire, sur telephone, une zone qui
+          navigue sans rien montrer.
+
+          `pointer-events-none` tant qu'ils sont invisibles : le focus clavier
+          traverse cette propriete, le doigt non. */}
       <nav
         aria-label={locale === "fr" ? "Sections" : "Sections"}
-        className="fixed bottom-6 left-6 z-30 flex flex-wrap gap-2 opacity-0 transition-opacity focus-within:opacity-100"
+        className="pointer-events-none fixed bottom-6 left-6 z-30 flex flex-wrap gap-2 opacity-0 transition-opacity focus-within:pointer-events-auto focus-within:opacity-100 tactile:pointer-events-auto tactile:right-4 tactile:bottom-5 tactile:left-4 tactile:justify-center tactile:opacity-100"
       >
         {ZONES.map((zone) => (
           <button
             key={zone.id}
             type="button"
             onClick={() => bureau.ouvrir(zone.id)}
-            className="rounded-full border border-line bg-surface px-3 py-2 text-xs text-mid hover:border-accent hover:text-fg"
+            // Le plancher de 44 px au doigt vaut pour les cinq : une pastille de
+            // 30 px de haut se rate une fois sur trois, et c'est ici le seul
+            // chemin vers le contenu.
+            className="rounded-full border border-line bg-surface/85 px-3 py-2 text-xs text-mid backdrop-blur hover:border-accent hover:text-fg tactile:min-h-11 tactile:px-4 tactile:text-sm"
           >
             {zone.titre[locale]}
           </button>
