@@ -1,9 +1,13 @@
 import { Home } from "@/components/home/Home";
+import { Monde } from "@/components/bureau/Monde";
 
-// The English home page. See app/(fr)/page.tsx for the reasoning; the content
-// lives in content/home.ts and content/projects.ts, and the page only picks the
-// language.
+// The English home page. See app/(fr)/page.tsx for the reasoning: the server
+// renders the full portfolio, the 3D desk is layered on after hydration.
 
 export default function HomePage() {
-  return <Home locale="en" />;
+  return (
+    <Monde locale="en">
+      <Home locale="en" />
+    </Monde>
+  );
 }

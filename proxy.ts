@@ -62,7 +62,7 @@ export const config = {
       // Les actifs statiques n'ont pas besoin de nonce et ne doivent pas payer
       // une invocation de fonction a chaque requete.
       source:
-        "/((?!_next/static|_next/image|favicon\\.ico|favicon\\.svg|apple-touch-icon\\.png|og\\.png|robots\\.txt|fonts/|assets/|models/|hdr/).*)",
+        "/((?!_next/static|_next/image|favicon\\.ico|favicon\\.svg|apple-touch-icon\\.png|og\\.png|robots\\.txt|fonts/|assets/).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },

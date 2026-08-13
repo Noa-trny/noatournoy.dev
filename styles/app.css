@@ -145,3 +145,28 @@
     transition: none;
   }
 }
+
+
+/* ---------------------------------------------------------------------------
+   LE MONDE ET SON REPLI
+
+   Quand le bureau 3D tourne, le site complet reste dans le document mais sort
+   de la vue. `opacity` et NON `display: none` ni `hidden` : ces deux-la
+   retirent l'element de l'ordre de tabulation et de l'arbre d'accessibilite,
+   ce qui est exactement l'inverse du but. Le contenu revient des qu'un element
+   y prend le focus — le meme mecanisme qu'un lien d'evitement.
+--------------------------------------------------------------------------- */
+.monde[data-3d="on"] .monde-dom {
+  position: fixed;
+  inset: 0;
+  overflow: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+.monde[data-3d="on"] .monde-dom:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+  background: var(--color-bg);
+  z-index: 60;
+}

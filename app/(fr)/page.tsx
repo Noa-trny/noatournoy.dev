@@ -1,13 +1,18 @@
 import { Home } from "@/components/home/Home";
+import { Monde } from "@/components/bureau/Monde";
 
-// L'accueil francais. Tout son contenu vit dans content/home.ts et
-// content/projects.ts ; la page ne fait que choisir la langue.
+// L'accueil francais.
 //
-// La scene 3D a ete retiree. Elle avait coute beaucoup et ne servait pas le
-// propos : une villa mediterraneenne photorealiste ne dit rien d'un ingenieur
-// en cybersecurite, et les projets y etaient des panneaux plantes dans un
-// jardin. Le code reste dans le depot, sous `scene/`, non monte.
+// Le SERVEUR rend le portfolio complet ; le bureau 3D vient par-dessus apres
+// hydratation, quand la machine le permet. C'est ce qui garantit que le
+// referencement, le clavier et les navigateurs sans WebGL voient le meme site
+// que tout le monde — et c'est la seule propriete que les trois refontes de ce
+// projet n'ont pas entamee.
 
 export default function Accueil() {
-  return <Home locale="fr" />;
+  return (
+    <Monde locale="fr">
+      <Home locale="fr" />
+    </Monde>
+  );
 }

@@ -94,25 +94,8 @@ const config: NextConfig = {
           },
         ],
       },
-      // Les modeles 3D et l'environnement lumineux, a partir de la phase 7.
-      {
-        source: "/models/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
-      {
-        source: "/hdr/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, immutable",
-          },
-        ],
-      },
+      // Les modeles 3D et l'HDRI ont disparu avec la villa : le monde est
+      // desormais entierement code, sans un octet d'asset a mettre en cache.
     ];
   },
 };

@@ -58,6 +58,12 @@ export function Repere({ locale }: { locale: Locale }) {
         ← {locale === "fr" ? "Reculer" : "Step back"}
       </button>
 
+      {/* LES BOUTONS SOUS LE CANVAS SONT LA VRAIE NAVIGATION.
+      
+          Le survol et le clic dans la scene sont un agrement ; ceux-ci sont
+          atteignables au clavier et lus par un lecteur d'ecran. Ils ne sont pas
+          caches par `display: none` — ce qui les sortirait de l'ordre de
+          tabulation — mais rendus transparents et reveles au focus. */}
       <nav
         aria-label={locale === "fr" ? "Sections" : "Sections"}
         className="fixed bottom-6 left-6 z-30 flex flex-wrap gap-2 opacity-0 transition-opacity focus-within:opacity-100"
