@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { FontPreload } from "./shared-head";
-import "@/styles/spec.css";
+import "@/styles/app.css";
 
 // `global-not-found.tsx` et non `not-found.tsx` : il n'existe pas de
 // app/layout.tsx dans lequel rendre une page d'erreur, puisque les deux layouts
