@@ -63,14 +63,32 @@ export const VUE_COULOIR = {
   champ: 58,
 };
 
-/** En portrait le cadre est haut : ce sont le sol et le plafond qui le remplissent. */
+/**
+ * LE COULOIR EN PORTRAIT : plus loin, et plus ouvert.
+ *
+ * Ce plan a rate deux fois, et la seconde fois pour une raison qui se calcule.
+ * La demi-largeur cadree vaut `tan(champ/2) x rapport x distance` : a 64 degres
+ * sur un rapport de telephone, les murs a 1,10 m n'entrent dans le cadre qu'a
+ * 3,80 m devant soi. Or il n'y avait que 2,90 m de couloir devant la camera —
+ * les murs n'apparaissaient donc QU'APRES le seuil, c'est-a-dire jamais en tant
+ * que couloir. On voyait une boite noire avec deux plafonniers.
+ *
+ * Deux leviers, tous deux necessaires. On recule jusqu'au fond du passage, ce
+ * qui porte la course visible a cinq metres ; et l'on ouvre a soixante-dix
+ * degres, ce qui fait entrer les murs des 3,40 m. Il reste alors 1,60 m de
+ * fuyantes laterales et prés de trois metres de sol — assez pour que le lieu se
+ * lise comme un couloir et non comme un cadre.
+ *
+ * Soixante-dix degres est beaucoup, et c'est assume : un tres grand angle est
+ * precisement l'objectif avec lequel on filme un couloir. La deformation des
+ * bords, qui trahirait un objet, ne trahit pas une perspective.
+ */
 export const VUE_COULOIR_PORTRAIT = {
-  oeil: [0, 1.52, 10.4] as const,
-  // Vise plus bas qu'en paysage : en portrait ce sont le SOL et le plafond qui
-  // remplissent le cadre, les murs lateraux n'y entrant jamais — a ce rapport,
-  // il faudrait un couloir de soixante-dix centimetres pour les voir.
-  cible: [0, 0.92, 2.2] as const,
-  champ: 64,
+  oeil: [0, 1.5, 12.4] as const,
+  // Vise plus bas qu'en paysage : dans un cadre haut, c'est le SOL qui porte la
+  // profondeur, et il faut le faire entrer tot.
+  cible: [0, 0.95, 2.2] as const,
+  champ: 70,
 };
 
 /**
