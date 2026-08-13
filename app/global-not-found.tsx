@@ -44,57 +44,83 @@ export default async function GlobalNotFound() {
       <head>
         <FontPreload />
       </head>
-      <body>
-        <a className="skip" href="#contenu">
+      {/* CETTE PAGE PORTAIT ENCORE LE BALISAGE DE L'ANCIEN SITE. Onze classes —
+          `wrap`, `tophead`, `fiche-title`, `foot-in`… — venaient de spec.css et
+          ne designaient plus rien depuis la refonte sombre. Elle s'affichait
+          quand meme, parce que les styles de base portent une page de texte,
+          mais elle n'avait aucune mise en page a elle : ni gouttiere, ni
+          rythme, ni hierarchie. Reecrite dans la grammaire du reste du site
+          plutot que dotee de onze utilitaires pour une seule page. */}
+      <body className="flex min-h-screen flex-col">
+        <a
+          href="#contenu"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-full focus:bg-fg focus:px-4 focus:py-2 focus:text-sm focus:text-bg"
+        >
           Aller au contenu
         </a>
 
-        <div>
-          <header className="tophead wrap">
-            <a className="mark" href="/">
-              Portfolio
+        <header className="border-b border-line">
+          <div className="mx-auto w-full max-w-6xl px-6 py-4 sm:px-8">
+            <a href="/" className="text-sm font-medium text-fg">
+              Noa&nbsp;Tournoy
             </a>
-          </header>
-        </div>
+          </div>
+        </header>
 
-        <main id="contenu" tabIndex={-1}>
-          <section aria-labelledby="titre">
-            <div className="wrap">
-              <p className="label">
-                <span>Erreur 404</span>
-              </p>
-              <h1 className="fiche-title" id="titre">
-                Page
-                <br />
-                introuvable
-              </h1>
-              <p className="hero-sub" lang="en">
-                This page does not exist.
-              </p>
-              <ul className="fiche-links">
-                <li>
-                  <a href="/">Retour à l&apos;accueil</a>
-                </li>
-                <li>
-                  <a href="/travaux/">Voir les travaux</a>
-                </li>
-                <li>
-                  <a href="/en/" lang="en" hrefLang="en">
-                    English version
+        <main id="contenu" tabIndex={-1} className="flex-1">
+          <section
+            aria-labelledby="titre"
+            className="mx-auto w-full max-w-3xl px-6 pt-24 pb-20 sm:px-8"
+          >
+            <p className="text-xs tracking-[0.14em] text-dim uppercase">Erreur 404</p>
+
+            <h1
+              id="titre"
+              className="mt-5 text-[clamp(2.25rem,6vw,3.5rem)] leading-[1.05] font-semibold"
+            >
+              Page introuvable
+            </h1>
+
+            <p className="mt-6 text-lg text-mid" lang="en">
+              This page does not exist.
+            </p>
+
+            {/* Trois sorties plutot qu'un seul retour : quelqu'un qui arrive ici
+                s'est trompe d'adresse, il ne sait pas forcement laquelle il
+                voulait. */}
+            <ul className="mt-10 flex flex-wrap gap-2">
+              {[
+                { href: "/", texte: "Retour à l’accueil" },
+                { href: "/travaux/", texte: "Voir les travaux" },
+                { href: "/en/", texte: "English version", lang: "en" },
+              ].map((l) => (
+                <li key={l.href}>
+                  <a
+                    href={l.href}
+                    {...(l.lang ? { lang: l.lang, hrefLang: l.lang } : {})}
+                    className="lueur inline-block rounded-full border border-line px-4 py-2 text-sm text-mid transition-colors hover:border-accent/60 hover:text-fg"
+                  >
+                    {l.texte}
                   </a>
                 </li>
-              </ul>
-            </div>
+              ))}
+            </ul>
           </section>
         </main>
 
-        <footer className="foot dark">
-          <div className="wrap foot-in">
+        <footer className="border-t border-line">
+          <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-10 text-sm text-dim sm:px-8">
             <span>Noa Tournoy — Lille, France</span>
-            <span>
-              <a href="https://eclosion.noatournoy.dev">Éclosion</a> ·{" "}
-              <a href="/travaux/">Travaux</a> ·{" "}
-              <a href="/contact/">Contact</a>
+            <span className="flex flex-wrap gap-5">
+              <a href="https://eclosion.noatournoy.dev" className="hover:text-fg">
+                Éclosion
+              </a>
+              <a href="/travaux/" className="hover:text-fg">
+                Travaux
+              </a>
+              <a href="/contact/" className="hover:text-fg">
+                Contact
+              </a>
             </span>
           </div>
         </footer>

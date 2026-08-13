@@ -215,6 +215,50 @@
   }
 }
 
+/* LA JAUGE DE DEFILEMENT, dont le JavaScript n'avait jamais cesse de tourner.
+
+   `Kinetics` est monte dans les deux layouts et anime `.progress i` depuis le
+   debut ; c'est la REGLE qui manquait, partie avec spec.css. Le balisage etait
+   donc la, le script aussi, et rien ne s'affichait — un defaut qu'aucune erreur
+   ne signale, puisque `querySelector` trouve bien l'element et que GSAP anime
+   sans broncher une boite de zero pixel.
+
+   LES DEUX HAUTEURS SONT LIEES PAR LE SCRIPT, pas par le gout : il deplace le
+   curseur de 355 % de sa propre hauteur. Pour qu'il parte du haut de la piste
+   et s'arrete pile en bas, il faut piste = curseur x 4,55. Vingt-deux et cent
+   pixels. Toute autre paire fait soit deborder le curseur, soit l'arreter avant
+   la fin — et dans les deux cas la jauge ment sur la position. */
+@utility progress {
+  position: fixed;
+  top: 50%;
+  right: 1.1rem;
+  z-index: 30;
+  width: 2px;
+  height: 100px;
+  transform: translateY(-50%);
+  border-radius: 1px;
+  background: var(--color-line);
+  /* Elle ne recoit rien : une barre fixe qui intercepte un clic est
+     exactement le defaut qui a rendu toute la scene 3D inerte. */
+  pointer-events: none;
+
+  & i {
+    display: block;
+    width: 100%;
+    height: 22px;
+    border-radius: 1px;
+    background: var(--color-accent);
+  }
+}
+
+/* Sous mouvement reduit, le script ne l'anime pas : elle resterait figee en
+   haut, ce qui se lit comme une jauge cassee plutot que comme une absence. */
+@media (prefers-reduced-motion: reduce) {
+  .progress {
+    display: none;
+  }
+}
+
 /* Revelation au defilement, pilotee par un IntersectionObserver minuscule
    plutot que par une bibliotheque d'animation. Voir components/ui/Reveal.tsx
    pour le raisonnement. */
