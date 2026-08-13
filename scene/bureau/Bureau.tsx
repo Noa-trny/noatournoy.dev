@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useMemo } from "react";
+import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import type { Locale } from "@/content/routes";
 import { Rig } from "./Rig";
@@ -22,6 +22,7 @@ import * as THREE from "three";
 import { Forme } from "../croquis/Forme";
 import { Couloir } from "./Couloir";
 import { OmbresFigees } from "./Ombres";
+import { Optionnel } from "../croquis/Optionnel";
 import {
   Carnet,
   Ecran,
@@ -334,9 +335,9 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             eclaire
           />
         </Machine>
-        {/* SA PROPRE FRONTIERE, comme le casque : cent-dix kilooctets ne
-            doivent pas retenir l'affichage du couloir. */}
-        <Suspense fallback={null}>
+        {/* Comme le casque : cent-dix kilooctets ne doivent retenir ni
+            l'affichage du couloir, ni le sort du site. */}
+        <Optionnel nom="le fauteuil">
           {/* Decale a gauche ET devant le plateau. A z = 0,95 il est hors du
               meuble — qui fait un metre cinquante de profondeur — et a x = -0,5
               il laisse libre la ligne de visee du plan large vers l'ecran
@@ -344,11 +345,11 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
               pousse sous le bureau aurait traverse le plateau ; un siege
               centre aurait masque la liste des travaux. */}
           <Fauteuil position={[-0.5, 0, 0.95]} rotation={[0, Math.PI, 0]} />
-        </Suspense>
+        </Optionnel>
 
         <Lampe position={[-1.32, 0.7675, -0.6]} />
         <Mug position={[0.28, 0.7675, 0.36]} />
-        <Suspense fallback={null}>
+        <Optionnel nom="les plantes">
           {/* Celle du plateau : la meme plante, a trente centimetres. */}
           <Plante position={[1.42, 0.7675, -0.46]} rotation={[0, 0.7, 0]} echelle={0.3} />
           {/* ET UNE DE SOL, a sa taille reelle. La piece etait un volume vide
@@ -357,20 +358,18 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
               lampe, donne une deuxieme profondeur — et il ne coute aucun
               telechargement de plus, le fichier etant deja en cache. */}
           <Plante position={[2.55, 0, -0.35]} rotation={[0, -0.9, 0]} />
-        </Suspense>
+        </Optionnel>
         {/* Le cote droit etait vide : trois objets suffisent a l'habiter, et
             chacun apporte une hauteur differente — c'est la variation de
             hauteur qui fait un plateau vecu plutot qu'un plan de travail. */}
         <Livres position={[1.36, 0.7675, 0.18]} rotation={[0, -0.42, 0]} />
-        {/* SA PROPRE FRONTIERE DE SUSPENSE, et non celle de la scene. Le
-            casque est le seul objet qui se telecharge ; partager la frontiere
-            du monde ferait attendre le bureau entier — couloir compris — sur
-            vingt-six kilooctets. Le repli est `null` et non un element du DOM :
-            dans un canvas, React reconcilie des objets three, pas des balises,
-            et un div en repli fait planter le reconciliateur. */}
-        <Suspense fallback={null}>
+        {/* SA PROPRE FRONTIERE, et non celle de la scene : partager celle du
+            monde ferait attendre le bureau entier — couloir compris — sur
+            vingt-six kilooctets. Et une frontiere qui SURVIT a l'echec : voir
+            Optionnel, un modele manquant detruisait la page. */}
+        <Optionnel nom="le casque">
           <Casque position={[0.92, 0.7675, -0.52]} />
-        </Suspense>
+        </Optionnel>
         <Feuillets position={[0.58, 0.7675, 0.42]} />
 
         <Halo />
