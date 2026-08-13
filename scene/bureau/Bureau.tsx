@@ -54,7 +54,7 @@ import {
 /** Le halo de la lampe : une sphere non eclairee, tres transparente. */
 function Halo() {
   return (
-    <mesh position={[-0.62, 1.26, -0.16]} raycast={() => {}}>
+    <mesh position={[-1.0, 1.2, -0.45]} raycast={() => {}}>
       <sphereGeometry args={[0.52, 16, 12]} />
       <meshBasicMaterial color="#ffe0b0" transparent opacity={0.04} depthWrite={false} />
     </mesh>
@@ -157,7 +157,12 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             source qui projette une ombre : deux lumieres a ombres donneraient
             deux ombres par objet, ce qu'aucun bureau ne fait. */}
         <pointLight
-          position={[-0.62, 1.32, -0.14]}
+          // LA SOURCE EST DANS L'ABAT-JOUR, et elle n'y etait pas : elle
+          // flottait cinquante centimetres a sa droite, si bien que la flaque
+          // ne tombait pas sous la lampe. Personne ne l'avait vu parce qu'une
+          // flaque ronde a l'air juste ou qu'elle soit — jusqu'a ce qu'on
+          // regarde la lampe et la flaque ensemble.
+          position={[-1.0, 1.2, -0.45]}
           intensity={2.5}
           distance={11}
           decay={2}
@@ -269,7 +274,7 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             eclaire
           />
         </Machine>
-        <Lampe position={[-1.16, 0.7675, -0.52]} />
+        <Lampe position={[-1.32, 0.7675, -0.6]} />
         <Mug position={[0.28, 0.7675, 0.36]} />
         <Plante position={[1.42, 0.7675, -0.46]} />
         {/* Le cote droit etait vide : trois objets suffisent a l'habiter, et

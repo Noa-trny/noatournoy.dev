@@ -24,9 +24,9 @@ export default function ContactFr() {
       <Skip locale="fr" />
       <Header pair={pair.contact} locale="fr" />
       <main id="contenu" tabIndex={-1}>
-        <section className="sec band-sec light" aria-labelledby="titre">
-          <div className="wrap">
-            <p className="label">
+        <section className="mx-auto max-w-4xl px-6 pt-20 pb-14 sm:px-8" aria-labelledby="titre">
+          <div>
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs tracking-[0.14em] text-dim uppercase">
               <span>contact</span>
               <span>Lille, France</span>
             </p>
@@ -52,9 +52,9 @@ export default function ContactFr() {
           </div>
         </section>
 
-        <section className="sec band-sec dark" aria-labelledby="quoi">
-          <div className="wrap">
-            <h2 className="sec-title" id="quoi">
+        <section className="mx-auto max-w-4xl border-t border-line px-6 py-14 sm:px-8" aria-labelledby="quoi">
+          <div>
+            <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold" id="quoi">
               Ce qui vaut <em>le message</em>.
             </h2>
             <div className="prose">

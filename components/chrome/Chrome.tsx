@@ -1,150 +1,112 @@
+import Link from "next/link";
 import type { Locale, Pair } from "@/content/routes";
 import { routes } from "@/content/routes";
 import { ui } from "@/content/ui";
 
-// L'habillage partage : lien d'evitement, entete, tiroir de menu, pied de page.
-// Il etait recopie dans 21 fichiers HTML ; il vit desormais ici, une fois.
+// L'HABILLAGE DES PAGES INTERIEURES.
 //
-// Aucun de ces composants n'est client : ils ne font que produire du balisage.
-// Le comportement du menu (Echap, retour du focus, aria-expanded) revient en
-// phase 4, avec le reste du mouvement.
+// Reecrit pour le theme sombre. L'ancienne version dependait de `spec.css` —
+// 1393 lignes de bandes alternees et de vert acide — retiree des layouts avec la
+// refonte : les onze pages autres que l'accueil s'affichaient donc nues.
+//
+// LE TIROIR DE MENU A DISPARU. Il existait parce que l'ancien site avait cinq
+// sections d'accueil a atteindre depuis n'importe ou, et il tirait un module de
+// comportement en GSAP pour s'ouvrir. Quatre destinations tiennent dans une
+// barre ; un tiroir pour quatre liens, c'est un clic de plus pour rien.
+// `MenuDrawer` reste exporte et ne rend rien, le temps que les pages cessent de
+// l'appeler — le retirer d'un coup casserait six fichiers pour aucun gain.
 
 export function Skip({ locale }: { locale: Locale }) {
   return (
-    <a className="skip" href="#contenu">
+    <a
+      href="#contenu"
+      // Le lien d'evitement : hors de vue tant qu'il n'a pas le focus, jamais
+      // `display: none` — qui le sortirait de l'ordre de tabulation, donc le
+      // rendrait inatteignable par le seul public a qui il sert.
+      className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:rounded-full focus:bg-fg focus:px-4 focus:py-2 focus:text-sm focus:text-bg"
+    >
       {ui.skip[locale]}
     </a>
   );
 }
 
-/**
- * Le selecteur de langue.
- *
- * `pair` porte les DEUX URLs de la page courante, si bien que le lien mene a la
- * traduction de cette page-la et non a l'accueil. C'etait ecrit a la main sur
- * chaque page ; le deriver supprime toute une classe de liens faux.
- */
-export function LangSwitch({
-  pair,
-  locale,
-}: {
-  pair: Pair;
-  locale: Locale;
-}) {
+export function LangSwitch({ pair, locale }: { pair: Pair; locale: Locale }) {
   return (
-    <div className="lang" role="group" aria-label={ui.langGroup[locale]}>
-      <a
-        href={pair.fr}
-        lang="fr"
-        hrefLang="fr"
-        {...(locale === "fr" ? { "aria-current": "true" as const } : {})}
-      >
-        FR
-      </a>
-      <a
-        href={pair.en}
-        lang="en"
-        hrefLang="en"
-        {...(locale === "en" ? { "aria-current": "true" as const } : {})}
-      >
-        EN
-      </a>
-    </div>
+    <nav aria-label={ui.langGroup[locale]} className="flex items-center gap-1 text-xs">
+      {(["fr", "en"] as const).map((l) => (
+        <Link
+          key={l}
+          href={pair[l]}
+          hrefLang={l}
+          {...(locale === l ? { "aria-current": "true" as const } : {})}
+          className={`rounded px-2 py-1 uppercase transition-colors ${
+            locale === l ? "text-fg" : "text-dim hover:text-mid"
+          }`}
+        >
+          {l}
+        </Link>
+      ))}
+    </nav>
   );
 }
 
-/**
- * L'entete.
- *
- * `band` distingue les deux formes du site : l'accueil pose son entete DANS la
- * section hero, les pages interieures l'enveloppent dans `.head-band`. La
- * difference existait deja dans l'ancien HTML.
- */
-export function Header({
-  pair,
-  locale,
-  band = true,
-}: {
-  pair: Pair;
-  locale: Locale;
-  band?: boolean;
-}) {
-  const head = (
-    <header className="tophead wrap">
-      <a className="mark" href={routes.home[locale]}>
-        {ui.mark[locale]}
-      </a>
-      <div className="tophead-right">
+export function Header({ pair, locale }: { pair: Pair; locale: Locale }) {
+  const liens = [
+    { href: routes.home[locale], nom: ui.mark[locale] },
+    { href: routes.work[locale], nom: ui.worksNav[locale] },
+    { href: routes.skills[locale], nom: locale === "fr" ? "Savoir-faire" : "Skills" },
+    { href: routes.contact[locale], nom: locale === "fr" ? "Contact" : "Contact" },
+  ];
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur">
+      <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-4 sm:px-8">
+        <Link href={routes.home[locale]} className="text-sm font-medium text-fg">
+          Noa&nbsp;Tournoy
+        </Link>
+        <nav className="flex flex-1 flex-wrap gap-4 text-sm">
+          {liens.slice(1).map((l) => (
+            <Link key={l.href} href={l.href} className="text-mid transition-colors hover:text-fg">
+              {l.nom}
+            </Link>
+          ))}
+        </nav>
         <LangSwitch pair={pair} locale={locale} />
-        <button
-          className="menu-btn"
-          type="button"
-          aria-expanded="false"
-          aria-controls="menu"
-        >
-          {ui.menuOpen[locale]}
-        </button>
       </div>
     </header>
   );
-  return band ? <div className="head-band">{head}</div> : head;
 }
 
-/**
- * Le tiroir de menu, en deux variantes qui existaient deja dans l'ancien site :
- *
- * - `pages` sur les pages interieures : quatre destinations du site ;
- * - `sections` sur l'accueil : cinq ancres vers ses propres sections.
- *
- * Les confondre faisait disparaitre Parcours, Stack et Certifications de la
- * navigation de l'accueil — c'est ce que la comparaison de texte a attrape.
- */
-export function MenuDrawer({
-  locale,
-  variant = "pages",
-}: {
-  locale: Locale;
-  variant?: "pages" | "sections";
-}) {
-  return (
-    <div className="menu" id="menu" hidden>
-      <button className="menu-close" type="button">
-        {ui.menuClose[locale]}
-      </button>
-      <div className="menu-panel">
-        <nav aria-label={ui.menuNav[locale]}>
-          {variant === "sections" ? (
-            <>
-              <a href="#travaux">{ui.anchorWork[locale]}</a>
-              <a href="#parcours">{ui.anchorPath[locale]}</a>
-              <a href="#stack">{ui.anchorStack[locale]}</a>
-              <a href="#certifications">{ui.anchorCerts[locale]}</a>
-              <a href="#contact">{ui.anchorContact[locale]}</a>
-            </>
-          ) : (
-            <>
-              <a href={routes.work[locale]}>{ui.navWork[locale]}</a>
-              <a href={routes.skills[locale]}>{ui.navSkills[locale]}</a>
-              <a href={routes.contact[locale]}>{ui.navContact[locale]}</a>
-              <a href={routes.home[locale]}>{ui.navHome[locale]}</a>
-            </>
-          )}
-        </nav>
-      </div>
-    </div>
-  );
+/** Conserve pour ne pas casser les six pages qui l'appellent encore. */
+export function MenuDrawer(_: { locale: Locale; variant?: string }) {
+  return null;
 }
 
 export function Footer({ locale }: { locale: Locale }) {
   return (
-    <footer className="foot dark">
-      <div className="wrap foot-in">
-        <span>{ui.footPlace[locale]}</span>
-        <span>
-          <a href="https://eclosion.noatournoy.dev">Éclosion</a> ·{" "}
-          <a href={routes.work[locale]}>{ui.footWork[locale]}</a> ·{" "}
-          <a href={routes.contact[locale]}>{ui.footContact[locale]}</a>
-        </span>
+    <footer className="mt-24 border-t border-line">
+      <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-10 text-sm text-dim sm:px-8">
+        <p>{ui.footPlace[locale]}</p>
+        <ul className="flex flex-wrap gap-5">
+          <li>
+            <a href="mailto:noa.tournoy@supinfo.com" className="transition-colors hover:text-fg">
+              noa.tournoy@supinfo.com
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/Noa-trny" className="transition-colors hover:text-fg">
+              GitHub
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://www.linkedin.com/in/noa-tournoy/"
+              className="transition-colors hover:text-fg"
+            >
+              LinkedIn
+            </a>
+          </li>
+        </ul>
       </div>
     </footer>
   );

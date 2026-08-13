@@ -228,16 +228,19 @@ export function Lampe({ position }: { position: [number, number, number] }) {
         <sphereGeometry args={[0.022, 12, 10]} />
       </Forme>
       {/* Le bras, tendu vers le centre du bureau */}
+      {/* LE BRAS EST RACCOURCI. A 0,42 m il portait l'abat-jour jusque DANS la
+          dalle de l'ecran principal — les deux objets s'interpenetraient, ce
+          qui se voit d'autant plus qu'un contour noir cerne chacun d'eux. */}
       <Forme
         reglages={PALETTE.laiton}
-        position={[0.25, 0.5, 0.08]}
+        position={[0.18, 0.5, 0.06]}
         rotation={[0.28, 0, 1.42]}
         trait={0.0024}
       >
-        <cylinderGeometry args={[0.011, 0.011, 0.42, 12]} />
+        <cylinderGeometry args={[0.011, 0.011, 0.3, 12]} />
       </Forme>
       {/* L'abat-jour, AU BOUT du bras, ouvert vers le bas et vers l'avant */}
-      <group position={[0.44, 0.47, 0.17]} rotation={[0.42, 0, 0.22]}>
+      <group position={[0.31, 0.47, 0.12]} rotation={[0.42, 0, 0.22]}>
         <Forme reglages={PALETTE.laiton} position={[0, 0, 0]} trait={0.0026}>
           <cylinderGeometry args={[0.05, 0.1, 0.12, 20, 1, true]} />
         </Forme>

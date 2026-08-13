@@ -30,17 +30,17 @@ export default function WorkEn() {
       <Header pair={pair.work} locale="en" />
 
       <main id="contenu" tabIndex={-1}>
-        <section className="sec band-sec light" aria-labelledby="titre">
-          <div className="wrap">
-            <p className="label">
+        <section className="mx-auto max-w-4xl px-6 pt-20 pb-14 sm:px-8" aria-labelledby="titre">
+          <div>
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs tracking-[0.14em] text-dim uppercase">
               <span>work</span>
               <span>six pieces</span>
               <span>2022 → 2026</span>
             </p>
-            <h1 className="fiche-title" id="titre">
+            <h1 className="mt-5 text-[clamp(2.25rem,6vw,3.5rem)] leading-[1.05] font-semibold" id="titre">
               Work
             </h1>
-            <p className="hero-sub">
+            <p className="mt-6 max-w-2xl text-lg text-mid">
               Six pieces, from shader to dashboard. Each one says what it is,
               exactly what I did on it, and what was measured when there was
               something to measure.
@@ -48,8 +48,8 @@ export default function WorkEn() {
           </div>
         </section>
 
-        <section className="sec band-sec dark" aria-labelledby="index">
-          <div className="wrap">
+        <section className="mx-auto max-w-4xl border-t border-line px-6 py-14 sm:px-8" aria-labelledby="index">
+          <div>
             <h2 className="sr-only" id="index">
               Index of work
             </h2>
@@ -58,9 +58,9 @@ export default function WorkEn() {
           </div>
         </section>
 
-        <section className="sec band-sec light" aria-labelledby="reste">
-          <div className="wrap">
-            <h2 className="sec-title" id="reste">
+        <section className="mx-auto max-w-4xl px-6 pt-20 pb-14 sm:px-8" aria-labelledby="reste">
+          <div>
+            <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold" id="reste">
               The rest lives on GitHub.
             </h2>
             <div className="prose">

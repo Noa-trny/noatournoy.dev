@@ -30,23 +30,23 @@ export default function SkillsEn() {
       <Skip locale="en" />
       <Header pair={pair.skills} locale="en" />
       <main id="contenu" tabIndex={-1}>
-        <section className="sec band-sec light" aria-labelledby="titre">
-          <div className="wrap">
-            <p className="label">
+        <section className="mx-auto max-w-4xl px-6 pt-20 pb-14 sm:px-8" aria-labelledby="titre">
+          <div>
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs tracking-[0.14em] text-dim uppercase">
               <span>skills</span>
               <span>languages, infrastructure, certifications</span>
             </p>
-            <h1 className="fiche-title" id="titre">
+            <h1 className="mt-5 text-[clamp(2.25rem,6vw,3.5rem)] leading-[1.05] font-semibold" id="titre">
               Skills
             </h1>
-            <p className="hero-sub">
+            <p className="mt-6 max-w-2xl text-lg text-mid">
               A list is only worth something if every line has been used somewhere. The ones below point to the work where they were.
             </p>
           </div>
         </section>
 
-        <section className="sec band-sec dark" aria-labelledby="tech">
-          <div className="wrap">
+        <section className="mx-auto max-w-4xl border-t border-line px-6 py-14 sm:px-8" aria-labelledby="tech">
+          <div>
             <h2 className="sr-only" id="tech">
               Technical
             </h2>
@@ -72,9 +72,9 @@ export default function SkillsEn() {
           </div>
         </section>
 
-        <section className="sec band-sec light" aria-labelledby="ou">
-          <div className="wrap">
-            <h2 className="sec-title" id="ou">
+        <section className="mx-auto max-w-4xl px-6 pt-20 pb-14 sm:px-8" aria-labelledby="ou">
+          <div>
+            <h2 className="text-[clamp(1.5rem,3vw,2rem)] font-semibold" id="ou">
               Where it <em>was used</em>.
             </h2>
             <div className="prose">
@@ -90,8 +90,8 @@ export default function SkillsEn() {
           </div>
         </section>
 
-        <section className="sec band-sec dark" aria-labelledby="autres">
-          <div className="wrap">
+        <section className="mx-auto max-w-4xl border-t border-line px-6 py-14 sm:px-8" aria-labelledby="autres">
+          <div>
             <h2 className="sr-only" id="autres">
               Languages and method
             </h2>

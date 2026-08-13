@@ -1,25 +1,23 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import type { Locale } from "@/content/routes";
 import { routes } from "@/content/routes";
 import { PROJECTS } from "@/content/projects";
-import { RowPeek } from "./motion/RowPeek";
 
 // La liste numerotee des travaux. Elle existe sur deux pages avec deux contenus
 // differents : l'accueil montre les etiquettes de techno, /travaux/ montre une
 // annee et une phrase longue. D'ou la variante.
 //
-// Deux defauts de l'ancien site disparaissent ici :
+// Deux defauts de l'ancien site, corriges de longue date, tiennent toujours :
+// la NUMEROTATION derive du meme tableau SLUGS des deux cotes — l'accueil disait
+// « _04 Ludoria » quand /travaux/ disait « _04 Gamedex » — et la PUCE D'ANNEE
+// existe dans les deux langues, l'anglais l'ayant perdue en chemin.
 //
-// 1. La NUMEROTATION divergeait. L'accueil disait « _04 Ludoria » quand
-//    /travaux/ disait « _04 Gamedex » : un visiteur qui passait de l'une a
-//    l'autre voyait les numeros se melanger. Les deux derivent maintenant du
-//    meme tableau SLUGS.
-// 2. La PUCE D'ANNEE n'existait que cote francais — /en/work/ avait perdu le
-//    <span> de l'annee en cours de route. Les deux langues la portent a nouveau.
-//
-// Les attributs data-shot / data-none disparaissent : la vignette qui suit le
-// curseur lit PROJECTS directement plutot que de relire le DOM qu'elle vient
-// d'ecrire. Il ne reste qu'un `data-slug`, la cle qui relie une ligne rendue
-// cote serveur a son entree du manifeste.
+// LA VIGNETTE QUI SUIVAIT LE CURSEUR A DISPARU avec `spec.css`. Elle affichait
+// une capture au survol d'une ligne ; sur le theme sombre, la carte porte deja
+// son annee et sa phrase, et un objet flottant qui poursuit la souris se lit
+// comme une infobulle de 2012. Ce qu'elle apportait — savoir a quoi ressemble le
+// projet — appartient a la fiche.
 
 export function WorkRows({
   locale,
@@ -29,32 +27,45 @@ export function WorkRows({
   variant: "tags" | "blurb";
 }) {
   return (
-    <div className="rows-wrap">
-      <ol className="rows">
-        {PROJECTS.map((p) => (
-          <li className="row" key={p.slug} data-slug={p.slug}>
+    <ol className="flex flex-col">
+      {PROJECTS.map((p) => (
+        <li key={p.slug} data-slug={p.slug}>
+          <Link
+            href={routes.project[locale](p.slug)}
+            className="lueur group flex items-baseline gap-5 border-b border-line py-7 hover:bg-surface/40 sm:gap-8"
+          >
             {/* Une seule expression : `{p.no}.` produirait deux noeuds de texte,
                 que React separe par un commentaire dans le HTML rendu. */}
-            <span className="row-no">{`${p.no}.`}</span>
-            <div>
-              <h3 className="row-title">
-                <a href={routes.project[locale](p.slug)}>{p.title}</a>
+            <span className="shrink-0 text-xs text-dim tabular-nums">{`${p.no}.`}</span>
+
+            <div className="min-w-0 flex-1">
+              <h3 className="flex items-center gap-2 text-xl font-medium text-fg sm:text-2xl">
+                {p.title}
+                <ArrowUpRight className="size-4 text-dim transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent-soft" />
               </h3>
-              <p className="row-tags">
-                {variant === "tags" ? (
-                  p.tags.map((t) => <span key={t}>{t}</span>)
-                ) : (
-                  <>
-                    <span>{p.year}</span>
-                    <span>{p.blurb[locale]}</span>
-                  </>
-                )}
-              </p>
+
+              {variant === "tags" ? (
+                <ul className="mt-3 flex flex-wrap gap-1.5">
+                  {p.tags.map((t) => (
+                    <li
+                      key={t}
+                      className="rounded border border-line px-2 py-0.5 text-xs text-dim"
+                    >
+                      {t}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-mid">
+                  {p.blurb[locale]}
+                </p>
+              )}
             </div>
-          </li>
-        ))}
-      </ol>
-      <RowPeek locale={locale} />
-    </div>
+
+            <span className="shrink-0 text-xs text-dim tabular-nums">{p.year}</span>
+          </Link>
+        </li>
+      ))}
+    </ol>
   );
 }
