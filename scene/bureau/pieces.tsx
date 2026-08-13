@@ -329,9 +329,20 @@ export function Machine({
  * verbeux, mais on voit ou sont les choses.
  */
 export function Lampe({ position }: { position: [number, number, number] }) {
+  // AUCUNE PIECE DU LUMINAIRE NE PORTE D'OMBRE, et c'est la seule façon d'avoir
+  // une lampe credible. L'ampoule est A L'INTERIEUR de l'abat-jour, a trois
+  // centimetres de lui ; le mur est a cinquante. La silhouette de l'abat-jour
+  // s'y projetait donc grossie une dizaine de fois — une immense aile noire a
+  // bord franc, qui ne ressemblait a rien de ce qu'une lampe fait.
+  //
+  // Physiquement, c'est pourtant ce qu'une source ponctuelle nue produit. Le
+  // defaut n'est pas dans le calcul, il est dans le MODELE : une vraie ampoule
+  // n'est pas un point, c'est un volume diffusant, et l'ombre d'un objet a
+  // trois centimetres d'une source large n'existe pratiquement pas. Retirer le
+  // luminaire de la passe d'ombres approche mieux la realite que l'y laisser.
   return (
     <group position={position}>
-      <Forme reglages={PALETTE.pied} position={[0, 0.014, 0]} trait={0.0026}>
+      <Forme reglages={PALETTE.pied} position={[0, 0.014, 0]} trait={0.0026} castShadow={false}>
         <cylinderGeometry args={[0.08, 0.09, 0.028, 20]} />
       </Forme>
       {/* Le montant, legerement incline */}
@@ -340,11 +351,12 @@ export function Lampe({ position }: { position: [number, number, number] }) {
         position={[0.03, 0.24, -0.02]}
         rotation={[0.08, 0, -0.13]}
         trait={0.0024}
+        castShadow={false}
       >
         <cylinderGeometry args={[0.012, 0.012, 0.44, 12]} />
       </Forme>
       {/* L'articulation */}
-      <Forme reglages={PALETTE.pied} position={[0.06, 0.455, -0.01]} trait={0.0022}>
+      <Forme reglages={PALETTE.pied} position={[0.06, 0.455, -0.01]} trait={0.0022} castShadow={false}>
         <sphereGeometry args={[0.022, 12, 10]} />
       </Forme>
       {/* Le bras, tendu vers le centre du bureau */}
@@ -356,12 +368,13 @@ export function Lampe({ position }: { position: [number, number, number] }) {
         position={[0.18, 0.5, 0.06]}
         rotation={[0.28, 0, 1.42]}
         trait={0.0024}
+        castShadow={false}
       >
         <cylinderGeometry args={[0.011, 0.011, 0.3, 12]} />
       </Forme>
       {/* L'abat-jour, AU BOUT du bras, ouvert vers le bas et vers l'avant */}
       <group position={[0.31, 0.47, 0.12]} rotation={[0.42, 0, 0.22]}>
-        <Forme reglages={PALETTE.laiton} position={[0, 0, 0]} trait={0.0026}>
+        <Forme reglages={PALETTE.laiton} position={[0, 0, 0]} trait={0.0026} castShadow={false}>
           <cylinderGeometry args={[0.05, 0.1, 0.12, 20, 1, true]} />
         </Forme>
         {/* La face interieure, non eclairee : c'est l'ampoule qu'on voit. */}

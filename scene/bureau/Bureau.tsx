@@ -152,17 +152,27 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             profondeur et la destination reste visible. */}
         <fogExp2 attach="fog" args={["#090a0d", 0.085]} />
 
-        {/* LA LAMPE. Portee, chaude, placee dans l'abat-jour.
+        {/* LA LAMPE : une source ponctuelle, dans l'abat-jour.
 
-            LA FLAQUE ETAIT UN DISQUE, et c'est `distance` qui la decoupait : au
-            dela, la lumiere s'arrete NET. Une lampe ne s'arrete pas, elle
-            faiblit. On la porte donc assez loin pour que seule la decroissance
-            en carre agisse, et l'on baisse l'intensite d'autant. La couleur est
-            aussi moins ambree : a #ffd6a0 tout le bureau virait a l'orange, y
-            compris ce que la lampe n'atteint pas — signe d'une teinte trop
-            saturee, pas d'une lumiere trop forte. C'est la seule
-            source qui projette une ombre : deux lumieres a ombres donneraient
-            deux ombres par objet, ce qu'aucun bureau ne fait. */}
+            UN PROJECTEUR A ETE ESSAYE ET REJETE. Sur le papier il gagnait sur
+            les deux tableaux — un cone est exactement ce que fait un abat-jour,
+            et son ombre tient dans une carte plate au lieu d'une carte cubique,
+            six fois moins chere. A l'image, il creusait le mur d'un grand
+            disque noir hors du cone, laissait le mat de la lampe virer au rose
+            sous le ruban faute d'etre lave par le chaud, et redonnait a la
+            flaque le bord franc qu'on venait de faire disparaitre. Une piece
+            eclairee par une seule lampe a besoin que cette lampe DEBORDE.
+
+            La flaque n'est pas decoupee par `distance` : elle est portee assez
+            loin pour que seule la decroissance en carre agisse. La couleur est
+            peu saturee — a #ffd6a0 tout le bureau virait a l'orange, y compris
+            ce que la lampe n'atteint pas, signe d'une teinte trop saturee et
+            non d'une lumiere trop forte.
+
+            C'est la seule source qui projette une ombre : deux lumieres a
+            ombres donneraient deux ombres par objet, ce qu'aucun bureau ne
+            fait. Et le luminaire lui-meme n'en porte pas — voir Lampe, son
+            abat-jour se projetait en aile geante sur le mur. */}
         <pointLight
           // LA SOURCE EST DANS L'ABAT-JOUR, et elle n'y etait pas : elle
           // flottait cinquante centimetres a sa droite, si bien que la flaque
@@ -210,7 +220,7 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             il se trouve. Sans trait : un contour sur un plan de vingt-quatre
             metres dessinerait un cadre autour de la scene. */}
         <Forme
-          reglages={{ couleur: "#0f1116", paliers: 3, grain: 0.08, plancher: 0.16 }}
+          reglages={{ couleur: "#0f1116", paliers: 7, grain: 0.08, plancher: 0.16 }}
           position={[0, 0, 4.5]}
           rotation={[-Math.PI / 2, 0, 0]}
           trait={0}
@@ -220,12 +230,20 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         </Forme>
 
         {/* Le mur du fond, juste derriere les ecrans : il donne une butee au
-            regard et recoit le halo de la lampe. */}
+            regard et recoit le halo de la lampe.
+
+            NEUF PALIERS, la ou tout le reste en a trois. La quantification est
+            ce qui donne le trait de croquis sur un OBJET — quelques faces, donc
+            quelques aplats. Sur une grande surface lisse qui recoit une
+            decroissance en carre, elle decoupe le halo en disques a bord net :
+            on lisait un projecteur de theatre, pas une lampe. Le mur et le sol
+            sont les deux seules surfaces assez larges pour que ça se voie, et
+            les deux seules a monter en paliers. */}
         {/* Le mur descend en valeur. A #1b1e26 avec un plancher a 0,28, il
             renvoyait presque autant que le plateau eclaire : le bureau n'etait
             plus un ilot dans le noir, mais un objet pose sur un fond gris. */}
         <Forme
-          reglages={{ couleur: "#12151b", paliers: 3, grain: 0.1, plancher: 0.14 }}
+          reglages={{ couleur: "#12151b", paliers: 9, grain: 0.1, plancher: 0.14 }}
           position={[0, 1.6, -1.05]}
           trait={0}
         >
