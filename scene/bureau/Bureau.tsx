@@ -1,6 +1,8 @@
 "use client";
 
 import { Canvas } from "@react-three/fiber";
+import { Rig } from "./Rig";
+import { Sensible } from "./Sensible";
 import * as THREE from "three";
 import { Forme } from "../croquis/Forme";
 import {
@@ -14,6 +16,9 @@ import {
   Plateau,
   Portable,
   Saisie,
+  Livres,
+  Casque,
+  Feuillets,
 } from "./pieces";
 
 // LE POSTE DE TRAVAIL.
@@ -55,7 +60,9 @@ export default function Bureau() {
         // biais, elle cadrait donc le vide au-dessus du plateau, et le bureau
         // sortait par le bas. Le point vise est le centre du plateau, un peu
         // en arriere, pour que les ecrans montent dans le cadre.
-        onCreated={({ camera }) => camera.lookAt(-0.05, 0.88, -0.25)}
+        // La visee est desormais tenue par <Rig>, qui la partage avec les
+        // vols vers chaque zone. La poser ici aussi la ferait sauter d'une
+        // image au premier rendu.
         dpr={[1, 1.5]}
         shadows={{ type: THREE.PCFShadowMap }}
       >
@@ -128,10 +135,54 @@ export default function Bureau() {
         <Carnet position={[-1.02, 0.7675, 0.2]} rotation={[0, 0.34, 0]} />
         <Machine position={[-1.24, 0.7675, -0.34]} rotation={[0, 0.18, 0]} />
         <Lampe position={[-1.16, 0.7675, -0.52]} />
-        <Mug position={[0.34, 0.7675, 0.34]} />
-        <Plante position={[1.32, 0.7675, -0.42]} />
+        <Mug position={[0.28, 0.7675, 0.36]} />
+        <Plante position={[1.42, 0.7675, -0.46]} />
+        {/* Le cote droit etait vide : trois objets suffisent a l'habiter, et
+            chacun apporte une hauteur differente — c'est la variation de
+            hauteur qui fait un plateau vecu plutot qu'un plan de travail. */}
+        <Livres position={[1.36, 0.7675, 0.18]} rotation={[0, -0.42, 0]} />
+        <Casque position={[0.92, 0.7675, -0.52]} />
+        <Feuillets position={[0.58, 0.7675, 0.42]} />
 
         <Halo />
+
+        {/* LE RIG ET LES ZONES SENSIBLES.
+
+            Cinq boites invisibles, une par section, PLUS GENEREUSES que les
+            objets qu'elles designent : un carnet de deux centimetres
+            d'epaisseur est impossible a viser a la souris, une boite de quinze
+            centimetres autour se vise sans y penser. */}
+        <Rig />
+        <Sensible
+          id="projets"
+          position={[-0.32, 1.05, -0.33]}
+          taille={[0.7, 0.46, 0.2]}
+          rotation={[0, 0.22, 0]}
+        />
+        <Sensible
+          id="apropos"
+          position={[0.5, 1.03, -0.29]}
+          taille={[0.62, 0.42, 0.2]}
+          rotation={[0, -0.3, 0]}
+        />
+        <Sensible
+          id="parcours"
+          position={[-1.02, 0.81, 0.2]}
+          taille={[0.32, 0.18, 0.38]}
+          rotation={[0, 0.34, 0]}
+        />
+        <Sensible
+          id="stack"
+          position={[-1.24, 0.88, -0.34]}
+          taille={[0.28, 0.32, 0.4]}
+          rotation={[0, 0.18, 0]}
+        />
+        <Sensible
+          id="contact"
+          position={[1.02, 0.85, 0.1]}
+          taille={[0.44, 0.26, 0.38]}
+          rotation={[0, -0.62, 0]}
+        />
       </Canvas>
     </div>
   );

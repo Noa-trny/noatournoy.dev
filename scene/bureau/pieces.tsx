@@ -101,13 +101,28 @@ export function Portable({
       <Forme reglages={PALETTE.boitier} position={[0, 0.008, 0]} trait={0.0026}>
         <boxGeometry args={[0.34, 0.016, 0.24]} />
       </Forme>
-      {/* L'ecran, incline : c'est l'inclinaison qui dit « ouvert » et qui
-          accroche la lumiere de la lampe sur sa tranche. */}
-      <group position={[0, 0.016, -0.12]} rotation={[-1.18, 0, 0]}>
+      {/* LE CAPOT PIVOTE AUTOUR DE SA CHARNIERE, au bord arriere du socle, et
+          d'une vingtaine de degres seulement au-dela de la verticale.
+          Premiere version : soixante-huit degres, c'est-a-dire presque a plat.
+          L'objet se lisait comme une feuille posee sur la table. Un portable
+          ouvert tient entre cent et cent vingt degres d'ouverture totale. */}
+      <group position={[0, 0.016, -0.115]} rotation={[-0.32, 0, 0]}>
         <Forme reglages={PALETTE.boitier} position={[0, 0.11, 0]} trait={0.0026}>
-          <boxGeometry args={[0.34, 0.22, 0.012]} />
+          <boxGeometry args={[0.34, 0.22, 0.011]} />
         </Forme>
+        {/* La dalle, non eclairee : un ecran allume ne recoit pas d'ombre. */}
+        <mesh position={[0, 0.11, 0.007]}>
+          <planeGeometry args={[0.31, 0.19]} />
+          <meshBasicMaterial color="#0d1a26" />
+        </mesh>
       </group>
+      {/* Pave tactile et clavier : deux creux suffisent a la lecture. */}
+      <Forme reglages={PALETTE.cadre} position={[0, 0.017, 0.055]} trait={0}>
+        <boxGeometry args={[0.11, 0.002, 0.07]} />
+      </Forme>
+      <Forme reglages={PALETTE.cadre} position={[0, 0.017, -0.045]} trait={0}>
+        <boxGeometry args={[0.3, 0.002, 0.09]} />
+      </Forme>
     </group>
   );
 }
@@ -179,33 +194,53 @@ export function Machine({
   );
 }
 
-/** La lampe d'architecte : c'est elle qui fait l'ilot de lumiere. */
+/**
+ * La lampe d'architecte : c'est elle qui fait l'ilot de lumiere.
+ *
+ * RECONSTRUITE EN CHAINE SIMPLE. La premiere version empilait des groupes
+ * tournes les uns dans les autres, et l'abat-jour finissait a vingt centimetres
+ * du bras — chaque rotation deplacait l'origine de la suivante. Ici chaque
+ * segment est place ET tourne explicitement dans le repere de la lampe : plus
+ * verbeux, mais on voit ou sont les choses.
+ */
 export function Lampe({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
-      <Forme reglages={PALETTE.pied} position={[0, 0.012, 0]} trait={0.0026}>
-        <cylinderGeometry args={[0.075, 0.085, 0.024, 20]} />
+      <Forme reglages={PALETTE.pied} position={[0, 0.014, 0]} trait={0.0026}>
+        <cylinderGeometry args={[0.08, 0.09, 0.028, 20]} />
       </Forme>
-      <group rotation={[0, 0, -0.36]}>
-        <Forme reglages={PALETTE.laiton} position={[0, 0.24, 0]} trait={0.0024}>
-          <cylinderGeometry args={[0.011, 0.011, 0.46, 12]} />
+      {/* Le montant, legerement incline */}
+      <Forme
+        reglages={PALETTE.laiton}
+        position={[0.03, 0.24, -0.02]}
+        rotation={[0.08, 0, -0.13]}
+        trait={0.0024}
+      >
+        <cylinderGeometry args={[0.012, 0.012, 0.44, 12]} />
+      </Forme>
+      {/* L'articulation */}
+      <Forme reglages={PALETTE.pied} position={[0.06, 0.455, -0.01]} trait={0.0022}>
+        <sphereGeometry args={[0.022, 12, 10]} />
+      </Forme>
+      {/* Le bras, tendu vers le centre du bureau */}
+      <Forme
+        reglages={PALETTE.laiton}
+        position={[0.25, 0.5, 0.08]}
+        rotation={[0.28, 0, 1.42]}
+        trait={0.0024}
+      >
+        <cylinderGeometry args={[0.011, 0.011, 0.42, 12]} />
+      </Forme>
+      {/* L'abat-jour, AU BOUT du bras, ouvert vers le bas et vers l'avant */}
+      <group position={[0.44, 0.47, 0.17]} rotation={[0.42, 0, 0.22]}>
+        <Forme reglages={PALETTE.laiton} position={[0, 0, 0]} trait={0.0026}>
+          <cylinderGeometry args={[0.05, 0.1, 0.12, 20, 1, true]} />
         </Forme>
-      </group>
-      <group position={[-0.17, 0.46, 0]} rotation={[0, 0, 0.95]}>
-        <Forme reglages={PALETTE.laiton} position={[0, 0.14, 0]} trait={0.0024}>
-          <cylinderGeometry args={[0.011, 0.011, 0.3, 12]} />
-        </Forme>
-        {/* L'abat-jour, cone ouvert vers le bas. `openEnded` pour qu'on voie
-            l'interieur eclairé quand la camera passe dessous. */}
-        <group position={[0.02, 0.3, 0]} rotation={[0, 0, -1.15]}>
-          <Forme reglages={PALETTE.laiton} position={[0, 0, 0]} trait={0.0026}>
-            <cylinderGeometry args={[0.055, 0.105, 0.13, 20, 1, true]} />
-          </Forme>
-          <mesh position={[0, -0.055, 0]} rotation={[Math.PI / 2, 0, 0]}>
-            <circleGeometry args={[0.1, 20]} />
-            <meshBasicMaterial color="#ffd9a0" />
-          </mesh>
-        </group>
+        {/* La face interieure, non eclairee : c'est l'ampoule qu'on voit. */}
+        <mesh position={[0, -0.052, 0]} rotation={[Math.PI / 2, 0, 0]}>
+          <circleGeometry args={[0.095, 20]} />
+          <meshBasicMaterial color="#ffd9a0" />
+        </mesh>
       </group>
     </group>
   );
@@ -225,27 +260,129 @@ export function Mug({ position }: { position: [number, number, number] }) {
   );
 }
 
-/** La plante : la seule courbe organique d'une scene faite de boites. */
+/**
+ * La plante : la seule courbe organique d'une scene faite de boites.
+ *
+ * Les feuilles PARTENT du pot au lieu de flotter au-dessus. La premiere version
+ * les posait a vingt centimetres de haut sur un pot qui en fait douze : on
+ * voyait un caillou en levitation. Elles se chevauchent aussi entre elles —
+ * une touffe est un volume continu, pas une constellation.
+ */
 export function Plante({ position }: { position: [number, number, number] }) {
+  const feuilles: [number, number, number, number][] = [
+    [0, 0.15, 0, 0.075],
+    [0.055, 0.185, 0.02, 0.062],
+    [-0.05, 0.17, -0.03, 0.058],
+    [0.02, 0.225, -0.045, 0.05],
+    [-0.03, 0.13, 0.055, 0.052],
+    [0.06, 0.13, -0.05, 0.045],
+  ];
   return (
     <group position={position}>
-      <Forme reglages={PALETTE.ceramique} position={[0, 0.06, 0]} trait={0.0026}>
-        <cylinderGeometry args={[0.07, 0.055, 0.12, 16]} />
+      <Forme reglages={PALETTE.ceramique} position={[0, 0.055, 0]} trait={0.0026}>
+        <cylinderGeometry args={[0.068, 0.05, 0.11, 16]} />
       </Forme>
-      {[
-        [0, 0.2, 0, 0.16],
-        [0.05, 0.17, 0.03, 0.12],
-        [-0.045, 0.16, -0.02, 0.11],
-        [0.02, 0.15, -0.05, 0.1],
-      ].map(([x, y, z, r], i) => (
+      {/* Le rebord : un pot sans levre se lit comme un verre. */}
+      <Forme reglages={PALETTE.ceramique} position={[0, 0.112, 0]} trait={0.0022}>
+        <cylinderGeometry args={[0.074, 0.07, 0.014, 16]} />
+      </Forme>
+      {feuilles.map(([x, y, z, r], i) => (
         <Forme
           key={i}
           reglages={PALETTE.feuillage}
-          position={[x!, y!, z!]}
-          rotation={[i * 0.4, i * 1.1, i * 0.3]}
+          position={[x, y, z]}
+          rotation={[i * 0.5, i * 1.3, i * 0.4]}
           trait={0.0022}
         >
           <icosahedronGeometry args={[r, 0]} />
+        </Forme>
+      ))}
+    </group>
+  );
+}
+
+/** Une pile de livres : elle occupe le vide et donne de la verticale. */
+export function Livres({
+  position,
+  rotation = [0, 0, 0],
+}: {
+  position: [number, number, number];
+  rotation?: [number, number, number];
+}) {
+  const pile = [
+    { h: 0.032, l: 0.22, p: 0.16, c: PALETTE.cadre, d: 0 },
+    { h: 0.026, l: 0.21, p: 0.155, c: PALETTE.laiton, d: 0.06 },
+    { h: 0.03, l: 0.2, p: 0.15, c: PALETTE.feuillage, d: -0.05 },
+  ];
+  let y = 0;
+  return (
+    <group position={position} rotation={rotation}>
+      {pile.map((b, i) => {
+        const yy = y + b.h / 2;
+        y += b.h;
+        return (
+          <Forme
+            key={i}
+            reglages={b.c}
+            position={[0, yy, 0]}
+            rotation={[0, b.d, 0]}
+            trait={0.0024}
+          >
+            <boxGeometry args={[b.l, b.h, b.p]} />
+          </Forme>
+        );
+      })}
+    </group>
+  );
+}
+
+/** Le casque sur son support : un objet qui dit « on y passe des heures ». */
+export function Casque({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <Forme reglages={PALETTE.pied} position={[0, 0.01, 0]} trait={0.0024}>
+        <cylinderGeometry args={[0.055, 0.06, 0.02, 16]} />
+      </Forme>
+      <Forme reglages={PALETTE.pied} position={[0, 0.11, 0]} trait={0.0022}>
+        <cylinderGeometry args={[0.009, 0.009, 0.2, 10]} />
+      </Forme>
+      {/* L'arceau : un DEMI-tore, d'ou `thetaLength` a PI. */}
+      <Forme reglages={PALETTE.boitier} position={[0, 0.2, 0]} trait={0.0024}>
+        <torusGeometry args={[0.075, 0.011, 8, 20, Math.PI]} />
+      </Forme>
+      {[-0.075, 0.075].map((x) => (
+        <Forme
+          key={x}
+          reglages={PALETTE.boitier}
+          position={[x, 0.185, 0]}
+          rotation={[Math.PI / 2, 0, 0]}
+          trait={0.0024}
+        >
+          <cylinderGeometry args={[0.032, 0.032, 0.026, 14]} />
+        </Forme>
+      ))}
+    </group>
+  );
+}
+
+/** Des feuillets epars : le desordre qui prouve qu'on travaille. */
+export function Feuillets({ position }: { position: [number, number, number] }) {
+  const pages: [number, number, number][] = [
+    [0, 0, 0.02],
+    [0.03, 0.0015, -0.34],
+    [-0.02, 0.003, 0.21],
+  ];
+  return (
+    <group position={position}>
+      {pages.map(([x, y, r], i) => (
+        <Forme
+          key={i}
+          reglages={PALETTE.papier}
+          position={[x, y + 0.0012, 0]}
+          rotation={[0, r, 0]}
+          trait={0.0018}
+        >
+          <boxGeometry args={[0.21, 0.0022, 0.29]} />
         </Forme>
       ))}
     </group>

@@ -1,10 +1,22 @@
 import Bureau from "@/scene/bureau/Bureau";
+import { Panneau } from "@/components/bureau/Panneau";
+import { Contenu } from "@/components/bureau/Contenu";
+import { Repere } from "@/components/bureau/Repere";
 
-// Le laboratoire : la page ou l'on REGARDE une piste avant de la construire.
-// Liee depuis nulle part, elle sortira du depot quand le monde sera branche au
-// site. C'est la reponse a la lecon de la journee — une villa entiere avait ete
-// preparee, eclairee et parcourue avant qu'on regarde ce qu'elle donnait.
+// Le laboratoire : le monde et sa navigation, avant branchement sur le site.
+//
+// Le CONTENU est construit ici, sur le serveur, et passe au panneau. Le monde
+// 3D ne porte donc aucun texte : il porte des objets. C'est ce qui permet au
+// document servi de rester complet — un robot d'indexation et un lecteur
+// d'ecran y trouvent tout, que WebGL fonctionne ou non.
 
 export default function Labo() {
-  return <Bureau />;
+  const blocs = Contenu({ locale: "fr" });
+  return (
+    <>
+      <Bureau />
+      <Repere locale="fr" />
+      <Panneau locale="fr" blocs={blocs} />
+    </>
+  );
 }
