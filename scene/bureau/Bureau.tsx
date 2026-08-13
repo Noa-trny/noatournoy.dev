@@ -21,6 +21,7 @@ import { Sensible } from "./Sensible";
 import * as THREE from "three";
 import { Forme } from "../croquis/Forme";
 import { Couloir } from "./Couloir";
+import { OmbresFigees } from "./Ombres";
 import {
   Carnet,
   Ecran,
@@ -381,6 +382,7 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             d'epaisseur est impossible a viser a la souris, une boite de quinze
             centimetres autour se vise sans y penser. */}
         <Rig />
+        <OmbresFigees />
         <Sensible
           id="projets"
           position={[-0.32, 1.05, -0.33]}

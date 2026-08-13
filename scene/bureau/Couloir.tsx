@@ -59,6 +59,13 @@ const NERVURE = { couleur: "#39434f", paliers: 3, grain: 0.07, plancher: 0.24 } 
  */
 const NERVURES = [8.0, 8.9, 9.8];
 
+// AUCUNE PIECE DU COULOIR NE PORTE D'OMBRE. La lampe du bureau est a onze
+// metres, sa portee en fait cinq : elle n'eclaire rien ici. Mais three ne le
+// sait pas — il rend TOUS les objets marques porteurs d'ombre dans les six faces
+// de la carte cubique, et le couloir est le decor le plus lourd de la scene. Le
+// retirer de la passe d'ombres est gratuit et invisible.
+const SANS_OMBRE = { castShadow: false, receiveShadow: false } as const;
+
 export function Couloir() {
   const { couloir, piece, seuil, fond, hauteurCouloir, hauteurPiece } = LIEU;
   const longCouloir = fond - seuil;
@@ -71,7 +78,7 @@ export function Couloir() {
           pris de biais a 2,35 m sur X, reste a l'interieur : une camera placee
           derriere un mur ne cadre rien du tout. */}
       {[-piece, piece].map((x) => (
-        <Forme key={x} reglages={MUR} position={[x, hauteurPiece / 2, (seuil - 1.05) / 2]} trait={0}>
+        <Forme key={x} reglages={MUR} position={[x, hauteurPiece / 2, (seuil - 1.05) / 2]} trait={0} {...SANS_OMBRE}>
           <boxGeometry args={[0.08, hauteurPiece, seuil + 1.05]} />
         </Forme>
       ))}
@@ -87,6 +94,7 @@ export function Couloir() {
           reglages={MUR}
           position={[(s * (piece + couloir)) / 2, hauteurPiece / 2, seuil]}
           trait={0.003}
+          {...SANS_OMBRE}
         >
           <boxGeometry args={[piece - couloir, hauteurPiece, 0.1]} />
         </Forme>
@@ -110,20 +118,20 @@ export function Couloir() {
         position={[0, 0.001, zCouloir]}
         rotation={[-Math.PI / 2, 0, 0]}
         trait={0}
-        castShadow={false}
+        {...SANS_OMBRE}
       >
         <planeGeometry args={[couloir * 2, longCouloir]} />
       </Forme>
 
       {[-couloir, couloir].map((x) => (
-        <Forme key={x} reglages={MUR_COULOIR} position={[x, hauteurCouloir / 2, zCouloir]} trait={0}>
+        <Forme key={x} reglages={MUR_COULOIR} position={[x, hauteurCouloir / 2, zCouloir]} trait={0} {...SANS_OMBRE}>
           <boxGeometry args={[0.08, hauteurCouloir, longCouloir]} />
         </Forme>
       ))}
       {/* Le plafond n'existe QUE sur le couloir. Au-dessus de la piece, il
           entrerait dans le champ du plan large et fermerait une image qui vaut
           justement par le noir au-dessus du bureau. */}
-      <Forme reglages={MUR_COULOIR} position={[0, hauteurCouloir, zCouloir]} trait={0}>
+      <Forme reglages={MUR_COULOIR} position={[0, hauteurCouloir, zCouloir]} trait={0} {...SANS_OMBRE}>
         <boxGeometry args={[couloir * 2, 0.08, longCouloir]} />
       </Forme>
 
@@ -135,6 +143,7 @@ export function Couloir() {
               reglages={NERVURE}
               position={[x - Math.sign(x) * 0.06, hauteurCouloir / 2, z]}
               trait={0.0028}
+              {...SANS_OMBRE}
             >
               <boxGeometry args={[0.06, hauteurCouloir, 0.14]} />
             </Forme>
@@ -143,6 +152,7 @@ export function Couloir() {
             reglages={NERVURE}
             position={[0, hauteurCouloir - 0.06, z]}
             trait={0.0028}
+            {...SANS_OMBRE}
           >
             <boxGeometry args={[couloir * 2, 0.06, 0.14]} />
           </Forme>

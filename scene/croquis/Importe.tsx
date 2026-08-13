@@ -1,10 +1,11 @@
 "use client";
 
 import { useLoader } from "@react-three/fiber";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import { materiauContour, materiauCroquis, type ReglagesCroquis } from "./materiau";
+import { rafraichirOmbres } from "../bureau/Ombres";
 
 // UN MODELE IMPORTE, REDESSINE AU CROQUIS.
 //
@@ -119,6 +120,14 @@ export function Importe({
     // reference recreerait tous les materiaux par image.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gltf, trait, JSON.stringify(reglages)]);
+
+  // LA CARTE D'OMBRES EST GELEE une fois la scene posee : un objet qui arrive
+  // par le reseau apres le gel n'aurait aucune ombre, et flotterait. Il demande
+  // donc lui-meme une cuisson de plus — la seule façon fiable, puisque personne
+  // d'autre ne sait quand il est arrive.
+  useEffect(() => {
+    rafraichirOmbres();
+  }, [objet]);
 
   return (
     <primitive object={objet} position={position} rotation={rotation} scale={scale} />

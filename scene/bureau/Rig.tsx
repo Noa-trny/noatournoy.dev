@@ -58,7 +58,14 @@ const espion =
 export function Rig() {
   const camera = useThree((s) => s.camera);
   const taille = useThree((s) => s.size);
+  // Le renderer n'est lu QUE par le mouchard. Le prendre ici plutot que
+  // d'aller le chercher depuis l'exterieur est la seule façon fiable : R3F ne
+  // publie le sien nulle part sur le document, et une sonde qui fouillait les
+  // proprietes internes du canvas est revenue avec des zeros — ce qui se lit
+  // comme « la scene ne dessine rien » alors qu'elle dessinait tres bien.
+  const gl = useThree((s) => s.gl);
   const branche = useRef(false);
+  const horloge = useRef({ derniere: 0, pire: 0, images: 0, cumul: 0 });
 
   // LE RAPPORT DE L'ECRAN CHOISIT LE PLAN, et il est lu ici plutot que par une
   // media query : c'est la camera qui cadre, pas la feuille de style.
@@ -166,6 +173,32 @@ export function Rig() {
     }
 
     if (espion) {
+      // LE COUT REEL, PAR IMAGE. `gl.info.render` est remis a zero a chaque
+      // rendu par three, donc ces nombres sont ceux de l'image qui vient de
+      // passer — pas un cumul.
+      const h = horloge.current;
+      const maintenant = performance.now();
+      if (h.derniere) {
+        const ecart = maintenant - h.derniere;
+        h.images += 1;
+        h.cumul += ecart;
+        // Les dix premieres images sont ignorees : elles contiennent la
+        // compilation des programmes, qui n'a lieu qu'une fois et fausserait le
+        // pire cas pour toute la session.
+        if (h.images > 10) h.pire = Math.max(h.pire, ecart);
+      }
+      h.derniere = maintenant;
+
+      (window as unknown as { __cout?: unknown }).__cout = {
+        dessins: gl.info.render.calls,
+        triangles: gl.info.render.triangles,
+        programmes: gl.info.programs?.length ?? 0,
+        geometries: gl.info.memory.geometries,
+        textures: gl.info.memory.textures,
+        imageMoyenne: h.images ? +(h.cumul / h.images).toFixed(1) : 0,
+        pireImage: +h.pire.toFixed(1),
+        rendu: (gl.getContext() as WebGLRenderingContext).getParameter(0x1f01),
+      };
       (window as unknown as { __piste?: unknown }).__piste = {
         brut: +piste.brut.toFixed(3),
         lisse: +piste.lisse.toFixed(3),
