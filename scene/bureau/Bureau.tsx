@@ -347,7 +347,16 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
 
         <Lampe position={[-1.32, 0.7675, -0.6]} />
         <Mug position={[0.28, 0.7675, 0.36]} />
-        <Plante position={[1.42, 0.7675, -0.46]} />
+        <Suspense fallback={null}>
+          {/* Celle du plateau : la meme plante, a trente centimetres. */}
+          <Plante position={[1.42, 0.7675, -0.46]} rotation={[0, 0.7, 0]} echelle={0.3} />
+          {/* ET UNE DE SOL, a sa taille reelle. La piece etait un volume vide
+              autour d'un ilot de lumiere : au plan du seuil, on voyait un bureau
+              flotter dans le noir. Un objet pose au sol, hors de la flaque de la
+              lampe, donne une deuxieme profondeur — et il ne coute aucun
+              telechargement de plus, le fichier etant deja en cache. */}
+          <Plante position={[2.55, 0, -0.35]} rotation={[0, -0.9, 0]} />
+        </Suspense>
         {/* Le cote droit etait vide : trois objets suffisent a l'habiter, et
             chacun apporte une hauteur differente — c'est la variation de
             hauteur qui fait un plateau vecu plutot qu'un plan de travail. */}

@@ -30,11 +30,22 @@ import { NodeIO } from "@gltf-transform/core";
 import { dedup, prune, join, weld, flatten } from "@gltf-transform/functions";
 import { readFileSync, writeFileSync } from "node:fs";
 
-const [entree, sortie] = process.argv.slice(2);
+const [entree, sortie, ...options] = process.argv.slice(2);
 if (!entree || !sortie) {
-  console.error("usage: importer.mjs <entree.glb> <sortie.glb>");
+  console.error("usage: importer.mjs <entree.glb> <sortie.glb> [--par-materiau]");
   process.exit(1);
 }
+
+// `--par-materiau` GARDE LES MATERIAUX SEPARES, et c'est parfois indispensable.
+//
+// Par defaut on les reduit a un seul : la scene est monochrome par objet, un
+// casque est noir, un fauteuil aussi. Mais une plante en pot ne l'est pas — pot,
+// terre et feuillage sont trois matieres, et les peindre d'une seule couleur
+// donne une sculpture verte. Le drapeau n'ajoute rien : il s'abstient de rendre
+// les materiaux IDENTIQUES, ce qui suffit a ce que `dedup` cesse de les
+// confondre et `join` de fusionner leurs primitives. Chacune coute alors deux
+// appels de rendu, contour compris — c'est le prix de la couleur.
+const parMateriau = options.includes("--par-materiau");
 
 const io = new NodeIO();
 const doc = await io.readBinary(readFileSync(entree));
@@ -60,7 +71,12 @@ for (const m of racine.listMaterials()) {
     // couleur de base restee grise assombrirait toute la palette du projet, et
     // le decalage serait d'autant plus difficile a diagnostiquer qu'il
     // s'appliquerait uniformement.
-    .setBaseColorFactor([1, 1, 1, 1]);
+    //
+    // Sauf en mode par-materiau : c'est justement la difference de couleur qui
+    // empeche `dedup` de les fondre en un seul. Le rendu ne les lit pas — ils
+    // sont remplaces au chargement — mais le fichier a besoin qu'ils restent
+    // distinguables, et leur NOM est ce qui sert de clef cote scene.
+    .setBaseColorFactor(parMateriau ? m.getBaseColorFactor() : [1, 1, 1, 1]);
 }
 
 // Les UV suivent : plus aucune texture ne les lit, et ils pesent deux flottants
@@ -99,5 +115,5 @@ const apres = {
 const ko = (n) => `${(n / 1024).toFixed(1)} ko`;
 console.log(`  octets      ${ko(avant.octets)}  ->  ${ko(apres.octets)}`);
 console.log(`  primitives  ${avant.primitives}  ->  ${apres.primitives}   (chacune = 2 appels de rendu, contour compris)`);
-console.log(`  materiaux   ${avant.materiaux}  ->  ${apres.materiaux}`);
+console.log(`  materiaux   ${avant.materiaux}  ->  ${apres.materiaux}${parMateriau ? "   " + doc.getRoot().listMaterials().map((m) => m.getName()).join(", ") : ""}`);
 console.log(`  textures    ${avant.textures}  ->  ${apres.textures}`);

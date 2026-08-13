@@ -29,6 +29,21 @@ import { materiauContour, materiauCroquis, type ReglagesCroquis } from "./materi
 // ou un modele compresse arriverait, c'est-a-dire longtemps apres qu'on aurait
 // oublie qu'elle existe. Ici, ce qui n'est pas ecrit ne peut pas se declencher.
 
+/**
+ * Les reglages : soit UN jeu pour tout l'objet, soit un par nom de materiau.
+ *
+ * La plupart des objets du bureau sont d'une seule matiere — un casque est noir,
+ * un fauteuil aussi. Une plante en pot, non : pot, terre et feuillage sont trois
+ * matieres, et les peindre d'une seule couleur donne une sculpture verte. La
+ * clef est le NOM du materiau tel qu'il vit dans le fichier ; c'est la seule
+ * chose stable qu'un modele conserve a travers la chaine de preparation, l'ordre
+ * des primitives, lui, ne l'etant pas.
+ */
+export type ReglagesParMateriau = { readonly [nom: string]: ReglagesCroquis };
+
+const estUnSeul = (r: ReglagesCroquis | ReglagesParMateriau): r is ReglagesCroquis =>
+  "couleur" in r;
+
 export function Importe({
   url,
   reglages,
@@ -38,7 +53,7 @@ export function Importe({
   scale,
 }: {
   url: string;
-  reglages: ReglagesCroquis;
+  reglages: ReglagesCroquis | ReglagesParMateriau;
   /** Epaisseur du contour. Zero le supprime. */
   trait?: number;
   position?: [number, number, number];
@@ -48,7 +63,20 @@ export function Importe({
   const gltf = useLoader(GLTFLoader, url);
 
   const objet = useMemo(() => {
-    const mat = materiauCroquis(reglages);
+    // UN MATERIAU PAR NOM, ET NON PAR MAILLAGE. Les creer dans la boucle en
+    // ferait un par primitive : three les compilerait separement et le cache de
+    // programmes ne pourrait pas les regrouper, alors que ce sont les memes.
+    const parNom = new Map<string, THREE.Material>();
+    const donner = (nom: string) => {
+      const trouve = parNom.get(nom);
+      if (trouve) return trouve;
+      const r = estUnSeul(reglages)
+        ? reglages
+        : (reglages[nom] ?? Object.values(reglages)[0]!);
+      const m = materiauCroquis(r);
+      parNom.set(nom, m);
+      return m;
+    };
     const matTrait = trait > 0 ? materiauContour(trait) : null;
 
     // CLONE, et ce n'est pas une precaution de style. `useLoader` met le resultat
@@ -67,7 +95,11 @@ export function Importe({
     });
 
     for (const m of maillages) {
-      m.material = mat;
+      // Le nom du materiau D'ORIGINE, lu avant de l'ecraser : c'est la clef.
+      const nom = Array.isArray(m.material)
+        ? (m.material[0]?.name ?? "")
+        : (m.material?.name ?? "");
+      m.material = donner(nom);
       m.castShadow = true;
       m.receiveShadow = true;
       if (matTrait) {
@@ -82,8 +114,11 @@ export function Importe({
       }
     }
     return racine;
+    // `reglages` est compare par sa forme serialisee : les appelants passent un
+    // litteral, donc une nouvelle reference a chaque rendu, et depender de la
+    // reference recreerait tous les materiaux par image.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gltf, trait, reglages.couleur, reglages.paliers, reglages.grain, reglages.plancher]);
+  }, [gltf, trait, JSON.stringify(reglages)]);
 
   return (
     <primitive object={objet} position={position} rotation={rotation} scale={scale} />

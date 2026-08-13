@@ -389,43 +389,54 @@ export function Mug({ position }: { position: [number, number, number] }) {
 }
 
 /**
- * La plante : la seule courbe organique d'une scene faite de boites.
+ * LA PLANTE. Troisieme modele importe, et le cas qui a fait evoluer la chaine.
  *
- * Les feuilles PARTENT du pot au lieu de flotter au-dessus. La premiere version
- * les posait a vingt centimetres de haut sur un pot qui en fait douze : on
- * voyait un caillou en levitation. Elles se chevauchent aussi entre elles —
- * une touffe est un volume continu, pas une constellation.
+ * Six icosaedres verts faisaient une constellation, pas un feuillage. Le
+ * probleme n'etait pas le nombre — c'est qu'une feuille a une NERVURE et un
+ * bord, deux choses qu'un solide de Platon n'a pas, et qu'aucun empilement de
+ * solides ne finit par avoir.
+ *
+ * ELLE EST LA SEULE A GARDER SES TROIS MATERIAUX. Pot, terre et feuillage sont
+ * trois matieres ; les fondre en une, comme pour le casque et le fauteuil,
+ * donnait une sculpture verte. C'est ce qui a fait naitre le drapeau
+ * `--par-materiau` de la chaine de preparation et la table de reglages par nom
+ * de materiau — le nom etant la seule chose qu'un modele conserve de façon
+ * stable a travers la preparation.
+ *
+ * Trois primitives, donc six appels de rendu avec les contours. C'est le prix de
+ * la couleur, et il se paie une fois pour toutes les instances : le fichier est
+ * telecharge, decode et mis en cache par URL, donc la plante de sol et celle du
+ * bureau ne coutent qu'un seul chargement.
  */
-export function Plante({ position }: { position: [number, number, number] }) {
-  const feuilles: [number, number, number, number][] = [
-    [0, 0.15, 0, 0.075],
-    [0.055, 0.185, 0.02, 0.062],
-    [-0.05, 0.17, -0.03, 0.058],
-    [0.02, 0.225, -0.045, 0.05],
-    [-0.03, 0.13, 0.055, 0.052],
-    [0.06, 0.13, -0.05, 0.045],
-  ];
+const MATIERES_PLANTE = {
+  Plant_Green: PALETTE.feuillage,
+  Brown: { couleur: "#4a3826", paliers: 3, grain: 0.16, plancher: 0.3 },
+  Black: PALETTE.ceramique,
+} as const;
+
+export function Plante({
+  position,
+  rotation = [0, 0, 0],
+  echelle = 1,
+}: {
+  position: [number, number, number];
+  rotation?: [number, number, number];
+  /**
+   * Une plante n'a pas de taille canonique — c'est ce qui la distingue du
+   * fauteuil, qu'on se garde bien de redimensionner. Le meme fichier sert donc
+   * de plante de sol a un metre et de pot de bureau a trente centimetres.
+   */
+  echelle?: number;
+}) {
   return (
-    <group position={position}>
-      <Forme reglages={PALETTE.ceramique} position={[0, 0.055, 0]} trait={0.0026}>
-        <cylinderGeometry args={[0.068, 0.05, 0.11, 16]} />
-      </Forme>
-      {/* Le rebord : un pot sans levre se lit comme un verre. */}
-      <Forme reglages={PALETTE.ceramique} position={[0, 0.112, 0]} trait={0.0022}>
-        <cylinderGeometry args={[0.074, 0.07, 0.014, 16]} />
-      </Forme>
-      {feuilles.map(([x, y, z, r], i) => (
-        <Forme
-          key={i}
-          reglages={PALETTE.feuillage}
-          position={[x, y, z]}
-          rotation={[i * 0.5, i * 1.3, i * 0.4]}
-          trait={0.0022}
-        >
-          <icosahedronGeometry args={[r, 0]} />
-        </Forme>
-      ))}
-    </group>
+    <Importe
+      url="/models/plante.glb"
+      reglages={MATIERES_PLANTE}
+      trait={0.0026 / Math.max(echelle, 0.2)}
+      position={position}
+      rotation={rotation}
+      scale={echelle}
+    />
   );
 }
 
