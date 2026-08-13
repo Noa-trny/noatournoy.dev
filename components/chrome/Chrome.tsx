@@ -9,12 +9,17 @@ import { ui } from "@/content/ui";
 // 1393 lignes de bandes alternees et de vert acide — retiree des layouts avec la
 // refonte : les onze pages autres que l'accueil s'affichaient donc nues.
 //
-// LE TIROIR DE MENU A DISPARU. Il existait parce que l'ancien site avait cinq
-// sections d'accueil a atteindre depuis n'importe ou, et il tirait un module de
-// comportement en GSAP pour s'ouvrir. Quatre destinations tiennent dans une
-// barre ; un tiroir pour quatre liens, c'est un clic de plus pour rien.
-// `MenuDrawer` reste exporte et ne rend rien, le temps que les pages cessent de
-// l'appeler — le retirer d'un coup casserait six fichiers pour aucun gain.
+// LE TIROIR DE MENU A DISPARU, et cette fois entierement. Il existait parce que
+// l'ancien site avait cinq sections d'accueil a atteindre depuis n'importe ou.
+// Quatre destinations tiennent dans une barre ; un tiroir pour quatre liens,
+// c'est un clic de plus pour rien.
+//
+// `MenuDrawer` a survecu un temps comme coquille vide « le temps que les pages
+// cessent de l'appeler ». Elles ne l'ont jamais fait, et le module de
+// comportement qui l'ouvrait est reste monte sur toutes les pages — quatre-
+// vingt-huit lignes a l'ecoute d'un `#menu` qu'aucune page ne rendait. Une
+// compatibilite provisoire qu'on ne retire pas devient une dette qu'on paie a
+// chaque chargement.
 
 export function Skip({ locale }: { locale: Locale }) {
   return (
@@ -75,11 +80,6 @@ export function Header({ pair, locale }: { pair: Pair; locale: Locale }) {
       </div>
     </header>
   );
-}
-
-/** Conserve pour ne pas casser les six pages qui l'appellent encore. */
-export function MenuDrawer(_: { locale: Locale; variant?: string }) {
-  return null;
 }
 
 export function Footer({ locale }: { locale: Locale }) {

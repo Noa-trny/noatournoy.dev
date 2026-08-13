@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { alternates, pair } from "@/content/routes";
-import { Footer, Header, MenuDrawer, Skip } from "@/components/chrome/Chrome";
+import { Footer, Header, Skip } from "@/components/chrome/Chrome";
 import { WorkRows } from "@/components/WorkRows";
 
 // Portage verbatim de en/work/index.html. Pendant anglais de app/(fr)/travaux :
@@ -73,8 +73,6 @@ export default function WorkEn() {
           </div>
         </section>
       </main>
-
-      <MenuDrawer locale="en" />
       <Footer locale="en" />
     </>
   );

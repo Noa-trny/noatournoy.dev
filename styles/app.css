@@ -215,20 +215,29 @@
   }
 }
 
-/* LA JAUGE DE DEFILEMENT, dont le JavaScript n'avait jamais cesse de tourner.
+/* LA JAUGE DE DEFILEMENT, EN CSS PUR.
 
-   `Kinetics` est monte dans les deux layouts et anime `.progress i` depuis le
-   debut ; c'est la REGLE qui manquait, partie avec spec.css. Le balisage etait
-   donc la, le script aussi, et rien ne s'affichait — un defaut qu'aucune erreur
-   ne signale, puisque `querySelector` trouve bien l'element et que GSAP anime
-   sans broncher une boite de zero pixel.
+   Elle etait animee par `Kinetics`, trois cent vingt-deux lignes qui tiraient
+   GSAP et ScrollTrigger sur CHAQUE page du site. Or ce module interrogeait
+   quatorze selecteurs de l'ancien site — `.hero`, `.bref`, `.certs`, `.btn` —
+   dont pas un seul n'existe encore : il ne lui restait que cette barre. Une
+   bibliotheque d'animation par page pour cent pixels de trait.
 
-   LES DEUX HAUTEURS SONT LIEES PAR LE SCRIPT, pas par le gout : il deplace le
-   curseur de 355 % de sa propre hauteur. Pour qu'il parte du haut de la piste
-   et s'arrete pile en bas, il faut piste = curseur x 4,55. Vingt-deux et cent
-   pixels. Toute autre paire fait soit deborder le curseur, soit l'arreter avant
-   la fin — et dans les deux cas la jauge ment sur la position. */
+   `animation-timeline: scroll()` fait la meme chose sans une ligne de
+   JavaScript : la progression de l'animation EST la position de la barre de
+   defilement, il n'y a plus ni ecouteur, ni recalcul, ni image perdue.
+
+   LES 355 % VIENNENT DU SCRIPT QU'ON REMPLACE, et ce n'est pas une coincidence
+   qu'on garde : c'est la contrainte. Le curseur se deplace de 355 % de sa
+   propre hauteur, donc pour qu'il parte du haut et s'arrete pile en bas il faut
+   piste = curseur x 4,55. Vingt-deux et cent pixels.
+
+   TOUT EST SOUS `@supports`, y compris l'affichage. Sans la regle, la valeur
+   `scroll()` est invalide et l'animation retombe sur la timeline du DOCUMENT :
+   la barre descendrait toute seule au chargement, une fois, en annonçant une
+   position fausse. Mieux vaut pas de jauge du tout qu'une jauge qui ment. */
 @utility progress {
+  display: none;
   position: fixed;
   top: 50%;
   right: 1.1rem;
@@ -238,8 +247,8 @@
   transform: translateY(-50%);
   border-radius: 1px;
   background: var(--color-line);
-  /* Elle ne recoit rien : une barre fixe qui intercepte un clic est
-     exactement le defaut qui a rendu toute la scene 3D inerte. */
+  /* Elle ne recoit rien : une barre fixe qui intercepte un clic est exactement
+     le defaut qui a rendu toute la scene 3D inerte. */
   pointer-events: none;
 
   & i {
@@ -251,8 +260,27 @@
   }
 }
 
-/* Sous mouvement reduit, le script ne l'anime pas : elle resterait figee en
-   haut, ce qui se lit comme une jauge cassee plutot que comme une absence. */
+@supports (animation-timeline: scroll()) {
+  .progress {
+    display: block;
+  }
+  .progress i {
+    animation: jauge linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
+@keyframes jauge {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(355%);
+  }
+}
+
+/* Sous mouvement reduit, elle disparait : une jauge est un mouvement, et c'est
+   precisement ce qu'on nous demande de retirer. */
 @media (prefers-reduced-motion: reduce) {
   .progress {
     display: none;

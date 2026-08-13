@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { alternates, pair } from "@/content/routes";
-import { Footer, Header, MenuDrawer, Skip } from "@/components/chrome/Chrome";
+import { Footer, Header, Skip } from "@/components/chrome/Chrome";
 
 export const metadata: Metadata = {
   title: "Contact — Noa Tournoy",
@@ -70,7 +70,6 @@ export default function ContactFr() {
           </div>
         </section>
       </main>
-      <MenuDrawer locale="fr" />
       <Footer locale="fr" />
     </>
   );

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { alternates, pair } from "@/content/routes";
-import { Footer, Header, MenuDrawer, Skip } from "@/components/chrome/Chrome";
+import { Footer, Header, Skip } from "@/components/chrome/Chrome";
 import { WorkRows } from "@/components/WorkRows";
 
 // Portage verbatim de travaux/index.html. L'habillage vient de Chrome, la liste
@@ -74,8 +74,6 @@ export default function WorkFr() {
           </div>
         </section>
       </main>
-
-      <MenuDrawer locale="fr" />
       <Footer locale="fr" />
     </>
   );

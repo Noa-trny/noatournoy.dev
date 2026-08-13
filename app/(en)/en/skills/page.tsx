@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { alternates, pair } from "@/content/routes";
-import { Footer, Header, MenuDrawer, Skip } from "@/components/chrome/Chrome";
+import { Footer, Header, Skip } from "@/components/chrome/Chrome";
 
 // La page skills, portee depuis /en/skills/index.html.
 // Les quatre bandes (titre, tech, ou, autres) sont portees par la page
@@ -108,7 +108,6 @@ export default function SkillsEn() {
           </div>
         </section>
       </main>
-      <MenuDrawer locale="en" />
       <Footer locale="en" />
     </>
   );

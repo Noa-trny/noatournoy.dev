@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { connection } from "next/server";
 import { alternates, pair } from "@/content/routes";
-import { Kinetics } from "@/components/motion/Kinetics";
-import { MenuBehaviour } from "@/components/motion/MenuBehaviour";
 import { FontPreload, sharedMetadata } from "../shared-head";
 import "@/styles/app.css";
 
@@ -58,8 +56,6 @@ export default async function RootLayoutFr({
         <div className="progress" aria-hidden="true">
           <i />
         </div>
-        <Kinetics />
-        <MenuBehaviour />
       </body>
     </html>
   );
