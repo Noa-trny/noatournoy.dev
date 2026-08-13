@@ -1,6 +1,7 @@
 "use client";
 
 import { Suspense, lazy, useEffect, useState } from "react";
+import type { ReactNode } from "react";
 import type { Locale } from "@/content/routes";
 import { refusDe3D } from "@/scene/capability";
 import { STATIONS, brancher } from "@/scene/bureau/defilement";
@@ -23,13 +24,32 @@ const Bureau = lazy(() => import("@/scene/bureau/Bureau"));
 // rendu client produisent le meme arbre — le repli, rien d'autre. Toute lecture
 // de `window`, `matchMedia` ou `navigator` PENDANT le rendu serait une
 // divergence d'hydratation par construction ; elles vivent donc dans un effet.
+//
+// LE DOCUMENT EST LA PISTE, et c'est le changement de cette version. Le repli
+// vivait dans une couche fixe posee par-dessus tout ; il est maintenant DECOUPE
+// par station, chaque section a l'offset de defilement ou son objet est a
+// l'ecran. Trois consequences tombent d'un coup :
+//
+//   — la page n'a plus besoin d'entretoise : ce sont les sections elles-memes
+//     qui donnent sa hauteur au trajet, donc la piste ne peut pas se
+//     desynchroniser du contenu ;
+//   — tabuler vers un lien de projet le fait defiler NATIVEMENT, la progression
+//     change, et la camera y vole. Zero ligne de code ;
+//   — sans JavaScript, les memes sections s'empilent dans l'ordre et forment le
+//     portfolio complet.
+
+export type Section = {
+  /** La clef de station, telle que declaree dans `defilement.ts`. */
+  readonly cle: string;
+  readonly noeud: ReactNode;
+};
 
 export function Monde({
   locale,
-  children,
+  sections,
 }: {
   locale: Locale;
-  children: React.ReactNode;
+  sections: readonly Section[];
 }) {
   const [actif, setActif] = useState(false);
 
@@ -49,7 +69,7 @@ export function Monde({
   }, []);
 
   // La lecture de la barre n'est branchee QUE si la scene l'est : sans canvas,
-  // la page n'a pas de piste a parcourir et l'ecouteur n'ecrirait dans le vide.
+  // la page se lit de haut en bas et n'a pas de camera a piloter.
   useEffect(() => {
     if (!actif) return;
     return brancher();
@@ -64,28 +84,20 @@ export function Monde({
       ) : null}
       {actif ? <Repere locale={locale} /> : null}
 
-      {/* LA PISTE : un ecran de hauteur par station, et rien d'autre.
-
-          C'est ce qui donne a la page de quoi defiler alors que le canvas est
-          fixe. Un seul bloc de « 600vh » aurait fait le meme effet, mais le
-          nombre aurait vecu dans la feuille de style pendant que les stations
-          vivent dans `defilement.ts` : ajouter une section aurait allonge le
-          trajet sans allonger la piste, et la derniere station serait devenue
-          inatteignable. Ici les deux comptent la meme liste.
-
-          `h-screen`, donc 100vh et non 100dvh : sur telephone, la hauteur
-          dynamique change quand la barre d'adresse se retracte, ce qui
-          modifierait la progression en plein defilement. */}
-      {actif
-        ? STATIONS.map((id, i) => (
-            <div key={id ?? "large"} aria-hidden="true" className="h-screen" data-station={i} />
-          ))
-        : null}
-
-      {/* Le site complet, TOUJOURS rendu et jamais retire. Invisible quand le
-          bureau est la, il revient au focus — `opacity` et non `display: none`,
-          qui le sortirait de l'ordre de tabulation. */}
-      <div className="monde-dom">{children}</div>
+      <main id="contenu">
+        {STATIONS.map((st, i) => {
+          const s = sections.find((x) => x.cle === st.cle);
+          return (
+            <div key={st.cle} className="station" data-station={i}>
+              {/* Une station sans section existe quand meme : le couloir et le
+                  plan large sont du TEMPS D'APPROCHE, et ce temps doit occuper
+                  sa hauteur de piste sinon la premiere section commence avant
+                  qu'on ait vu ou l'on est. */}
+              {s ? <div className="station-fond">{s.noeud}</div> : null}
+            </div>
+          );
+        })}
+      </main>
     </div>
   );
 }

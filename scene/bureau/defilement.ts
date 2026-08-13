@@ -23,15 +23,31 @@ import { ZONES } from "./zones";
 // jamais par le rendu React. C'est le meme contrat que sur le projet precedent,
 // et c'est ce qui lui a permis de tenir 60 images par seconde.
 
-/**
- * LES STATIONS, dans l'ordre du trajet : le plan large, puis les cinq objets.
- *
- * L'ordre est celui des zones, donc celui du fichier qui declare le contenu :
- * ajouter une section lui donne une station sans qu'on touche a ce fichier.
- */
-export const STATIONS: readonly (IdZone | null)[] = [null, ...ZONES.map((z) => z.id)];
+export type Station = {
+  /** Identite stable : elle sert de clef de rendu et de nom de point de vue. */
+  readonly cle: string;
+  /** La zone visee, ou `null` quand la station ne vise aucun objet. */
+  readonly zone: IdZone | null;
+};
 
-/** Le nombre d'intervalles a parcourir — cinq trajets pour six stations. */
+/**
+ * LES STATIONS, dans l'ordre du trajet.
+ *
+ * TROIS stations sans zone ouvrent la marche — le fond du couloir, le seuil,
+ * puis le plan large — et c'est pourquoi une station n'est plus un simple
+ * `IdZone | null` : trois `null` dans une liste ne se distinguent ni comme
+ * clefs de rendu ni comme points de vue. Les cinq suivantes derivent des zones, donc du fichier qui
+ * declare le contenu : ajouter une section lui donne une station sans qu'on
+ * touche a celui-ci.
+ */
+export const STATIONS: readonly Station[] = [
+  { cle: "couloir", zone: null },
+  { cle: "seuil", zone: null },
+  { cle: "bureau", zone: null },
+  ...ZONES.map((z) => ({ cle: z.id, zone: z.id })),
+];
+
+/** Le nombre d'intervalles a parcourir : une station de moins que la liste. */
 export const TRAJETS = STATIONS.length - 1;
 
 /**
@@ -73,8 +89,15 @@ export function brancher(): () => void {
   };
 }
 
-/** L'indice de station d'une zone, ou 0 pour le plan large. */
-export const indexDe = (id: IdZone | null) => Math.max(STATIONS.indexOf(id), 0);
+/** L'indice de station d'une zone, ou celui du plan large a defaut. */
+export const indexDe = (id: IdZone | null) =>
+  Math.max(
+    STATIONS.findIndex((s) => s.zone === id),
+    // Reculer ne ramene ni au couloir ni au seuil mais au PLAN LARGE : ce sont
+    // des entrees, pas des points de retour — on ne ressort pas de chez soi
+    // pour changer de piece.
+    2,
+  );
 
 /**
  * Fait defiler jusqu'a une station.

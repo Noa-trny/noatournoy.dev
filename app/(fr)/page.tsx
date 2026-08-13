@@ -1,4 +1,4 @@
-import { Home } from "@/components/home/Home";
+import { sectionsAccueil } from "@/components/home/Home";
 import { Monde } from "@/components/bureau/Monde";
 
 // L'accueil francais.
@@ -8,11 +8,11 @@ import { Monde } from "@/components/bureau/Monde";
 // referencement, le clavier et les navigateurs sans WebGL voient le meme site
 // que tout le monde — et c'est la seule propriete que les trois refontes de ce
 // projet n'ont pas entamee.
+//
+// Les sections sont RENDUES ICI, sur le serveur, et passees deja construites :
+// `Monde` est un composant client et ne peut pas recevoir la fonction qui les
+// fabrique. Il ne fait que les repartir le long du trajet.
 
 export default function Accueil() {
-  return (
-    <Monde locale="fr">
-      <Home locale="fr" />
-    </Monde>
-  );
+  return <Monde locale="fr" sections={sectionsAccueil("fr")} />;
 }

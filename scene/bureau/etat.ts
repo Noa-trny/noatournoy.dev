@@ -62,7 +62,9 @@ export const bureau = {
     allerA(indexDe(id));
   },
   fermer() {
-    allerA(0);
+    // Vers le PLAN LARGE et non le couloir : celui-ci est une entree, pas un
+    // point de retour. On ne ressort pas de chez soi pour changer de piece.
+    allerA(indexDe(null));
   },
   subscribe(f: () => void) {
     abonnes.add(f);

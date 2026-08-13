@@ -40,11 +40,82 @@ export type Zone = {
 /** Le champ vertical de la camera, en degres. Partage avec `Bureau`. */
 export const CHAMP = 32;
 
+/**
+ * LE DEPART : le fond du couloir.
+ *
+ * On n'arrive plus sur le bureau, on arrive DEVANT. Le premier ecran ne montre
+ * qu'un passage sombre et, tout au fond, la flaque de la lampe — ce qui donne
+ * au defilement une raison d'exister avant meme la premiere station.
+ *
+ * LE CHAMP FAIT PARTIE DU PLAN, et c'est ce que la premiere version ignorait.
+ * A 32 degres — l'equivalent d'un petit teleobjectif — les murs d'un couloir
+ * de deux metres n'entrent dans le cadre qu'a trois metres devant soi, donc
+ * apres le seuil : on ne voyait aucun couloir, seulement un grand noir avec un
+ * bureau lointain au milieu. Un couloir est une figure de GRAND-ANGLE ; le
+ * champ est donc une propriete de point de vue, interpolee comme le reste, et
+ * il se resserre a mesure qu'on approche.
+ */
+export const VUE_COULOIR = {
+  oeil: [0, 1.58, 10.7] as const,
+  // Vise plus bas que l'oeil : c'est ce qui fait entrer le sol dans le cadre et
+  // fuir les deux murs. Vise a hauteur d'oeil, un couloir devient un rectangle.
+  cible: [0, 1.12, 2] as const,
+  champ: 58,
+};
+
+/** En portrait le cadre est haut : ce sont le sol et le plafond qui le remplissent. */
+export const VUE_COULOIR_PORTRAIT = {
+  oeil: [0, 1.52, 10.4] as const,
+  // Vise plus bas qu'en paysage : en portrait ce sont le SOL et le plafond qui
+  // remplissent le cadre, les murs lateraux n'y entrant jamais — a ce rapport,
+  // il faudrait un couloir de soixante-dix centimetres pour les voir.
+  cible: [0, 0.92, 2.2] as const,
+  champ: 64,
+};
+
+/**
+ * LE SEUIL : un pas a l'interieur, la piece qui s'ouvre.
+ *
+ * Cette station n'est pas un ornement, c'est ce qui rend le couloir possible.
+ * La camera va d'une station a la suivante EN LIGNE DROITE ; or le plan large
+ * est pris de biais, a plus de deux metres de l'axe. Sans arret au seuil, la
+ * corde partait du fond du couloir droit vers ce biais et sortait par le mur
+ * bien avant la porte — ce qui obligeait a elargir le couloir jusqu'a ce qu'il
+ * n'en soit plus un. Ici les deux segments sont droits ET a l'interieur :
+ * l'axe jusqu'au seuil, puis le biais une fois dans la piece.
+ *
+ * Elle vaut aussi comme plan : franchir une porte et voir la piece s'ouvrir est
+ * un temps a part, que le plan large ne raconte pas.
+ */
+export const VUE_SEUIL = {
+  oeil: [0.3, 1.62, 6.8] as const,
+  cible: [-0.05, 1, -0.25] as const,
+  champ: 42,
+};
+
+export const VUE_SEUIL_PORTRAIT = {
+  oeil: [0.24, 1.66, 6.4] as const,
+  cible: [-0.1, 0.98, -0.25] as const,
+  champ: 48,
+};
+
 /** Le point de vue d'ensemble : le plan large, et le retour de chaque zone. */
 export const VUE_LARGE = {
   oeil: [2.35, 1.98, 2.85] as const,
   cible: [-0.05, 0.88, -0.25] as const,
 };
+
+/**
+ * LE RECUL MAXIMAL DU PLAN LARGE, et il est desormais borne par les murs.
+ *
+ * Reculer sur une fenetre etroite est ce qui evite de couper le bureau. Mais le
+ * recul deplace l'oeil le long d'une diagonale : au-dela de ce facteur, il
+ * sort de la piece et passe DERRIERE un mur, et la corde qui vient du couloir
+ * traverse le montant du seuil au passage. Sur une fenetre presque carree, le
+ * bureau sera donc legerement rogne — c'est le moindre des deux defauts, et le
+ * seul qu'on puisse encore regarder.
+ */
+export const RECUL_MAX = 1.35;
 
 /**
  * LE PLAN LARGE EN PORTRAIT, et ce n'est pas le meme cadrage recadre.

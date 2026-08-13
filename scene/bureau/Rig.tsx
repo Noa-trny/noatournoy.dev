@@ -5,7 +5,18 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { bureau } from "./etat";
 import { STATIONS, TRAJETS, piste } from "./defilement";
-import { CHAMP, SEUIL_PORTRAIT, VUE_LARGE, VUE_PORTRAIT, zonePar } from "./zones";
+import {
+  CHAMP,
+  VUE_SEUIL,
+  VUE_SEUIL_PORTRAIT,
+  RECUL_MAX,
+  SEUIL_PORTRAIT,
+  VUE_COULOIR,
+  VUE_COULOIR_PORTRAIT,
+  VUE_LARGE,
+  VUE_PORTRAIT,
+  zonePar,
+} from "./zones";
 
 // LE VOL DE CAMERA, DESORMAIS PILOTE PAR LA BARRE DE DEFILEMENT.
 //
@@ -58,36 +69,53 @@ export function Rig() {
   // ferait soixante fois par seconde un travail qui change au redimensionnement.
   const vues = useMemo(() => {
     const rapport = Math.max(taille.width / Math.max(taille.height, 1), 0.28);
-    const demiChamp = Math.tan(THREE.MathUtils.degToRad(CHAMP) / 2);
-
     // La distance a laquelle une largeur donnee tient dans le cadre : c'est la
     // formule du champ, rien de plus. Elle remplace tout reglage a la main —
     // les vues, composees sur un ecran large, coupaient le texte des deux cotes
     // en portrait, et l'auraient recoupe a la premiere dalle redimensionnee.
-    const distancePour = (largeur: number) => largeur / 2 / (demiChamp * rapport);
+    const distancePour = (largeur: number, champ: number) =>
+      largeur / 2 / (Math.tan(THREE.MathUtils.degToRad(champ) / 2) * rapport);
 
     // Le plan large, lui, n'a pas de largeur a lire : il a une composition. On
     // le recule donc au rapport, borne haut et bas — sans quoi une fenetre
     // simplement etroite coupe les bords du bureau sans que rien ne bascule.
+    // La borne haute vient des murs, pas du gout : voir RECUL_MAX.
     const reference = portrait ? 0.462 : 1.674;
-    const reculLarge = Math.min(Math.max(reference / rapport, 1), 2.1);
+    const reculLarge = Math.min(Math.max(reference / rapport, 1), RECUL_MAX);
 
-    return STATIONS.map((id) => {
-      const z = id ? zonePar(id) : null;
-      const large = portrait ? VUE_PORTRAIT : VUE_LARGE;
-      const cible = new THREE.Vector3(...(z ? z.cible : large.cible));
-      const oeilBrut = new THREE.Vector3(...(z ? z.oeil : large.oeil));
+    const approche = {
+      couloir: portrait ? VUE_COULOIR_PORTRAIT : VUE_COULOIR,
+      seuil: portrait ? VUE_SEUIL_PORTRAIT : VUE_SEUIL,
+      bureau: portrait ? VUE_PORTRAIT : VUE_LARGE,
+    } as const;
+
+    return STATIONS.map((st) => {
+      const z = st.zone ? zonePar(st.zone) : null;
+      const large = st.cle === "bureau";
+      const brut = z ?? approche[st.cle as keyof typeof approche] ?? approche.bureau;
+      const cible = new THREE.Vector3(...brut.cible);
+      const oeilBrut = new THREE.Vector3(...brut.oeil);
+      // Le champ appartient au plan : large dans le couloir, resserre une fois
+      // arrive. Une station qui n'en declare pas garde celui de la camera.
+      const champ = "champ" in brut ? brut.champ : CHAMP;
 
       // Le facteur s'applique le long du vecteur cible -> oeil : seule la
       // distance change, jamais l'angle. C'est l'angle qui fait la composition.
       // Et jamais moins que la distance ecrite : elle a ete composee, on ne s'en
       // rapproche pas sous pretexte qu'un ecran est large.
+      //
+      // Le couloir ne recule PAS. Ce qui remplit son cadre, ce sont ses propres
+      // murs : ils s'ecartent exactement comme le champ, donc reculer n'y montre
+      // rien de plus — seulement du noir en plus, et un depart plus loin de la
+      // seule lumiere de l'image.
       const facteur = z
-        ? Math.max(1, distancePour(z.largeur) / oeilBrut.distanceTo(cible))
-        : reculLarge;
+        ? Math.max(1, distancePour(z.largeur, champ) / oeilBrut.distanceTo(cible))
+        : large
+          ? reculLarge
+          : 1;
 
       const oeil = cible.clone().addScaledVector(oeilBrut.clone().sub(cible), facteur);
-      return { oeil, cible };
+      return { oeil, cible, champ };
     });
   }, [taille.width, taille.height, portrait]);
 
@@ -122,6 +150,21 @@ export function Rig() {
     camera.position.copy(_oeil);
     camera.lookAt(_cible);
 
+    // LE CHAMP SE RESSERRE EN MEME TEMPS QU'ON AVANCE : cinquante-huit degres
+    // au fond du couloir, trente-deux une fois au bureau. C'est ce qui donne au
+    // passage la compression d'un objectif qui se ferme plutot que le simple
+    // rapprochement d'une camera fixe.
+    //
+    // `updateProjectionMatrix` recalcule une matrice a chaque appel : la garde
+    // epsilon evite de le faire soixante fois par seconde pendant les longues
+    // portions ou le champ ne bouge pas d'un centieme de degre.
+    const champ = THREE.MathUtils.lerp(de.champ, vers.champ, t);
+    const perspective = camera as THREE.PerspectiveCamera;
+    if (Math.abs(perspective.fov - champ) > 0.01) {
+      perspective.fov = champ;
+      perspective.updateProjectionMatrix();
+    }
+
     if (espion) {
       (window as unknown as { __piste?: unknown }).__piste = {
         brut: +piste.brut.toFixed(3),
@@ -143,7 +186,7 @@ export function Rig() {
     const proche = Math.round(s);
     const pose = Math.abs(s - proche) < 0.22;
     bureau.set({
-      ouverte: (pose ? STATIONS[proche] : null) ?? null,
+      ouverte: (pose ? STATIONS[proche]?.zone : null) ?? null,
       // En mouvement, le survol est perime : R3F ne relance un lancer de rayon
       // que sur evenement de pointeur, jamais parce que la camera a bouge.
       ...(Math.abs(piste.brut - piste.lisse) > 0.0015 ? { survol: null } : {}),

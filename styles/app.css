@@ -156,25 +156,43 @@
 @custom-variant tactile (@media (hover: none));
 
 /* ---------------------------------------------------------------------------
-   LE MONDE ET SON REPLI
+   LE MONDE ET SA PISTE
 
-   Quand le bureau 3D tourne, le site complet reste dans le document mais sort
-   de la vue. `opacity` et NON `display: none` ni `hidden` : ces deux-la
-   retirent l'element de l'ordre de tabulation et de l'arbre d'accessibilite,
-   ce qui est exactement l'inverse du but. Le contenu revient des qu'un element
-   y prend le focus — le meme mecanisme qu'un lien d'evitement.
+   Le document EST la piste de defilement. Chaque station occupe un ecran de
+   hauteur, dans l'ordre du trajet, et porte la section dont l'objet est visible
+   a ce moment-la. C'est ce qui fait que tabuler vers un lien de projet le fait
+   defiler nativement, que la progression change, et que la camera suit — sans
+   une ligne de JavaScript.
+
+   Quand la scene ne tourne pas, TOUT CE BLOC NE S'APPLIQUE PAS : les stations
+   redeviennent des blocs ordinaires, les sections s'empilent a leur hauteur
+   naturelle, et l'on obtient le portfolio complet. Un seul balisage, deux
+   lectures.
 --------------------------------------------------------------------------- */
-.monde[data-3d="on"] .monde-dom {
-  position: fixed;
+.monde[data-3d="on"] .station {
+  /* `100vh` et non `100dvh` : sur telephone, la hauteur dynamique change quand
+     la barre d'adresse se retracte, ce qui deplacerait toutes les stations en
+     plein defilement. */
+  height: 100vh;
+  position: relative;
+}
+
+/* La section reste dans le document — jamais `display: none` ni `hidden`, qui
+   la sortiraient de l'ordre de tabulation et de l'arbre d'accessibilite, ce qui
+   est exactement l'inverse du but. Elle est seulement invisible, et revient des
+   qu'un de ses elements prend le focus. Meme ruse que le lien d'evitement. */
+.monde[data-3d="on"] .station-fond {
+  position: absolute;
   inset: 0;
-  overflow: auto;
+  overflow: hidden;
   opacity: 0;
   pointer-events: none;
   transition: opacity 220ms ease;
 }
-.monde[data-3d="on"] .monde-dom:focus-within {
+.monde[data-3d="on"] .station-fond:focus-within {
   opacity: 1;
   pointer-events: auto;
+  overflow: auto;
   background: var(--color-bg);
   z-index: 60;
 }

@@ -20,6 +20,7 @@ import {
 import { Sensible } from "./Sensible";
 import * as THREE from "three";
 import { Forme } from "../croquis/Forme";
+import { Couloir } from "./Couloir";
 import {
   Carnet,
   Ecran,
@@ -141,9 +142,12 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         // moindre maladresse. On recule en defilant, comme on avance.
       >
         <color attach="background" args={["#0a0b0d"]} />
-        {/* La brume s'ouvre : a 0,19 elle mangeait le fond de la piece des un
-            metre, et tout le decor tombait dans une soupe uniforme. */}
-        <fogExp2 attach="fog" args={["#090a0d", 0.13]} />
+        {/* La brume s'ouvre encore. A 0,13 elle etait juste pour une piece de
+            quatre metres ; depuis le fond du couloir, a onze, elle effaçait
+            quatre cinquiemes de la flaque de la lampe — c'est-a-dire la seule
+            chose que ce premier plan doit montrer. A 0,085, le couloir garde sa
+            profondeur et la destination reste visible. */}
+        <fogExp2 attach="fog" args={["#090a0d", 0.085]} />
 
         {/* LA LAMPE. Portee, chaude, placee dans l'abat-jour.
 
@@ -192,17 +196,19 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             et l'image entiere passe orange. */}
         <hemisphereLight args={["#3d4f70", "#0e1116", 0.85]} />
 
-        {/* Le sol. Il n'existe que pour recevoir l'ombre du bureau — sans lui,
-            le meuble flotte. Sans trait : un contour sur un plan infini
-            dessinerait un cadre autour de la scene. */}
+        {/* Le sol. Il recoit l'ombre du bureau — sans lui, le meuble flotte —
+            et il court desormais jusqu'au fond du couloir : un couloir sans sol
+            n'a qu'une fuyante sur deux, et l'oeil ne sait plus a quelle hauteur
+            il se trouve. Sans trait : un contour sur un plan de vingt-quatre
+            metres dessinerait un cadre autour de la scene. */}
         <Forme
           reglages={{ couleur: "#0f1116", paliers: 3, grain: 0.08, plancher: 0.16 }}
-          position={[0, 0, 0]}
+          position={[0, 0, 4.5]}
           rotation={[-Math.PI / 2, 0, 0]}
           trait={0}
           castShadow={false}
         >
-          <planeGeometry args={[14, 14]} />
+          <planeGeometry args={[16, 24]} />
         </Forme>
 
         {/* Le mur du fond, juste derriere les ecrans : il donne une butee au
@@ -212,11 +218,28 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             plus un ilot dans le noir, mais un objet pose sur un fond gris. */}
         <Forme
           reglages={{ couleur: "#12151b", paliers: 3, grain: 0.1, plancher: 0.14 }}
-          position={[0, 1.4, -1.05]}
+          position={[0, 1.6, -1.05]}
           trait={0}
         >
-          <boxGeometry args={[7, 2.8, 0.06]} />
+          <boxGeometry args={[8.6, 3.2, 0.06]} />
         </Forme>
+
+        {/* LA LUMIERE DU COULOIR : une seule source, et elle s'arrete avant le
+            bureau. `distance` a huit metres depuis le milieu du passage : elle
+            revele les deux fuyantes et meurt au seuil, donc elle ne touche pas
+            l'ilot de la lampe — qui doit rester la seule chaleur de la scene.
+            Trois sources pour trois bandeaux auraient coute trois passes
+            d'eclairage par image sur TOUS les materiaux, y compris ceux du
+            bureau, pour un couloir qu'on traverse en deux secondes. */}
+        <pointLight
+          position={[0, 2.15, 9.1]}
+          intensity={2.6}
+          distance={8}
+          decay={2}
+          color="#7c88a4"
+        />
+
+        <Couloir />
 
         <Plateau />
 
