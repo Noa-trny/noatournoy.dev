@@ -59,8 +59,11 @@ export const ZONES: readonly Zone[] = [
     id: "stack",
     objet: { fr: "la machine", en: "the machine" },
     titre: { fr: "Stack", en: "Stack" },
-    oeil: [-0.72, 1.12, 0.18],
-    cible: [-1.24, 0.88, -0.34],
+    // Plus de recul que les autres zones : une grille de neuf logos se lit
+    // d'un coup d'oeil, elle n'a pas besoin qu'on colle le nez dessus — et de
+    // pres, le boitier remplit le cadre sans qu'on sache ou l'on est.
+    oeil: [-0.42, 1.24, 0.46],
+    cible: [-1.2, 0.9, -0.3],
   },
   {
     id: "contact",

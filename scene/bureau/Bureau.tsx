@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import type { Locale } from "@/content/routes";
 import { Rig } from "./Rig";
+import { bureau } from "./etat";
 import { Dalle } from "./Dalle";
 import {
   peindreApropos,
@@ -88,6 +89,10 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         // image au premier rendu.
         dpr={[1, 1.5]}
         shadows={{ type: THREE.PCFShadowMap }}
+        // Un clic hors de tout objet recule. R3F ne relance un lancer de rayon
+        // que sur evenement de pointeur, jamais parce que la camera a bouge :
+        // c'est donc le seul endroit ou l'on apprend qu'on a vise le vide.
+        onPointerMissed={() => bureau.fermer()}
       >
         <color attach="background" args={["#0a0b0d"]} />
         <fogExp2 attach="fog" args={["#0a0b0d", 0.19]} />
@@ -173,7 +178,10 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             largeur={0.28}
             hauteur={0.21}
             position={[0.082, 0.115, 0]}
-            rotation={[0, Math.PI / 2, Math.PI / 2]}
+            // Un seul quart de tour, autour de Y. Le second, autour de Z, faisait
+            // monter l'etiquette a la verticale : le mot « STACK » se lisait de
+            // bas en haut le long de l'arete.
+            rotation={[0, Math.PI / 2, 0]}
             eclaire
           />
         </Machine>

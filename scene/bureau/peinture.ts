@@ -254,49 +254,90 @@ export function peindreParcours(locale: Locale): THREE.CanvasTexture {
   return texture(c);
 }
 
-/** Le flanc de la machine : la stack, comme une etiquette d'inventaire. */
+/**
+ * Le flanc de la machine : LES LOGOS, et rien d'autre.
+ *
+ * La premiere version listait la stack en pastilles de texte, groupe par
+ * groupe. Sur une surface de trente centimetres vue a deux metres, ça donnait
+ * un pave gris illisible — le texte etait la pour le principe, pas pour etre lu.
+ * Un logo se reconnait a une taille ou un mot ne se lit plus, et c'est
+ * exactement la contrainte d'une etiquette collee sur un boitier.
+ *
+ * NEUF SEULEMENT, en grille. Tout mettre reviendrait a refaire le pave, en
+ * images cette fois. Ce sont les outils qui reviennent dans les projets.
+ *
+ * LE DESSIN EST ASYNCHRONE et c'est ce que la mecanique doit encaisser. Les
+ * fichiers sont des SVG a charger ; on peint donc le fond tout de suite, puis on
+ * repeint quand les images arrivent en marquant la texture a rafraichir. Sans
+ * ce deuxieme passage, la surface resterait vide — et attendre avant de peindre
+ * laisserait un trou noir sur le bureau.
+ */
+const LOGOS = [
+  "python", "typescript", "react", "docker", "postgresql",
+  "kubernetes", "nextdotjs", "git", "cplusplus",
+];
+
 export function peindreStack(locale: Locale): THREE.CanvasTexture {
   const cph = home[locale];
-  REFERENCE = [512, 640];
-  const [c, g] = toile(384, 480);
-  g.fillStyle = "#191d24";
-  g.fillRect(0, 0, 512, 640);
+  REFERENCE = [512, 400];
+  const [c, g] = toile(384, 300);
 
-  g.fillStyle = JETONS.accent;
-  g.font = '600 22px "Inter", sans-serif';
-  g.fillText(cph.labels.stack.toUpperCase(), 34, 56);
-  g.strokeStyle = JETONS.ligne;
-  g.beginPath();
-  g.moveTo(34, 74);
-  g.lineTo(478, 74);
-  g.stroke();
+  const fond = () => {
+    g.fillStyle = "#12161c";
+    g.fillRect(0, 0, 512, 400);
+    g.fillStyle = JETONS.accent;
+    g.font = '600 22px "Inter", sans-serif';
+    g.fillText(cph.labels.stack.toUpperCase(), 36, 52);
+    g.strokeStyle = JETONS.ligne;
+    g.lineWidth = 1.5;
+    g.beginPath();
+    g.moveTo(36, 70);
+    g.lineTo(476, 70);
+    g.stroke();
+  };
+  fond();
 
-  let y = 118;
-  for (const groupe of cph.stack.slice(0, 4)) {
-    g.fillStyle = JETONS.encre;
-    g.font = '600 19px "Inter", sans-serif';
-    g.fillText(groupe.word, 34, y);
-    y += 26;
-    let x = 34;
-    for (const it of groupe.items.slice(0, 6)) {
-      g.font = '400 16px "Inter", sans-serif';
-      const l = g.measureText(it.name).width + 18;
-      if (x + l > 478) {
-        x = 34;
-        y += 32;
+  const tex = texture(c);
+
+  // Le chargement, puis un unique repassage. `Promise.allSettled` et non `all` :
+  // une icone manquante ne doit pas emporter les huit autres.
+  const cote = 96;
+  const marge = 36;
+  const pas = (512 - marge * 2 - cote) / 2;
+  Promise.allSettled(
+    LOGOS.map(
+      (nom) =>
+        new Promise<[string, HTMLImageElement]>((resoudre, rejeter) => {
+          const img = new Image();
+          img.onload = () => resoudre([nom, img]);
+          img.onerror = rejeter;
+          img.src = `/assets/icons/${nom}.svg`;
+        })
+    )
+  ).then((sorties) => {
+    fond();
+    let i = 0;
+    for (const sortie of sorties) {
+      if (sortie.status !== "fulfilled") {
+        i += 1;
+        continue;
       }
-      g.strokeStyle = JETONS.ligne;
+      const [, img] = sortie.value;
+      const x = marge + (i % 3) * pas;
+      const y = 108 + Math.floor(i / 3) * 94;
+      // Une plaque sous chaque logo : sans elle, un logo sombre — Next, GitHub —
+      // disparait dans le fond du boitier.
+      g.fillStyle = "#1c222b";
       g.beginPath();
-      g.roundRect(x, y - 18, l, 26, 5);
-      g.stroke();
-      g.fillStyle = JETONS.mid;
-      g.fillText(it.name, x + 9, y);
-      x += l + 7;
+      g.roundRect(x - 14, y - 14, cote + 28, cote + 28, 12);
+      g.fill();
+      g.drawImage(img, x, y, cote, cote);
+      i += 1;
     }
-    y += 56;
-    if (y > 600) break;
-  }
-  return texture(c);
+    tex.needsUpdate = true;
+  });
+
+  return tex;
 }
 
 /** L'ecran du portable : le contact. */

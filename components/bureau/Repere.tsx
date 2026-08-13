@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import type { Locale } from "@/content/routes";
 import { useBureau } from "@/scene/bureau/etat";
 import { ZONES, zonePar } from "@/scene/bureau/zones";
@@ -22,6 +23,18 @@ export function Repere({ locale }: { locale: Locale }) {
   const ouverte = useBureau((e) => e.ouverte);
   const z = survol ? zonePar(survol) : null;
 
+  // LE RETOUR EN ARRIERE. Sans panneau a fermer, il faut un chemin explicite
+  // pour reculer — sinon on approche un objet et l'on reste coince dessus.
+  // Trois : la touche d'echappement, un clic dans le vide, et un bouton.
+  useEffect(() => {
+    if (!ouverte) return;
+    const clavier = (e: KeyboardEvent) => {
+      if (e.key === "Escape") bureau.fermer();
+    };
+    document.addEventListener("keydown", clavier);
+    return () => document.removeEventListener("keydown", clavier);
+  }, [ouverte]);
+
   return (
     <>
       <div
@@ -33,6 +46,17 @@ export function Repere({ locale }: { locale: Locale }) {
         {z ? z.titre[locale] : ""}
         <span className="ml-2 text-dim">{z ? z.objet[locale] : ""}</span>
       </div>
+
+      {/* Le bouton de retour, visible seulement quand on est approche. */}
+      <button
+        type="button"
+        onClick={() => bureau.fermer()}
+        className={`fixed top-6 left-6 z-30 rounded-full border border-line bg-surface/80 px-4 py-2 text-sm text-mid backdrop-blur transition-opacity duration-300 hover:border-accent hover:text-fg ${
+          ouverte ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      >
+        ← {locale === "fr" ? "Reculer" : "Step back"}
+      </button>
 
       <nav
         aria-label={locale === "fr" ? "Sections" : "Sections"}
