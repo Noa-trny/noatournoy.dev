@@ -69,7 +69,7 @@ export type HomeCopy = {
   readonly labels: Readonly<Record<"bref" | "travaux" | "parcours" | "stack" | "certs", string>>;
   /** Decoupes autour du <em> qui porte le vert acide : le site n'utilise
    *  innerHTML nulle part, et un composant JSX est aussi lisible. */
-  readonly titles: Readonly<Record<"travaux" | "parcours" | "stack" | "certs", EmTitle>>;
+  readonly titles: Readonly<Record<"apropos" | "travaux" | "parcours" | "stack" | "certs", EmTitle>>;
   readonly bref: readonly BrefRow[];
   readonly time: readonly Milestone[];
   readonly stack: readonly StackGroup[];
@@ -167,6 +167,7 @@ export const home: Readonly<Record<Locale, HomeCopy>> = {
       "bref": "En bref"
     },
     "titles": {
+      "apropos": { "before": "Ce qu'il faut savoir, ", "em": "en bref", "after": "." },
       "travaux": {
         "before": "Du shader au ",
         "em": "tableau de bord",
@@ -502,6 +503,7 @@ export const home: Readonly<Record<Locale, HomeCopy>> = {
       "bref": "At a glance"
     },
     "titles": {
+      "apropos": { "before": "What is worth knowing, ", "em": "at a glance", "after": "." },
       "travaux": {
         "before": "From shader to ",
         "em": "dashboard",

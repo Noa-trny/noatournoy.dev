@@ -35,9 +35,13 @@ export function Bento({ locale }: { locale: Locale }) {
           id="t-apropos"
           className="mt-3 max-w-2xl text-[clamp(1.75rem,3.6vw,2.5rem)] font-semibold"
         >
-          {c.titles.parcours.before}
-          <span className="text-accent-soft">{c.titles.parcours.em}</span>
-          {c.titles.parcours.after}
+          {/* SON PROPRE TITRE. Cette section portait celui du PARCOURS — « Du
+              bac NSI a l'alternance cyber » — qui decrit un trajet dans le
+              temps, pas un apercu. Les deux `aria-labelledby` nommaient donc la
+              mauvaise section l'un comme l'autre. */}
+          {c.titles.apropos.before}
+          <span className="text-accent-soft">{c.titles.apropos.em}</span>
+          {c.titles.apropos.after}
         </h2>
       </Reveal>
 

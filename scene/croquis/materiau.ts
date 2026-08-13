@@ -123,10 +123,24 @@ export function materiauCroquis(r: ReglagesCroquis): THREE.MeshStandardMaterial 
       .replace("#include <dithering_fragment>", APRES_ECLAIRAGE);
   };
 
-  // La clef porte les DEUX reglages qui changent le code compile. Sans elle,
-  // deux materiaux aux paliers differents se partageraient un programme et le
-  // second rendrait avec les valeurs du premier.
-  m.customProgramCacheKey = () => `croquis-${paliers}-${grain.toFixed(3)}-${plancher.toFixed(3)}`;
+  // UNE CLEF CONSTANTE, ET C'EST TOUT CE QU'IL FAUT.
+  //
+  // Elle valait `croquis-${paliers}-${grain}-${plancher}`, c'est-a-dire qu'elle
+  // pliait trois UNIFORMES dans la clef d'un programme. Or le GLSL injecte est
+  // identique au caractere pres pour tous les materiaux croquis : ces trois
+  // valeurs ne changent pas une ligne de code, elles changent une donnee que le
+  // shader lit a l'execution.
+  //
+  // three alloue un `WebGLProgram` par clef distincte. Les huit entrees de la
+  // palette, les quatre matieres du couloir, le sol, le mur et la terre de la
+  // plante donnaient une quinzaine de triplets differents, donc une quinzaine
+  // de compilations et d'editions de liens a la premiere image — sur une scene
+  // dont tout l'objet est de tourner sur une carte integree.
+  //
+  // Le commentaire en tete de ce fichier prevenait des DEUX erreurs possibles :
+  // une clef trop large fait partager un programme a deux materiaux differents,
+  // une clef trop fine recompile pour rien. C'etait la seconde.
+  m.customProgramCacheKey = () => "croquis";
 
   return m;
 }

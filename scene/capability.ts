@@ -43,10 +43,17 @@ function rendLogiciel(gl: WebGL2RenderingContext): boolean {
     const nom = ext
       ? String(gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) ?? "")
       : String(gl.getParameter(gl.RENDERER) ?? "");
-    if (process.env.NODE_ENV !== "production" || typeof window !== "undefined") {
-      console.info(`[voyage] rendu par : ${nom || "(inconnu)"}`);
-    }
     sondeLogiciel = /swiftshader|software|llvmpipe|basic render|microsoft basic/i.test(nom);
+    // ON NE JOURNALISE QUE LE REFUS, et la garde precedente etait une
+    // tautologie : `NODE_ENV !== "production" || typeof window !== "undefined"`
+    // — or cette fonction n'est atteignable que depuis le navigateur, donc le
+    // second terme etait toujours vrai et le premier ne servait a rien. Chaque
+    // visiteur recevait le nom de sa carte graphique dans sa console. Le seul
+    // cas qui merite une trace est celui ou la scene est REFUSEE : c'est la
+    // seule chose qui distingue « la machine a refuse » de « ça a plante ».
+    if (sondeLogiciel) {
+      console.warn(`[bureau] rendu logiciel detecte : ${nom || "(inconnu)"}`);
+    }
     return sondeLogiciel;
   } catch {
     sondeLogiciel = false;
@@ -137,5 +144,3 @@ export function refusDe3D(): Refus | null {
 
   return null;
 }
-
-export const canRun3D = (): boolean => refusDe3D() === null;

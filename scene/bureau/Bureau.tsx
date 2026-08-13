@@ -8,9 +8,10 @@ import { CHAMP } from "./zones";
 import { useRouter } from "next/navigation";
 import { routes } from "@/content/routes";
 import { PROJECTS } from "@/content/projects";
-import { LIGNES_CONTACT, LIGNES_PROJETS } from "./peinture";
 import { Dalle } from "./Dalle";
 import {
+  LIGNES_CONTACT,
+  LIGNES_PROJETS,
   peindreApropos,
   peindreContact,
   peindreParcours,
@@ -29,7 +30,6 @@ import {
   Lampe,
   Machine,
   Mug,
-  PALETTE,
   Plante,
   Plateau,
   Portable,

@@ -23,7 +23,10 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#fbfbfc",
+  // Le fond du site, et non plus le blanc casse de l'ancien theme : sur
+  // telephone, la barre d'adresse peignait presque blanc au-dessus d'une
+  // page a #0a0b0d.
+  themeColor: "#0a0b0d",
 };
 
 // `connection()` COMME DANS LES DEUX LAYOUTS, et pour la meme raison — mais

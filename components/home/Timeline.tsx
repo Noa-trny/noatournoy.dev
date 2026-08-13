@@ -33,7 +33,11 @@ export function Timeline({ locale }: { locale: Locale }) {
           id="t-parcours"
           className="mt-3 max-w-2xl text-[clamp(1.75rem,3.6vw,2.5rem)] font-semibold"
         >
-          {c.labels.bref}
+          {/* `labels.bref` etait ici : une ETIQUETTE — « En bref » — servait de
+              titre, sous un surtitre qui disait deja « Parcours ». */}
+          {c.titles.parcours.before}
+          <span className="text-accent-soft">{c.titles.parcours.em}</span>
+          {c.titles.parcours.after}
         </h2>
       </Reveal>
 

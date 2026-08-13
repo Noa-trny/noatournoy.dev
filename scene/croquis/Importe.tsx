@@ -133,14 +133,3 @@ export function Importe({
     <primitive object={objet} position={position} rotation={rotation} scale={scale} />
   );
 }
-
-/**
- * Demande le fichier avant qu'on en ait besoin.
- *
- * Un modele charge a l'instant ou la camera arrive dessus apparait EN RETARD,
- * et le retard se lit comme un defaut alors que c'est la latence du reseau.
- * Appele au montage de la scene, le fichier est la bien avant la station.
- */
-export function precharger(url: string) {
-  useLoader.preload(GLTFLoader, url);
-}
