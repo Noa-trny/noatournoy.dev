@@ -10,6 +10,7 @@ qui vient d'ailleurs.
 | Fichier | Source | Auteur | Licence |
 |---|---|---|---|
 | `public/models/casque.glb` | [Poly Pizza](https://poly.pizza/m/PSsWSIAYIL) | CreativeTrio | CC0 1.0 (domaine public) |
+| `public/models/fauteuil.glb` | [Poly Pizza](https://poly.pizza/m/UfKvrZBK6C) | Quaternius | CC0 1.0 (domaine public) |
 
 CC0 n'exige aucune attribution. Elle figure ici parce qu'un travail qu'on
 reprend se cite, et parce que la question « d'où vient ce fichier » doit avoir

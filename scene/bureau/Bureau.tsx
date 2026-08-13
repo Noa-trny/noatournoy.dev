@@ -34,6 +34,7 @@ import {
   Saisie,
   Livres,
   Casque,
+  Fauteuil,
   Feuillets,
 } from "./pieces";
 
@@ -189,8 +190,13 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
           color="#8fbcff"
         />
 
-        {/* L'ambiante, tres faible et bleue : elle empeche le noir absolu sans
-            eclairer la piece. */}
+        {/* LE REMPLISSAGE RESTE BLEU, PAS CYAN. Vire au cyan pour accompagner
+            le ruban, il donnait un abat-jour LAITON VERT et un plateau de bois
+            verdatre : du cyan sur de l'orange fait du vert, et la quantification
+            en trois paliers, qui elargit chaque bande, rend le virage franc au
+            lieu de subtil. Les couleurs du ruban sont dans le RUBAN — une
+            source visible — et dans la seule lampe magenta qui lave le mur ;
+            elles n'ont rien a faire dans la lumiere qui tombe sur le bois. */}
         {/* L'ambiante remonte : le froid doit exister ailleurs que sous les
             ecrans, sinon le chaud de la lampe n'a rien contre quoi se detacher
             et l'image entiere passe orange. */}
@@ -240,6 +246,36 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         />
 
         <Couloir />
+
+        {/* LE RUBAN, ET SON UNIQUE LAMPE.
+
+            Deux segments non eclaires poses au ras du plateau, contre le mur :
+            c'est la SOURCE VISIBLE, celle qu'on voit briller. Elle ne coute
+            rien — un materiau basique ne participe a aucun calcul d'eclairage.
+
+            Mais une source visible n'eclaire rien, et un ruban qui ne teinte
+            pas le mur derriere lui se lit comme un autocollant. D'ou une seule
+            vraie lampe, magenta, de portee courte : elle lave le mur juste
+            derriere les ecrans et meurt avant d'atteindre le plateau. Deux
+            lampes de plus — une par couleur — auraient coute une passe
+            d'eclairage supplementaire sur TOUS les materiaux de la scene, y
+            compris ceux du couloir, pour une nuance que le ruban donne deja. */}
+        {[
+          { x: -0.78, couleur: "#c832ff" },
+          { x: 0.78, couleur: "#22e6ff" },
+        ].map((r) => (
+          <mesh key={r.x} position={[r.x, 0.782, -0.7]}>
+            <boxGeometry args={[1.5, 0.012, 0.02]} />
+            <meshBasicMaterial color={r.couleur} toneMapped={false} />
+          </mesh>
+        ))}
+        <pointLight
+          position={[-0.7, 0.86, -0.78]}
+          intensity={2.2}
+          distance={2.4}
+          decay={2}
+          color="#b039ff"
+        />
 
         <Plateau />
 
@@ -297,6 +333,18 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             eclaire
           />
         </Machine>
+        {/* SA PROPRE FRONTIERE, comme le casque : cent-dix kilooctets ne
+            doivent pas retenir l'affichage du couloir. */}
+        <Suspense fallback={null}>
+          {/* Decale a gauche ET devant le plateau. A z = 0,95 il est hors du
+              meuble — qui fait un metre cinquante de profondeur — et a x = -0,5
+              il laisse libre la ligne de visee du plan large vers l'ecran
+              principal, qui passe par x = 0,76 a cette profondeur. Un siege
+              pousse sous le bureau aurait traverse le plateau ; un siege
+              centre aurait masque la liste des travaux. */}
+          <Fauteuil position={[-0.5, 0, 0.95]} rotation={[0, Math.PI, 0]} />
+        </Suspense>
+
         <Lampe position={[-1.32, 0.7675, -0.6]} />
         <Mug position={[0.28, 0.7675, 0.36]} />
         <Plante position={[1.42, 0.7675, -0.46]} />

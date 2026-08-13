@@ -227,12 +227,17 @@ export function Saisie({ position }: { position: [number, number, number] }) {
       <Forme reglages={PALETTE.boitier} position={[0, 0.008, 0]} trait={0.0026}>
         <boxGeometry args={[0.308, 0.016, 0.134]} />
       </Forme>
-      {/* La plaque de fond, visible entre les touches : c'est elle qui donne
-          leur profondeur aux capuchons. Sans trait, sinon un contour noir
-          double chaque bord de touche par en dessous. */}
-      <Forme reglages={PALETTE.cadre} position={[0, 0.0165, 0]} trait={0}>
+      {/* LA PLAQUE DE FOND EST UNE SOURCE, pas une surface. C'est tout le
+          retroeclairage du clavier : la lumiere ne sort pas des touches, elle
+          sort de DESSOUS et remonte par les interstices — exactement comme sur
+          un vrai clavier retroeclaire, ou l'on ne voit jamais les diodes.
+          Materiau non eclaire, donc elle ne coute aucune passe de lumiere et
+          ne projette rien : un clavier qui eclairerait le bureau serait un
+          projecteur. */}
+      <mesh position={[0, 0.0165, 0]}>
         <boxGeometry args={[0.296, 0.001, 0.122]} />
-      </Forme>
+        <meshBasicMaterial color="#7b3ff2" toneMapped={false} />
+      </mesh>
       <Forme reglages={PALETTE.pied} position={[0, 0.017, 0]} trait={0.0016}>
         <primitive object={touches} attach="geometry" />
       </Forme>
@@ -500,6 +505,37 @@ export function Casque({ position }: { position: [number, number, number] }) {
         scale={1.35}
       />
     </group>
+  );
+}
+
+/**
+ * LE FAUTEUIL. Deuxieme modele importe, et celui qui manquait le plus.
+ *
+ * La place du siege etait VIDE — pas simplifiee, absente. Un poste de travail
+ * sans siege se lit comme un decor de vitrine : personne n'y travaille. Et
+ * c'est la forme qu'aucune primitive n'approche, entre le galbe du dossier, les
+ * accoudoirs et l'etoile a cinq branches du pied.
+ *
+ * Il n'est pas mis a l'echelle : le modele fait 1,13 m de haut et son origine
+ * est au sol, ce qui est exactement un fauteuil de bureau reel. Quand c'est le
+ * cas, on n'y touche pas — un facteur d'echelle sur un objet dont on connait la
+ * taille reelle est une erreur qui attend son heure.
+ */
+export function Fauteuil({
+  position,
+  rotation = [0, 0, 0],
+}: {
+  position: [number, number, number];
+  rotation?: [number, number, number];
+}) {
+  return (
+    <Importe
+      url="/models/fauteuil.glb"
+      reglages={PALETTE.boitier}
+      trait={0.0026}
+      position={position}
+      rotation={rotation}
+    />
   );
 }
 
