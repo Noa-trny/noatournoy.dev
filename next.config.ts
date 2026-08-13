@@ -77,6 +77,21 @@ const config: NextConfig = {
       },
       // Les actifs dont le nom ne change jamais et le contenu non plus.
       {
+        // LES MODELES SONT REVENUS, ET LEUR EN-TETE AVEC. Cette regle avait ete
+        // retiree en meme temps que la maison en verre, au motif que le site ne
+        // chargeait plus aucun `.glb` — c'etait vrai ce jour-la. Le casque, le
+        // fauteuil et les deux plantes sont arrives ensuite, et personne n'est
+        // revenu ici : cent cinquante-six kilooctets revalides a chaque visite,
+        // sans que rien ne le signale, puisque tout fonctionne.
+        source: "/models/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
+          },
+        ],
+      },
+      {
         source: "/fonts/:path*",
         headers: [
           {

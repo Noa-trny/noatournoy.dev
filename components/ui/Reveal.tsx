@@ -13,10 +13,15 @@ import { useEffect, useRef, useState } from "react";
 // par element revelé, sur une page qui en compte une trentaine, fait travailler
 // le navigateur a chaque defilement pour des elements dont le sort est scelle.
 //
-// Le mouvement reduit est traite en CSS et non ici : la regle `@media` de
-// `app.css` neutralise l'opacite et la transformation, si bien que le contenu
-// est visible meme si ce composant ne s'execute jamais — sans JavaScript, par
-// exemple.
+// SANS JAVASCRIPT, RIEN N'EST CACHE, et cette phrase a longtemps ete fausse
+// ici. Le commentaire precedent affirmait que le contenu restait visible « meme
+// si ce composant ne s'execute jamais », en s'appuyant sur la regle
+// `prefers-reduced-motion` — qui ne se declenche que si l'utilisateur a demande
+// moins d'animations. Pour un visiteur ordinaire sans scripts, l'accueil entier
+// restait blanc : trente-deux blocs, trente-deux invisibles.
+//
+// La regle qui cache est desormais sous `@media (scripting: enabled)` : elle ne
+// s'applique QUE la ou ce composant peut tourner. Voir app.css.
 
 export function Reveal({
   children,

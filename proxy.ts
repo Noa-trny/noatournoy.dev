@@ -62,8 +62,13 @@ export const config = {
     {
       // Les actifs statiques n'ont pas besoin de nonce et ne doivent pas payer
       // une invocation de fonction a chaque requete.
+      //
+      // `models/` etait sorti de cette liste quand le site ne chargeait plus
+      // aucun `.glb` — c'etait exact ce jour-la. Trois modeles sont revenus
+      // depuis, et chaque requete payait donc une fonction au bord pour recevoir
+      // une CSP dont un fichier binaire n'a aucun usage.
       source:
-        "/((?!_next/static|_next/image|favicon\\.ico|favicon\\.svg|apple-touch-icon\\.png|og\\.png|robots\\.txt|fonts/|assets/).*)",
+        "/((?!_next/static|_next/image|favicon\\.ico|favicon\\.svg|apple-touch-icon\\.png|og\\.png|robots\\.txt|fonts/|models/|assets/).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },
