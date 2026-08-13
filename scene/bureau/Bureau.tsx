@@ -1,7 +1,17 @@
 "use client";
 
+import { useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
+import type { Locale } from "@/content/routes";
 import { Rig } from "./Rig";
+import { Dalle } from "./Dalle";
+import {
+  peindreApropos,
+  peindreContact,
+  peindreParcours,
+  peindreProjets,
+  peindreStack,
+} from "./peinture";
 import { Sensible } from "./Sensible";
 import * as THREE from "three";
 import { Forme } from "../croquis/Forme";
@@ -46,7 +56,20 @@ function Halo() {
   );
 }
 
-export default function Bureau() {
+export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
+  // Les peintres sont memorises sur la langue : sans ça, chaque rendu de
+  // React en fabriquerait de nouveaux et `Dalle` repeindrait cinq toiles.
+  const peintres = useMemo(
+    () => ({
+      projets: () => peindreProjets(locale),
+      apropos: () => peindreApropos(locale),
+      parcours: () => peindreParcours(locale),
+      stack: () => peindreStack(locale),
+      contact: () => peindreContact(locale),
+    }),
+    [locale]
+  );
+
   return (
     <div className="fixed inset-0">
       <Canvas
@@ -118,22 +141,42 @@ export default function Bureau() {
         {/* Les deux ecrans, legerement tournes vers le siege : un ecran droit
             face au monde est un ecran de vitrine, pas de travail. */}
         <Ecran position={[-0.32, 0.7675, -0.34]} rotation={[0, 0.22, 0]}>
-          <mesh>
-            <planeGeometry args={[0.58, 0.34]} />
-            <meshBasicMaterial color="#101826" />
-          </mesh>
+          <Dalle peindre={peintres.projets} largeur={0.58} hauteur={0.34} />
         </Ecran>
         <Ecran position={[0.5, 0.7675, -0.3]} rotation={[0, -0.3, 0]} largeur={0.54} hauteur={0.34}>
-          <mesh>
-            <planeGeometry args={[0.5, 0.3]} />
-            <meshBasicMaterial color="#0e1a18" />
-          </mesh>
+          <Dalle peindre={peintres.apropos} largeur={0.5} hauteur={0.3} />
         </Ecran>
 
-        <Portable position={[1.02, 0.7675, 0.16]} rotation={[0, -0.62, 0]} />
+        <Portable position={[1.02, 0.7675, 0.16]} rotation={[0, -0.62, 0]}>
+          <Dalle peindre={peintres.contact} largeur={0.31} hauteur={0.19} />
+        </Portable>
         <Saisie position={[-0.18, 0.7675, 0.28]} />
-        <Carnet position={[-1.02, 0.7675, 0.2]} rotation={[0, 0.34, 0]} />
-        <Machine position={[-1.24, 0.7675, -0.34]} rotation={[0, 0.18, 0]} />
+        {/* LE CARNET EST OUVERT, et sa page porte la frise. Ferme, il ne
+            pouvait qu'annoncer une section ; ouvert, il la montre. C'est toute
+            la difference entre un objet qui designe un contenu et un objet qui
+            EST le contenu. */}
+        <Carnet position={[-1.02, 0.7675, 0.2]} rotation={[0, 0.34, 0]}>
+          <Dalle
+            peindre={peintres.parcours}
+            largeur={0.175}
+            hauteur={0.255}
+            position={[0, 0.031, 0]}
+            rotation={[-Math.PI / 2, 0, 0]}
+            eclaire
+          />
+        </Carnet>
+        <Machine position={[-1.24, 0.7675, -0.34]} rotation={[0, 0.18, 0]}>
+          {/* Le flanc de la machine, tourne vers la camera : une etiquette
+              d'inventaire plutot qu'un boitier muet. */}
+          <Dalle
+            peindre={peintres.stack}
+            largeur={0.28}
+            hauteur={0.21}
+            position={[0.082, 0.115, 0]}
+            rotation={[0, Math.PI / 2, Math.PI / 2]}
+            eclaire
+          />
+        </Machine>
         <Lampe position={[-1.16, 0.7675, -0.52]} />
         <Mug position={[0.28, 0.7675, 0.36]} />
         <Plante position={[1.42, 0.7675, -0.46]} />

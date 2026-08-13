@@ -92,9 +92,11 @@ export function Ecran({
 export function Portable({
   position,
   rotation = [0, 0, 0],
+  children,
 }: {
   position: [number, number, number];
   rotation?: [number, number, number];
+  children?: React.ReactNode;
 }) {
   return (
     <group position={position} rotation={rotation}>
@@ -111,10 +113,7 @@ export function Portable({
           <boxGeometry args={[0.34, 0.22, 0.011]} />
         </Forme>
         {/* La dalle, non eclairee : un ecran allume ne recoit pas d'ombre. */}
-        <mesh position={[0, 0.11, 0.007]}>
-          <planeGeometry args={[0.31, 0.19]} />
-          <meshBasicMaterial color="#0d1a26" />
-        </mesh>
+        <group position={[0, 0.11, 0.007]}>{children}</group>
       </group>
       {/* Pave tactile et clavier : deux creux suffisent a la lecture. */}
       <Forme reglages={PALETTE.cadre} position={[0, 0.017, 0.055]} trait={0}>
@@ -148,9 +147,11 @@ export function Saisie({ position }: { position: [number, number, number] }) {
 export function Carnet({
   position,
   rotation = [0, 0, 0],
+  children,
 }: {
   position: [number, number, number];
   rotation?: [number, number, number];
+  children?: React.ReactNode;
 }) {
   return (
     <group position={position} rotation={rotation}>
@@ -165,6 +166,7 @@ export function Carnet({
       <Forme reglages={PALETTE.laiton} position={[0.05, 0.03, 0.16]} trait={0}>
         <boxGeometry args={[0.018, 0.002, 0.08]} />
       </Forme>
+      {children}
     </group>
   );
 }
@@ -173,9 +175,11 @@ export function Carnet({
 export function Machine({
   position,
   rotation = [0, 0, 0],
+  children,
 }: {
   position: [number, number, number];
   rotation?: [number, number, number];
+  children?: React.ReactNode;
 }) {
   return (
     <group position={position} rotation={rotation}>
@@ -190,6 +194,7 @@ export function Machine({
           <meshBasicMaterial color={i === 0 ? "#7ee787" : i === 1 ? "#58a6ff" : "#f0b429"} />
         </mesh>
       ))}
+      {children}
     </group>
   );
 }
