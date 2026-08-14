@@ -834,9 +834,17 @@ export function Cables({ position }: { position: [number, number, number] }) {
           // Onze millimetres, c'etait un tuyau d'arrosage. Sept, c'est un cable.
           [[-0.30, 0.007, -0.44], [-0.41, 0.007, -0.53], [-0.49, 0.007, -0.66], [-0.53, -0.09, -0.80]],
           [[0.52, 0.007, -0.40], [0.45, 0.007, -0.54], [0.40, 0.007, -0.68], [0.38, -0.09, -0.80]],
-          // Celui de la machine flane un peu : le mou est ce qui distingue un
-          // cable d'une droite tiree au cordeau.
-          [[-1.19, 0.007, -0.46], [-1.09, 0.007, -0.57], [-1.14, 0.007, -0.69], [-1.06, -0.09, -0.81]],
+          // CELUI DE LA MACHINE PART DE SON ANGLE ARRIERE, et il a fallu le
+          // refaire quand la tour a grandi : elle s'est ecartee de douze
+          // centimetres vers la gauche, son cable est reste ou il etait, et il
+          // sortait donc du vide a cote d'elle.
+          //
+          // Il flane, parce que le mou est ce qui distingue un cable d'une
+          // droite tiree au cordeau — mais il flane VERS LA DROITE, ce qui
+          // n'est pas un caprice de trace : le socle de la lampe est un disque
+          // de neuf centimetres de rayon centre en (-1,32 ; -0,60), et la route
+          // directe lui passait dedans.
+          [[-1.3, 0.007, -0.48], [-1.18, 0.007, -0.58], [-1.2, 0.007, -0.7], [-1.15, -0.09, -0.81]],
         ] as const
       ).map((points) => {
         const courbe = new THREE.CatmullRomCurve3(
