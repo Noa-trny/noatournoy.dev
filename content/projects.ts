@@ -27,6 +27,23 @@ export type ProjectCopy = {
   readonly ogDescription: string;
 };
 
+/**
+ * LE VISUEL D'UN TRAVAIL, sur la liste des travaux.
+ *
+ * Trois projets ont une capture publique, trois n'en ont pas — deux sont sous
+ * accord de confidentialite, un est en depot prive. Plutot que de laisser trois
+ * trous, ceux-la portent un MOT : c'est une decision de design assumee, comme
+ * l'ancien site la prenait deja, et non une image manquante.
+ *
+ * Ce champ a existe sous le nom `peek`, a ete supprime comme mort — plus aucune
+ * page ne le lisait depuis le retrait de l'ancienne feuille de style — et
+ * revient ici parce que la liste des travaux s'en sert de nouveau. Il est cette
+ * fois LU, ce qui est toute la difference.
+ */
+export type Vignette =
+  | { readonly kind: "image"; readonly src: string; readonly alt: Readonly<Record<Locale, string>> }
+  | { readonly kind: "mot"; readonly mot: Readonly<Record<Locale, string>> };
+
 export type Project = {
   readonly slug: Slug;
   /** _01 a _06, la numerotation visible de l'accueil. */
@@ -38,6 +55,7 @@ export type Project = {
   readonly year: string;
   /** La phrase longue de la liste /travaux/, distincte du lede de la fiche. */
   readonly blurb: Readonly<Record<Locale, string>>;
+  readonly vignette: Vignette;
   readonly links: readonly ProjectLink[];
   /** Par defaut /og.png ; Eclosion montre sa propre aube. */
   readonly ogImage?: string;
@@ -52,6 +70,11 @@ export const PROJECTS: readonly Project[] = [
     tags: ["Next.js", "React Three Fiber", "GLSL", "WebAudio"],
     year: "2026",
     blurb: { fr: "Expérience web 3D où le défilement est le temps, huit actes, 100 % procédurale — aucun modèle, aucune texture, aucun fichier audio. Seul, de bout en bout. Next.js 15 · React 19 · TypeScript · Three.js · GLSL · WebAudio.", en: "A 3D web experience where scrolling is time. Eight acts, fully procedural, with no models, no textures and no audio files. Solo, end to end. Next.js 15 · React 19 · TypeScript · Three.js · GLSL · WebAudio." },
+    vignette: {
+      kind: "image",
+      src: "/travaux/eclosion/img/dawn-700.webp",
+      alt: { fr: "L'aube d'Éclosion : un soleil bas sur un vol d'oiseaux.", en: "Éclosion's dawn: a low sun over a flight of birds." },
+    },
     links: [
       { href: "https://eclosion.noatournoy.dev", label: { fr: "Voir l'expérience", en: "See the experience" } },
       { href: "https://github.com/Noa-trny/eclosion", label: { fr: "Lire le code", en: "Read the code" } },
@@ -83,6 +106,7 @@ export const PROJECTS: readonly Project[] = [
     tags: ["Looker", "LookML", "Python", "BigQuery", "Terraform"],
     year: "2025",
     blurb: { fr: "Tableau de bord de pilotage de la sécurité des produits digitaux, chez ADEO. Stage de trois mois. Looker · LookML · Python · React · BigQuery · Terraform · Kubernetes.", en: "A dashboard for monitoring the security of digital products, at ADEO. Three-month internship. Looker · LookML · Python · React · BigQuery · Terraform · Kubernetes." },
+    vignette: { kind: "mot", mot: { fr: "Confidentiel — ADEO", en: "Confidential — ADEO" } },
     links: [],
     copy: {
       fr: {
@@ -110,6 +134,7 @@ export const PROJECTS: readonly Project[] = [
     tags: ["Godot 4.6", "C++20", "TCP binaire", "Docker"],
     year: "2026",
     blurb: { fr: "Stratégie temps réel multijoueur. Client Godot, serveur C++20 faisant autorité sur Raspberry Pi 5, protocole TCP binaire, cartes procédurales. Dépôts privés.", en: "Multiplayer real-time strategy. Godot client, authoritative C++20 server on a Raspberry Pi 5, binary TCP protocol, procedural maps. Private repositories." },
+    vignette: { kind: "mot", mot: { fr: "Dépôts privés", en: "Private repositories" } },
     links: [],
     copy: {
       fr: {
@@ -137,6 +162,11 @@ export const PROJECTS: readonly Project[] = [
     tags: ["Python", "Pygame", "sockets", "Équipe de trois"],
     year: "2025",
     blurb: { fr: "Trois jeux de plateau en réseau : Katerenga, Congress, Isolation. Travail d'équipe à trois : interface, direction artistique et opposants automatiques. Python · Pygame · sockets.", en: "Three networked board games: Katerenga, Congress, Isolation. Team of three: interface, art direction and computer opponents. Python · Pygame · sockets." },
+    vignette: {
+      kind: "image",
+      src: "/travaux/ludoria/img/ludoria-katerenga-700.webp",
+      alt: { fr: "Le plateau de Katerenga dans Ludoria.", en: "The Katerenga board in Ludoria." },
+    },
     links: [
       { href: "https://github.com/simonpotel/Ludoria", label: { fr: "Lire le code", en: "Read the code" } },
     ],
@@ -166,6 +196,11 @@ export const PROJECTS: readonly Project[] = [
     tags: ["C++17", "STL", "Zéro dépendance"],
     year: "2026",
     blurb: { fr: "Jeu de pose de tuiles en console, sans une seule dépendance externe. C++17.", en: "A tile-laying game in the console, without a single external dependency. C++17." },
+    vignette: {
+      kind: "image",
+      src: "/travaux/laying-grass/img/console.webp",
+      alt: { fr: "laying_grass en console, tuiles posees.", en: "laying_grass in the console, tiles placed." },
+    },
     links: [
       { href: "https://github.com/Noa-trny/laying_grass_cpp", label: { fr: "Lire le code", en: "Read the code" } },
     ],
@@ -195,6 +230,7 @@ export const PROJECTS: readonly Project[] = [
     tags: ["React", "TypeScript", "Vite", "Cypress"],
     year: "2026",
     blurb: { fr: "Catalogue de jeux vidéo sur l'API RAWG : recherche, filtres, favoris persistants. TypeScript · React.", en: "A video game catalogue built on the RAWG API: search, filters, persistent favourites. TypeScript · React." },
+    vignette: { kind: "mot", mot: { fr: "TypeScript · React", en: "TypeScript · React" } },
     links: [
       { href: "https://github.com/Noa-trny/Gamedex", label: { fr: "Lire le code", en: "Read the code" } },
     ],

@@ -82,10 +82,11 @@ for (const [cle, v] of Object.entries(ui)) {
 // --- content/projects.ts -----------------------------------------------
 for (const p of PROJECTS) {
   check(`${p.slug}.blurb`, p.blurb.fr, p.blurb.en);
-  // `peek` a disparu du contenu : il portait la vignette de survol des lignes
-  // de travaux, retiree avec l'ancienne feuille de style. Ce controle validait
-  // donc consciencieusement la parite FR/EN d'etiquettes qu'aucune page
-  // n'affichait plus — un test vert sur des donnees mortes.
+  if (p.vignette.kind === "mot") {
+    check(`${p.slug}.vignette`, p.vignette.mot.fr, p.vignette.mot.en);
+  } else {
+    check(`${p.slug}.vignette.alt`, p.vignette.alt.fr, p.vignette.alt.en);
+  }
   p.links.forEach((l, i) =>
     check(`${p.slug}.links[${i}]`, l.label.fr, l.label.en)
   );

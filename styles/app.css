@@ -344,6 +344,34 @@
    telephone, la tablette et l'ecran tactile de bureau ; une largeur, non. */
 @custom-variant tactile (@media (hover: none));
 
+/* L'ATMOSPHERE DES PAGES INTERIEURES.
+
+   Elles s'ouvraient a froid : le filet de l'en-tete, puis du texte sur du noir
+   plat. La scene 3D, elle, a une profondeur — une lueur, un halo, une lampe. Ce
+   dégradé unique donne aux pages la meme origine lumineuse, en haut, la ou le
+   regard entre.
+
+   `fixed` et non `absolute` : sur une fiche de six mille pixels, un dégradé
+   ancre au document defilerait et la page redeviendrait plate au bout de deux
+   ecrans. Fixe, l'eclairage reste ou il est, comme une lumiere de piece.
+
+   `-z-10` fonctionne parce que le fond du `body` se peint AVANT ses
+   descendants, meme ceux d'indice negatif : le voile passe donc au-dessus du
+   noir et sous tout le contenu, sans creer de contexte d'empilement. */
+.atmosphere {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: -10;
+  height: 34rem;
+  pointer-events: none;
+  background: radial-gradient(
+    70% 100% at 50% 0%,
+    color-mix(in srgb, var(--color-accent) 9%, transparent),
+    transparent 72%
+  );
+}
+
 /* ---------------------------------------------------------------------------
    LE MONDE ET SA PISTE
 

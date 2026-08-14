@@ -54,6 +54,7 @@ export default async function RootLayoutEn({
         <FontPreload />
       </head>
       <body>
+        <div className="atmosphere" aria-hidden="true" />
         {children}
         {/* La jauge de defilement. Elle etait injectee dans le <body> par
             kinetic.js, donc INEXISTANTE en mouvement reduit ; dans le balisage
