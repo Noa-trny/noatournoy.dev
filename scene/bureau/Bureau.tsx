@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import type { Locale } from "@/content/routes";
 import { Rig } from "./Rig";
@@ -56,8 +56,12 @@ import {
 // reste tombe dans un bleu froid et le fond disparait. Un bureau uniformement
 // eclairé est un bureau de bureau ; celui-ci doit etre un poste a soi, la nuit.
 //
-// Trois sources et pas une de plus : les aplats du shader ecrasent les degrades,
-// donc multiplier les lumieres n'ajoute pas de modele, seulement des bandes.
+// TROIS SOURCES QUI MODELENT, ET PAS UNE DE PLUS : les aplats du shader
+// ecrasent les degrades, donc multiplier les lumieres qui SCULPTENT n'ajoute
+// pas de modele, seulement des bandes. La lampe, la lueur des ecrans,
+// l'ambiante. Les deux autres — le couloir, et ce qui entre par la porte — sont
+// des remplissages : faibles, larges, frontaux, sans ombre. Elles ne modelent
+// rien, elles disent seulement qu'il y a un ailleurs eclaire.
 
 /** Le halo de la lampe : une sphere non eclairee, tres transparente. */
 function Halo() {
@@ -70,6 +74,25 @@ function Halo() {
 }
 
 export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
+  // ON PEUT ETEINDRE LA LAMPE, et c'est la seule chose de cette piece qui
+  // reponde a un geste sans emmener nulle part.
+  //
+  // Elle est la seule source a ombre portee : eteinte, l'ilot chaud disparait et
+  // les dalles deviennent la seule lumiere du bureau. C'est la meme piece, et
+  // ce n'est plus la meme image.
+  //
+  // L'INTENSITE TOMBE A ZERO, LA SOURCE NE DISPARAIT PAS. Retirer la lumiere de
+  // la scene changerait le nombre de sources, donc les definitions du shader,
+  // donc ferait RECOMPILER tous les materiaux au moment du clic — un a-coup
+  // d'une demi-seconde pour eteindre une lampe. Une source a zero coute une
+  // passe d'eclairage inutile et ne coute rien d'autre.
+  //
+  // ET LES OMBRES N'ONT PAS A ETRE REFAITES. Elles sont gelees (voir
+  // OmbresFigees), donc la carte reste celle de la lampe allumee — mais elle
+  // est multipliee par une intensite nulle, ce qui l'efface exactement. Rien
+  // n'a bouge dans la piece : au rallumage, la carte est encore juste.
+  const [lampeAllumee, setLampeAllumee] = useState(true);
+
   // Les peintres sont memorises sur la langue : sans ça, chaque rendu de
   // React en fabriquerait de nouveaux et `Dalle` repeindrait cinq toiles.
   const routeur = useRouter();
@@ -184,7 +207,7 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
           // flaque ronde a l'air juste ou qu'elle soit — jusqu'a ce qu'on
           // regarde la lampe et la flaque ensemble.
           position={[-1.0, 1.2, -0.45]}
-          intensity={2.5}
+          intensity={lampeAllumee ? 2.5 : 0}
           distance={11}
           decay={2}
           color="#ffe4c4"
@@ -197,12 +220,45 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         />
 
         {/* La lueur des ecrans, froide, sans ombre : elle remonte sur le clavier
-            et sur le visage de celui qui n'est pas la. */}
+            et sur le visage de celui qui n'est pas la.
+
+            TROIS REGLAGES SE TIENNENT ICI, ET IL A FALLU LES TROIS.
+
+            LA HAUTEUR D'ABORD, parce que le defaut etait geometrique. A
+            trente-cinq centimetres au-dessus du plateau, la distance a la
+            surface DOUBLE en un demi-metre de cote : la nappe variait du simple
+            au double sur la largeur du bureau, ce qui est la definition d'un
+            CERCLE LUMINEUX. Il dormait sous le chaud de la lampe et a saute aux
+            yeux des qu'on a pu l'eteindre. Monter les paliers du plateau —
+            remede maison pour les halos a bord franc — ne l'a pas corrige mais
+            AGGRAVE : neuf paliers dessinent le coeur du point chaud au lieu de
+            le fondre. Le defaut n'etait pas dans la quantification. A
+            soixante-dix-huit centimetres, le meme demi-metre ne fait plus varier
+            la distance que d'un cinquieme, et le disque n'a plus de quoi exister.
+
+            LA DECROISSANCE ENSUITE. En carre — la loi physique — une ponctuelle
+            reste un projecteur quoi qu'on fasse. Or cette source est deja une
+            fiction : deux dalles qui emettent vers l'avant ne sont pas un point,
+            et une surface large ne fait pas de point chaud, c'est meme sa
+            definition. Lineaire, elle se comporte comme un emetteur etendu.
+
+            LA PORTEE ENFIN, et c'est elle qui rattrape ce que les deux autres
+            couteraient. Une decroissance plate porte loin : sans borne, elle
+            eclairait le fauteuil, le sol et les murs, et le bureau devenait
+            uniforme — c'est-a-dire un bureau de bureau. La fenetre de coupure de
+            three est douce, donc la nappe remplit tout le plateau puis s'eteint
+            avant d'atteindre le reste de la piece.
+
+            ET L'INTENSITE EST LE DERNIER CRAN, celui qu'on regle en regardant.
+            Trop basse, l'OMBRE que l'ecran principal projette depuis la lampe
+            ressort en travers du bureau, large et franche — elle a toujours ete
+            la, c'est cette nappe qui la remplissait. Trop haute, l'ilot chaud
+            n'a plus rien contre quoi se detacher. */}
         <pointLight
-          position={[0.1, 1.12, -0.3]}
-          intensity={1.35}
-          distance={5}
-          decay={2}
+          position={[0.1, 1.5, -0.1]}
+          intensity={1.7}
+          distance={2.5}
+          decay={1}
           color="#8fbcff"
         />
 
@@ -266,6 +322,39 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
           intensity={2.6}
           distance={8}
           decay={2}
+          color="#7c88a4"
+        />
+
+        {/* CE QUI ENTRE PAR LA PORTE.
+
+            La lumiere du couloir meurt au seuil — c'est voulu, elle ne doit pas
+            toucher l'ilot de la lampe. Mais du coup la piece ne recevait RIEN
+            de l'ouverture par laquelle on vient d'entrer, ce qui est le seul
+            endroit du decor ou l'oeil sait qu'il y a de la lumiere. Et il y a
+            une consequence concrete : la facade de la tour regarde le seuil,
+            donc c'est la SEULE direction d'ou elle peut etre eclairee de face.
+            Sans cette source, elle restait un panneau noir.
+
+            UNE QUATRIEME SOURCE, ET LE COMMENTAIRE EN TETE DE CE FICHIER DIT
+            TROIS. La regle vaut toujours et c'est pour ça qu'elle est ici, pas
+            ailleurs : ce qu'elle interdit, ce sont les sources qui MODELENT,
+            parce que les aplats du shader ecrasent leurs degrades et n'en
+            gardent que des bandes. Celle-ci ne modele rien — elle est faible,
+            large et frontale, c'est un remplissage. Elle ne porte donc pas
+            d'ombre non plus : deux ombres par objet, ça ne se voit dans aucune
+            piece.
+
+            DECROISSANCE LINEAIRE, comme la lueur des ecrans, et pour la meme
+            raison : ce qui est simule n'est pas une ampoule mais une PORTE,
+            c'est-a-dire une surface large. En carre, elle aurait fait une
+            flaque au milieu du plancher a mi-chemin du bureau. La portee est en
+            revanche bornee assez court pour que le fond de la piece — le mur du
+            neon, les angles — reste dans le noir. */}
+        <pointLight
+          position={[0, 2.0, 4.8]}
+          intensity={3.2}
+          distance={9.5}
+          decay={1}
           color="#7c88a4"
         />
 
@@ -422,7 +511,11 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             hauteur locale est donc leur rayon, et leur z est celui de la piece. */}
         <Cables position={[0, 0.7675, 0]} />
 
-        <Lampe position={[-1.32, 0.7675, -0.6]} />
+        <Lampe
+          position={[-1.32, 0.7675, -0.6]}
+          allumee={lampeAllumee}
+          onBasculer={() => setLampeAllumee((v) => !v)}
+        />
         <Mug position={[0.28, 0.7675, 0.36]} />
         <Optionnel nom="les plantes">
           {/* Celle du plateau : la meme plante, a trente centimetres. */}
@@ -446,7 +539,7 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         </Optionnel>
         <Feuillets position={[0.58, 0.7675, 0.42]} />
 
-        <Halo />
+        {lampeAllumee ? <Halo /> : null}
 
         {/* LE RIG ET LES ZONES SENSIBLES.
 

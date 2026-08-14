@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useId, useMemo } from "react";
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { Forme } from "../croquis/Forme";
 import { Importe } from "../croquis/Importe";
 import { materiauCroquis } from "../croquis/materiau";
+import { oublieLaMain, veutLaMain } from "./curseur";
 
 // LES PIECES DU BUREAU.
 //
@@ -564,7 +565,19 @@ export function Machine({
  * segment est place ET tourne explicitement dans le repere de la lampe : plus
  * verbeux, mais on voit ou sont les choses.
  */
-export function Lampe({ position }: { position: [number, number, number] }) {
+export function Lampe({
+  position,
+  allumee = true,
+  onBasculer,
+}: {
+  position: [number, number, number];
+  allumee?: boolean;
+  /** Appele au clic sur l'abat-jour. Absent, la lampe n'est pas cliquable. */
+  onBasculer?: () => void;
+}) {
+  const clef = useId();
+  useEffect(() => () => oublieLaMain(clef), [clef]);
+
   // AUCUNE PIECE DU LUMINAIRE NE PORTE D'OMBRE, et c'est la seule façon d'avoir
   // une lampe credible. L'ampoule est A L'INTERIEUR de l'abat-jour, a trois
   // centimetres de lui ; le mur est a cinquante. La silhouette de l'abat-jour
@@ -613,12 +626,46 @@ export function Lampe({ position }: { position: [number, number, number] }) {
         <Forme reglages={PALETTE.laiton} position={[0, 0, 0]} trait={0.0026} castShadow={false}>
           <cylinderGeometry args={[0.05, 0.1, 0.12, 20, 1, true]} />
         </Forme>
-        {/* La face interieure, non eclairee : c'est l'ampoule qu'on voit. */}
+        {/* La face interieure, non eclairee : c'est l'ampoule qu'on voit.
+            ETEINTE, ELLE NE DEVIENT PAS NOIRE mais terne. Un reflecteur eteint
+            reste une surface claire qui recoit le peu de lumiere de la piece ;
+            au noir, l'abat-jour se lirait comme troue. */}
         <mesh position={[0, -0.052, 0]} rotation={[Math.PI / 2, 0, 0]}>
           <circleGeometry args={[0.095, 20]} />
-          <meshBasicMaterial color="#ffd9a0" />
+          <meshBasicMaterial color={allumee ? "#ffd9a0" : "#38332b"} />
         </mesh>
       </group>
+
+      {/* L'INTERRUPTEUR : une boite invisible sur l'abat-jour.
+
+          Le gestionnaire ne va pas sur le groupe de la lampe, et c'est la meme
+          raison que pour les zones (voir Sensible) : R3F descend
+          RECURSIVEMENT dans les objets porteurs de gestionnaires, donc poser un
+          clic sur la lampe entiere y ferait entrer ses huit maillages a chaque
+          mouvement de souris. Une boite en fait douze triangles.
+
+          SUR L'ABAT-JOUR ET NON SUR LE PIED, pour deux raisons qui vont dans le
+          meme sens : c'est la ou l'on tend la main vers une vraie lampe, et
+          c'est le seul endroit du luminaire qui ne chevauche AUCUNE zone
+          sensible — le pied, lui, entre dans la boite de la zone « stack », et
+          un clic y serait mange par la machine. */}
+      {onBasculer ? (
+        <mesh
+          position={[0.31, 0.47, 0.12]}
+          visible={false}
+          onPointerOver={(e) => {
+            e.stopPropagation();
+            veutLaMain(clef, true);
+          }}
+          onPointerOut={() => oublieLaMain(clef)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onBasculer();
+          }}
+        >
+          <boxGeometry args={[0.24, 0.2, 0.24]} />
+        </mesh>
+      ) : null}
     </group>
   );
 }
