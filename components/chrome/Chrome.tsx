@@ -56,11 +56,16 @@ export function LangSwitch({ pair, locale }: { pair: Pair; locale: Locale }) {
 }
 
 export function Header({ pair, locale }: { pair: Pair; locale: Locale }) {
+  // TROIS DESTINATIONS, ET TROIS SEULEMENT. La liste en comptait quatre dont la
+  // premiere etait jetee par un `.slice(1)` a l'affichage : elle dupliquait la
+  // route de l'accueil, deja portee par la signature juste en dessous. Les deux
+  // dernieres etaient ecrites en dur — dont un `locale === "fr" ? "Contact" :
+  // "Contact"`, deux branches identiques — alors que `content/ui.ts` porte
+  // exactement ces libelles dans les deux langues.
   const liens = [
-    { href: routes.home[locale], nom: ui.mark[locale] },
-    { href: routes.work[locale], nom: ui.worksNav[locale] },
-    { href: routes.skills[locale], nom: locale === "fr" ? "Savoir-faire" : "Skills" },
-    { href: routes.contact[locale], nom: locale === "fr" ? "Contact" : "Contact" },
+    { href: routes.work[locale], nom: ui.navWork[locale] },
+    { href: routes.skills[locale], nom: ui.navSkills[locale] },
+    { href: routes.contact[locale], nom: ui.navContact[locale] },
   ];
 
   return (
@@ -70,7 +75,7 @@ export function Header({ pair, locale }: { pair: Pair; locale: Locale }) {
           Noa&nbsp;Tournoy
         </Link>
         <nav className="flex flex-1 flex-wrap gap-4 text-sm">
-          {liens.slice(1).map((l) => (
+          {liens.map((l) => (
             <Link key={l.href} href={l.href} className="text-mid transition-colors hover:text-fg">
               {l.nom}
             </Link>

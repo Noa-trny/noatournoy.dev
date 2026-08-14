@@ -11,13 +11,6 @@ import type { Locale, Slug } from "./routes";
 // Ce fichier a ete genere depuis l'ancien HTML puis relu, pour qu'aucune chaine
 // ne derive a la recopie.
 
-export type Peek =
-  | { readonly kind: "shot"; readonly src: string }
-  /** Pas d'image, et la raison est affichee a la place — DataSentinel est
-   *  confidentiel, SupKonQuest vit dans des depots prives. C'est une decision
-   *  de design assumee, pas un trou. */
-  | { readonly kind: "none"; readonly label: Readonly<Record<Locale, string>> };
-
 export type ProjectLink = {
   readonly href: string;
   readonly label: Readonly<Record<Locale, string>>;
@@ -45,7 +38,6 @@ export type Project = {
   readonly year: string;
   /** La phrase longue de la liste /travaux/, distincte du lede de la fiche. */
   readonly blurb: Readonly<Record<Locale, string>>;
-  readonly peek: Peek;
   readonly links: readonly ProjectLink[];
   /** Par defaut /og.png ; Eclosion montre sa propre aube. */
   readonly ogImage?: string;
@@ -60,7 +52,6 @@ export const PROJECTS: readonly Project[] = [
     tags: ["Next.js", "React Three Fiber", "GLSL", "WebAudio"],
     year: "2026",
     blurb: { fr: "Expérience web 3D où le défilement est le temps, huit actes, 100 % procédurale — aucun modèle, aucune texture, aucun fichier audio. Seul, de bout en bout. Next.js 15 · React 19 · TypeScript · Three.js · GLSL · WebAudio.", en: "A 3D web experience where scrolling is time. Eight acts, fully procedural, with no models, no textures and no audio files. Solo, end to end. Next.js 15 · React 19 · TypeScript · Three.js · GLSL · WebAudio." },
-    peek: { kind: "shot", src: "/travaux/eclosion/img/dawn-700.webp" },
     links: [
       { href: "https://eclosion.noatournoy.dev", label: { fr: "Voir l'expérience", en: "See the experience" } },
       { href: "https://github.com/Noa-trny/eclosion", label: { fr: "Lire le code", en: "Read the code" } },
@@ -92,10 +83,6 @@ export const PROJECTS: readonly Project[] = [
     tags: ["Looker", "LookML", "Python", "BigQuery", "Terraform"],
     year: "2025",
     blurb: { fr: "Tableau de bord de pilotage de la sécurité des produits digitaux, chez ADEO. Stage de trois mois. Looker · LookML · Python · React · BigQuery · Terraform · Kubernetes.", en: "A dashboard for monitoring the security of digital products, at ADEO. Three-month internship. Looker · LookML · Python · React · BigQuery · Terraform · Kubernetes." },
-    peek: {
-      kind: "none",
-      label: { fr: "Confidentiel — ADEO", en: "Confidential — ADEO" },
-    },
     links: [],
     copy: {
       fr: {
@@ -123,10 +110,6 @@ export const PROJECTS: readonly Project[] = [
     tags: ["Godot 4.6", "C++20", "TCP binaire", "Docker"],
     year: "2026",
     blurb: { fr: "Stratégie temps réel multijoueur. Client Godot, serveur C++20 faisant autorité sur Raspberry Pi 5, protocole TCP binaire, cartes procédurales. Dépôts privés.", en: "Multiplayer real-time strategy. Godot client, authoritative C++20 server on a Raspberry Pi 5, binary TCP protocol, procedural maps. Private repositories." },
-    peek: {
-      kind: "none",
-      label: { fr: "Dépôts privés — Carton Studio's", en: "Private repositories — Carton Studio's" },
-    },
     links: [],
     copy: {
       fr: {
@@ -154,7 +137,6 @@ export const PROJECTS: readonly Project[] = [
     tags: ["Python", "Pygame", "sockets", "Équipe de trois"],
     year: "2025",
     blurb: { fr: "Trois jeux de plateau en réseau : Katerenga, Congress, Isolation. Travail d'équipe à trois : interface, direction artistique et opposants automatiques. Python · Pygame · sockets.", en: "Three networked board games: Katerenga, Congress, Isolation. Team of three: interface, art direction and computer opponents. Python · Pygame · sockets." },
-    peek: { kind: "shot", src: "/travaux/ludoria/img/ludoria-katerenga-700.webp" },
     links: [
       { href: "https://github.com/simonpotel/Ludoria", label: { fr: "Lire le code", en: "Read the code" } },
     ],
@@ -184,7 +166,6 @@ export const PROJECTS: readonly Project[] = [
     tags: ["C++17", "STL", "Zéro dépendance"],
     year: "2026",
     blurb: { fr: "Jeu de pose de tuiles en console, sans une seule dépendance externe. C++17.", en: "A tile-laying game in the console, without a single external dependency. C++17." },
-    peek: { kind: "shot", src: "/travaux/laying-grass/img/console.webp" },
     links: [
       { href: "https://github.com/Noa-trny/laying_grass_cpp", label: { fr: "Lire le code", en: "Read the code" } },
     ],
@@ -214,10 +195,6 @@ export const PROJECTS: readonly Project[] = [
     tags: ["React", "TypeScript", "Vite", "Cypress"],
     year: "2026",
     blurb: { fr: "Catalogue de jeux vidéo sur l'API RAWG : recherche, filtres, favoris persistants. TypeScript · React.", en: "A video game catalogue built on the RAWG API: search, filters, persistent favourites. TypeScript · React." },
-    peek: {
-      kind: "none",
-      label: { fr: "TypeScript · React", en: "TypeScript · React" },
-    },
     links: [
       { href: "https://github.com/Noa-trny/Gamedex", label: { fr: "Lire le code", en: "Read the code" } },
     ],

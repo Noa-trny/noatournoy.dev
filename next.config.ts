@@ -19,8 +19,13 @@ const config: NextConfig = {
   turbopack: { root: import.meta.dirname },
 
   // Next 16 depose AGENTS.md et CLAUDE.md a la racine au premier `next dev`.
-  // Ce depot ne porte aucune trace d'outillage : la documentation de travail
-  // vit a cote, hors du dossier versionne.
+  //
+  // La DOCUMENTATION DE TRAVAIL vit a cote, hors du dossier versionne, et c'est
+  // ce que ce drapeau protege. Mais la phrase precedente disait « aucune trace
+  // d'outillage », ce qui n'est plus vrai et ne devrait pas l'etre : `scripts/`
+  // porte la chaine qui prepare les modeles livres et deux controles qui
+  // verifient ce qui est livre — classes sans regle, surfaces cliquables. Ces
+  // trois-la entretiennent le site ; les notes de chantier, non.
   agentRules: false,
 
   experimental: {
