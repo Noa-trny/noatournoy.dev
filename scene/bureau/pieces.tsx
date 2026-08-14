@@ -563,6 +563,84 @@ export function Fauteuil({
   );
 }
 
+/**
+ * LES CABLES, ET POURQUOI ILS COMPTENT PLUS QU'ILS N'EN ONT L'AIR.
+ *
+ * Aucun ecran n'etait branche. C'est le detail le moins spectaculaire et le
+ * plus revelateur : dans une piece reelle il y a toujours un fil qui tombe
+ * derriere le meuble, et son absence est une des signatures les plus sures
+ * d'une image de synthese. L'oeil ne le remarque pas, il remarque que quelque
+ * chose cloche.
+ *
+ * UNE COURBE ET NON DEUX SEGMENTS. Un cable pend en chainette : c'est son
+ * FLECHISSEMENT qui le rend credible, pas son trajet. Le point de controle du
+ * milieu est donc pose plus bas que l'interpolation droite ne le mettrait —
+ * sans quoi on obtient une tige coudee, ce qu'aucun cable ne fait.
+ */
+const CABLE = { couleur: "#16181d", paliers: 3, grain: 0.05, plancher: 0.26 } as const;
+
+export function Cables({ position }: { position: [number, number, number] }) {
+  const tubes = useMemo(
+    () =>
+      (
+        [
+          // Depart au dos d'un ecran, arrivee au sol derriere le plateau.
+          [[-0.32, 0.28, -0.05], [-0.42, 0.05, -0.3], [-0.5, -0.755, -0.42]],
+          [[0.5, 0.26, 0.0], [0.62, 0.02, -0.26], [0.72, -0.755, -0.38]],
+          [[-1.24, 0.12, -0.02], [-1.32, -0.1, -0.24], [-1.4, -0.755, -0.34]],
+        ] as const
+      ).map((points) => {
+        const courbe = new THREE.CatmullRomCurve3(
+          points.map((p) => new THREE.Vector3(...p)),
+          false,
+          "catmullrom",
+          0.6
+        );
+        return new THREE.TubeGeometry(courbe, 18, 0.008, 6, false);
+      }),
+    []
+  );
+
+  return (
+    <group position={position}>
+      {tubes.map((g, i) => (
+        <Forme key={i} reglages={CABLE} trait={0.0016} receiveShadow={false}>
+          <primitive object={g} attach="geometry" />
+        </Forme>
+      ))}
+    </group>
+  );
+}
+
+/**
+ * LE TAPIS. Le sol est un plan noir, et ça se voit au plan du seuil : le bureau
+ * et le fauteuil flottent sur du neant. Un tapis les rattache au sol et casse
+ * le grand aplat sombre — c'est le meme service qu'un socle rend a une statue.
+ *
+ * Une BOITE tres plate et non un plan : a epaisseur nulle, la tranche
+ * disparait et le contour du croquis dessine un rectangle sans volume, ce qui
+ * se lit comme une tache et non comme un objet pose.
+ */
+export function Tapis({
+  position,
+  rotation = [0, 0, 0],
+}: {
+  position: [number, number, number];
+  rotation?: [number, number, number];
+}) {
+  return (
+    <Forme
+      reglages={{ couleur: "#2c3242", paliers: 4, grain: 0.22, plancher: 0.3 }}
+      position={position}
+      rotation={rotation}
+      trait={0.0022}
+      castShadow={false}
+    >
+      <boxGeometry args={[3.5, 0.012, 2.3]} />
+    </Forme>
+  );
+}
+
 /** Des feuillets epars : le desordre qui prouve qu'on travaille. */
 export function Feuillets({ position }: { position: [number, number, number] }) {
   const pages: [number, number, number][] = [

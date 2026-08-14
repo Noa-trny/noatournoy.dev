@@ -24,6 +24,7 @@ import { Forme } from "../croquis/Forme";
 import { Couloir } from "./Couloir";
 import { OmbresFigees } from "./Ombres";
 import { Neon } from "./Neon";
+import { Fenetre } from "./Fenetre";
 import { Optionnel } from "../croquis/Optionnel";
 import {
   Carnet,
@@ -32,10 +33,12 @@ import {
   Machine,
   Mug,
   Plante,
+  Tapis,
   Plateau,
   Portable,
   Saisie,
   Livres,
+  Cables,
   Casque,
   Fauteuil,
   Feuillets,
@@ -266,6 +269,14 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
           color="#7c88a4"
         />
 
+        {/* Le tapis avant tout le reste : il est au sol, donc dessous. */}
+        <Tapis position={[-0.1, 0.007, 0.6]} rotation={[0, 0.04, 0]} />
+
+        {/* LA FENETRE, sur la partie vide du mur du fond — celle que le neon
+            n'occupe pas. C'est la seule zone sombre du plan large, et la seule
+            ou une ouverture ne se dispute pas le regard avec l'enseigne. */}
+        <Fenetre position={[2.15, 1.62, -0.98]} />
+
         <Couloir />
 
         {/* LE RUBAN, ET SON UNIQUE LAMPE.
@@ -373,6 +384,9 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
               centre aurait masque la liste des travaux. */}
           <Fauteuil position={[-0.5, 0, 0.95]} rotation={[0, Math.PI, 0]} />
         </Optionnel>
+
+        {/* Les cables partent du dos des ecrans, sous le plateau. */}
+        <Cables position={[0, 0.7675, -0.34]} />
 
         <Lampe position={[-1.32, 0.7675, -0.6]} />
         <Mug position={[0.28, 0.7675, 0.36]} />
