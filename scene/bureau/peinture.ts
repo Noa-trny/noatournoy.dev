@@ -120,6 +120,31 @@ function pastille(g: Contexte, x: number, y: number, texte: string): number {
   return l + 8;
 }
 
+/** Le titre de la fenetre de l'ecran principal. */
+const ENTETE = { fr: "travaux · 6 projets", en: "work · 6 projects" } as const;
+
+/** La police de cette barre de titre, ecrite une fois pour les deux usages. */
+const POLICE_ENTETE = '500 17px "Inter", sans-serif';
+
+/**
+ * OU FINIT LE TITRE, en pixels du repere de l'ecran principal.
+ *
+ * C'est la que se pose le curseur qui clignote — un objet de la scene, pas un
+ * pixel de la toile, puisqu'il doit s'allumer et s'eteindre sans qu'on
+ * repeigne une image de mille pixels soixante fois par seconde.
+ *
+ * IL FAUT DONC MESURER LE TEXTE ICI, et non deviner sa longueur : elle n'est
+ * pas la meme en français et en anglais, et elle change encore quand Inter
+ * remplace la police de secours. Mesurer avec la MEME chaine et la MEME police
+ * que le peintre est la seule façon que le curseur tombe au bout du mot dans
+ * les deux langues.
+ */
+export function finEntete(locale: Locale): readonly [number, number] {
+  const g = document.createElement("canvas").getContext("2d")!;
+  g.font = POLICE_ENTETE;
+  return [100 + g.measureText(ENTETE[locale]).width + 9, 28];
+}
+
 /** L'ecran principal : la liste des projets, comme une fenetre ouverte. */
 export function peindreProjets(locale: Locale): THREE.CanvasTexture {
   REFERENCE = [1024, 600];
@@ -137,8 +162,8 @@ export function peindreProjets(locale: Locale): THREE.CanvasTexture {
     g.fill();
   });
   g.fillStyle = JETONS.dim;
-  g.font = '500 17px "Inter", sans-serif';
-  g.fillText(locale === "fr" ? "travaux — 6 projets" : "work — 6 projects", 100, 28);
+  g.font = POLICE_ENTETE;
+  g.fillText(ENTETE[locale], 100, 28);
 
   let y = LIGNES_PROJETS.haut;
   for (const p of PROJECTS) {

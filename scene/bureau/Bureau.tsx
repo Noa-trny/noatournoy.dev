@@ -25,6 +25,7 @@ import { Couloir, MUR_GAUCHE } from "./Couloir";
 import { OmbresFigees } from "./Ombres";
 import { Neon } from "./Neon";
 import { Fenetre, FlaqueFenetre, POSE } from "./Fenetre";
+import { Caret } from "./Caret";
 import { Optionnel } from "../croquis/Optionnel";
 import {
   Carnet,
@@ -338,6 +339,8 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             lignes={lignesProjets}
             reference={LIGNES_PROJETS.reference}
           />
+          {/* Le curseur au bout du titre : la seule chose qui bouge ici. */}
+          <Caret locale={locale} largeur={0.58} hauteur={0.34} reference={LIGNES_PROJETS.reference} />
         </Ecran>
         <Ecran position={[0.5, 0.7675, -0.3]} rotation={[0, -0.3, 0]} largeur={0.54} hauteur={0.34}>
           <Dalle peindre={peintres.apropos} largeur={0.5} hauteur={0.3} />
