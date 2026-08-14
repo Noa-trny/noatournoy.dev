@@ -1,110 +1,88 @@
 "use client";
 
 import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
+import { policePrete } from "./peinture";
 
-// LE NEON DU MUR : trois lettres en tubes, et leur halo.
+// L'ENSEIGNE DU MUR : de la typographie, pas de la geometrie.
 //
-// POURQUOI DES TUBES ET NON UNE TEXTURE. Un neon peint sur un plan se trahit
-// des qu'on l'approche : il n'a pas d'epaisseur, donc pas de tranche eclairee ni
-// de recouvrement aux angles. Les stations amenent la camera a un metre du mur.
-// Sept cylindres et un tore coutent moins qu'une toile de 1024 pixels, et
-// tiennent le gros plan.
+// TROIS VERSIONS EN TUBES ONT ETE JETEES. Chacune reglait mieux que la
+// precedente — halo en degrade plutot qu'en opacite constante, coeur blanc
+// plutot que sature, tube plus fin, lettres plus etroites — et chacune restait
+// laide, parce que le defaut n'etait dans aucun de ces reglages. Il etait dans
+// les LETTRES : trois batons droits pour un N, un ovale parfait pour un O, des
+// billes aux jonctions. C'est du dessin a la main dans un editeur 3D, et aucun
+// reglage de couleur ne rattrape une lettre mal dessinee.
 //
-// POURQUOI PAS DE POST-TRAITEMENT. Le halo d'un neon, c'est ce qu'un
-// `UnrealBloomPass` ferait — et un `EffectComposer` tirerait quarante
-// kilooctets tout en invalidant le prechauffage des shaders, le piege que ce
-// projet evite depuis le debut.
+// Un dessinateur d'enseigne part d'un caractere. Ici il y en a un, deja charge,
+// deja celui du site : Inter. On le PEINT donc, et l'on projette la peinture.
 //
-// POURQUOI AUCUNE LUMIERE. Une source de plus, c'est une passe d'eclairage de
-// plus sur TOUS les materiaux de la scene, couloir compris — on vient
-// justement de ramener les programmes de vingt-deux a huit. La lampe magenta
-// qui lave deja ce mur fait le travail ; ce qu'on ajoute ici, c'est ce qu'on
-// VOIT briller, pas ce qui eclaire.
+// LE HALO EST PEINT LUI AUSSI, en deux dimensions, et c'est ce qui le rend
+// juste. `shadowBlur` du contexte 2D est un vrai flou gaussien — la meme chose
+// qu'un bloom, calculee une fois au chargement au lieu de deux passes d'ecran
+// par image. Le halo geometrique, lui, ne pouvait qu'approcher : une gaine de
+// verre n'a pas de decroissance gaussienne.
+//
+// TROIS TOILES ET NON UNE, une par lettre, parce que la teinte doit differer
+// d'une lettre a l'autre. Elles sont peintes en BLANC : c'est la couleur du
+// materiau qui les teinte, donc un cycle chromatique ne coute pas un repeinte.
 
-/** Un trait de lettre : deux points dans le plan de la lettre. */
-type Trait = readonly [number, number, number, number];
+const LETTRES = ["N", "O", "A"] as const;
+
+/** Hauteur d'une lettre, en metres. */
+const HAUTEUR = 0.34;
+/** Ecart entre deux centres de lettre, en hauteurs. */
+const PAS = 0.86;
+/** Teintes de depart, voisines : trois couleurs opposees font un chapiteau. */
+const DEPARTS = [0, 0.09, 0.18];
+
+const TOILE = 320;
 
 /**
- * Les trois lettres, en unites de hauteur de lettre.
+ * Peint une lettre en blanc, sur fond transparent, avec sa lueur.
  *
- * `O` n'est pas un trait mais un anneau : le tracer en segments donnerait un
- * polygone, et un neon en polygone se lit comme un panneau de signalisation.
+ * Les passes de flou vont de la plus large a la plus serree : une seule passe
+ * large donne une tache, une seule passe serree un contour dur. C'est leur
+ * empilement qui fait la decroissance continue d'un tube allume.
  */
-// LES LETTRES SONT ETROITES, et c'est la moitie de ce qui separe une enseigne
-// d'un jeu de cubes. A 0,6 de large pour 1 de haut, un N est presque carre : le
-// dessin se lit comme des lettres de bloc. Une enseigne au neon est etiree en
-// hauteur, parce qu'un tube plie garde son rayon et qu'un dessin large parait
-// gras a diametre egal.
-const LETTRES: readonly { readonly traits: readonly Trait[]; readonly anneau?: true }[] = [
-  // N : deux montants et la diagonale qui les joint.
-  { traits: [[0, 0, 0, 1], [0, 1, 0.52, 0], [0.52, 0, 0.52, 1]] },
-  // O
-  { traits: [], anneau: true },
-  // A : deux obliques et la barre.
-  { traits: [[0, 0, 0.26, 1], [0.26, 1, 0.52, 0], [0.1, 0.36, 0.42, 0.36]] },
-];
+function peindreLettre(lettre: string): THREE.CanvasTexture {
+  const c = document.createElement("canvas");
+  c.width = TOILE;
+  c.height = TOILE;
+  const g = c.getContext("2d")!;
+  g.textAlign = "center";
+  g.textBaseline = "middle";
+  // 300 et non 700 : un neon est un TUBE d'epaisseur constante, donc un trait
+  // fin. Une graisse forte donne des lettres pleines, qui se lisent comme du
+  // plastique retroeclaire.
+  g.font = `300 ${TOILE * 0.66}px "Inter", sans-serif`;
 
-const HAUTEUR = 0.42;
-/** L'ecart entre deux lettres, en hauteurs de lettre. Une lettre fait 0,52. */
-const PAS = 0.88;
-// UN TUBE PLUS FIN. A 0,042 pour une lettre de 1, le trait faisait un
-// douzieme de la hauteur — l'epaisseur d'un feutre d'ecolier. Un tube de neon
-// reel avoisine le vingtieme.
-const RAYON = 0.03;
-/** Le halo, en multiples du rayon du tube. */
-const AMPLEUR = 3.4;
+  const x = TOILE / 2;
+  const y = TOILE / 2;
+  g.shadowColor = "rgba(255,255,255,1)";
 
-/**
- * LES TROIS TEINTES SONT VOISINES, ET NON OPPOSEES.
- *
- * Elles etaient a un tiers de cercle l'une de l'autre — l'ecart MAXIMAL, donc
- * jaune, cyan et rose ensemble : la palette d'une fete d'anniversaire. Un
- * dixieme suffit a ce que les trois se distinguent tout en restant de la meme
- * famille, et le cycle continue de traverser tout le spectre — on garde le RVB
- * sans le chapiteau.
- */
-const DEPARTS = [0, 0.1, 0.2];
-
-/**
- * LE HALO A UN DEGRADE, ET C'EST TOUT CE QUI LE SEPARE D'UN TUBE EN PLASTIQUE.
- *
- * Sa premiere version etait un cylindre plus large en fondu additif, d'opacite
- * CONSTANTE. De loin ça passait ; de pres on voyait exactement ce que c'etait —
- * un gros tube translucide a bord net. Et comme le fondu additif s'ajoute a
- * lui-meme, les croisements de traits et les deux parois d'un meme cylindre
- * s'empilaient jusqu'au blanc.
- *
- * Ici l'opacite suit l'angle entre la normale et le regard : pleine la ou le
- * tube fait face a la camera, nulle a sa silhouette. La gaine n'a donc plus de
- * bord — elle s'eteint d'elle-meme — et une seule face est rendue, ce qui
- * supprime l'empilement.
- */
-const HALO_SOMMET = /* glsl */ `
-  varying vec3 vNormale;
-  varying vec3 vVersOeil;
-  void main() {
-    vec4 vue = modelViewMatrix * vec4(position, 1.0);
-    vNormale = normalize(normalMatrix * normal);
-    vVersOeil = normalize(-vue.xyz);
-    gl_Position = projectionMatrix * vue;
+  for (const [flou, alpha] of [
+    [64, 0.55],
+    [34, 0.5],
+    [16, 0.6],
+    [7, 0.8],
+  ] as const) {
+    g.shadowBlur = flou;
+    g.fillStyle = `rgba(255,255,255,${alpha})`;
+    g.fillText(lettre, x, y);
   }
-`;
 
-const HALO_FRAGMENT = /* glsl */ `
-  uniform vec3 uCouleur;
-  uniform float uForce;
-  varying vec3 vNormale;
-  varying vec3 vVersOeil;
-  void main() {
-    float face = max(dot(normalize(vNormale), normalize(vVersOeil)), 0.0);
-    // Puissance 2,5 : en lineaire la gaine reste visible presque jusqu'au bord
-    // et redessine la silhouette du tube. Il faut que l'extinction soit
-    // franche pour qu'on lise une lueur et non un volume.
-    gl_FragColor = vec4(uCouleur, pow(face, 2.5) * uForce);
-  }
-`;
+  // Le coeur, net et sans lueur : c'est le verre lui-meme.
+  g.shadowBlur = 0;
+  g.fillStyle = "#ffffff";
+  g.fillText(lettre, x, y);
+
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 4;
+  return t;
+}
 
 export function Neon({
   position,
@@ -113,129 +91,73 @@ export function Neon({
   position: [number, number, number];
   rotation?: [number, number, number];
 }) {
-  const coeurs = useRef<{ mat: THREE.MeshBasicMaterial; depart: number }[]>([]);
-  const gaines = useRef<{ mat: THREE.ShaderMaterial; depart: number }[]>([]);
-
-  const lettres = useMemo(() => {
-    // Deux jeux de geometries, un fin et un epais — et non un seul mis a
-    // l'echelle. Mettre le GROUPE a l'echelle agrandissait les positions autant
-    // que les tubes : le halo se retrouvait plus grand ET decale, un second
-    // « NOA » fantome. Seul le RAYON doit grossir.
-    const tube = new THREE.CylinderGeometry(RAYON, RAYON, 1, 12, 1, true);
-    const tubeHalo = new THREE.CylinderGeometry(RAYON * AMPLEUR, RAYON * AMPLEUR, 1, 14, 1, true);
-    const bille = new THREE.SphereGeometry(RAYON, 12, 8);
-    // L'ANNEAU EST OVALE, pas rond. Un tore de rayon 0,3 dans une lettre haute
-    // de 1 donne un O qui n'occupe que six dixiemes de la hauteur : a cote d'un
-    // N et d'un A pleine hauteur, il se lit comme un point.
-    const anneau = new THREE.TorusGeometry(0.26, RAYON, 8, 34);
-    const anneauHalo = new THREE.TorusGeometry(0.26, RAYON * AMPLEUR, 10, 34);
-
-    return LETTRES.map((l, i) => {
-      const segments = l.traits.map(([x1, y1, x2, y2]) => {
-        const dx = x2 - x1;
-        const dy = y2 - y1;
-        return {
-          position: [(x1 + x2) / 2, (y1 + y2) / 2, 0] as [number, number, number],
-          // Un cylindre pointe vers +Y : l'angle se mesure depuis la verticale,
-          // d'ou le quart de tour retire.
-          rotation: [0, 0, Math.atan2(dy, dx) - Math.PI / 2] as [number, number, number],
-          longueur: Math.hypot(dx, dy),
-        };
-      });
-      // LES JONCTIONS SONT DES BILLES. Deux cylindres qui se rencontrent a
-      // angle laissent un coin vide, et un neon n'en a pas — le verre y est
-      // continu. Une sphere par extremite ferme l'angle pour dix triangles.
-      const noeuds = l.traits.flatMap(([x1, y1, x2, y2]) => [
-        [x1, y1, 0] as [number, number, number],
-        [x2, y2, 0] as [number, number, number],
-      ]);
-      return {
-        segments,
-        noeuds,
-        anneau: l.anneau,
-        decalage: i * PAS,
-        depart: DEPARTS[i] ?? 0,
-        tube,
-        tubeHalo,
-        bille,
-        anneauGeo: anneau,
-        anneauHalo,
-      };
-    });
+  // LA POLICE D'ABORD, SINON ON CUIT LE REPLI. Peindre avant qu'Inter ne soit
+  // chargee grave la fonte systeme dans la texture, definitivement — c'est le
+  // piege que `Dalle` documente deja. On peint donc une premiere fois pour ne
+  // pas laisser un trou, puis une seconde fois quand la police est la.
+  const [version, setVersion] = useState(0);
+  useEffect(() => {
+    let vivant = true;
+    policePrete().then(() => vivant && setVersion((v) => v + 1));
+    return () => {
+      vivant = false;
+    };
   }, []);
 
-  // LA COULEUR TOURNE, ET C'EST LA SEULE ANIMATION DE LA SCENE. Un neon de
-  // bureau ne clignote pas : il derive. Un cycle complet en quarante secondes se
-  // remarque sans distraire, et l'ecart d'un tiers de cercle entre les lettres
-  // fait qu'a tout instant les trois different.
+  const textures = useMemo(
+    () => (typeof document === "undefined" ? null : LETTRES.map((l) => peindreLettre(l))),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [version]
+  );
+
+  const materiaux = useMemo(
+    () =>
+      textures?.map(
+        (map) =>
+          new THREE.MeshBasicMaterial({
+            map,
+            transparent: true,
+            toneMapped: false,
+            depthWrite: false,
+            // Additif : une enseigne AJOUTE de la lumiere au mur, elle ne le
+            // recouvre pas. C'est aussi ce qui fait disparaitre le rectangle de
+            // la toile, dont le noir devient neutre.
+            blending: THREE.AdditiveBlending,
+          })
+      ) ?? null,
+    [textures]
+  );
+
+  // Les textures et materiaux precedents sont liberes a chaque repeinte : sans
+  // ça, la seconde passe laisse la premiere en memoire graphique.
+  useEffect(
+    () => () => {
+      textures?.forEach((t) => t.dispose());
+      materiaux?.forEach((m) => m.dispose());
+    },
+    [textures, materiaux]
+  );
+
   useFrame((etat) => {
+    if (!materiaux) return;
     const t = etat.clock.elapsedTime * 0.014;
-    // LE COEUR EST PRESQUE BLANC, LE HALO PORTE LA COULEUR. C'est ce qui
-    // distingue un neon d'un tube de plastique colore, et c'etait le defaut
-    // principal : un tube saturé plein se lit comme un jouet. Dans un vrai
-    // neon, le gaz chauffe au blanc et seule la lueur alentour est teintee —
-    // c'est ainsi qu'une enseigne photographie.
-    for (const c of coeurs.current) c.mat.color.setHSL((t + c.depart) % 1, 0.22, 0.93);
-    for (const g of gaines.current) {
-      (g.mat.uniforms.uCouleur!.value as THREE.Color).setHSL((t + g.depart) % 1, 1, 0.52);
-    }
+    materiaux.forEach((m, i) => {
+      // Clarte elevee, saturation moyenne : la toile est deja blanche au coeur
+      // et coloree dans sa lueur, la teinte ne fait que l'habiller.
+      m.color.setHSL((t + (DEPARTS[i] ?? 0)) % 1, 0.8, 0.62);
+    });
   });
 
-  const materiauGaine = (depart: number) => (m: THREE.ShaderMaterial | null) => {
-    if (m && !gaines.current.some((g) => g.mat === m)) gaines.current.push({ mat: m, depart });
-  };
-  const materiauCoeur = (depart: number) => (m: THREE.MeshBasicMaterial | null) => {
-    if (m && !coeurs.current.some((c) => c.mat === m)) coeurs.current.push({ mat: m, depart });
-  };
-
-  /** La gaine : un seul cote rendu, aucune ecriture de profondeur. */
-  const gaine = (depart: number) => (
-    <shaderMaterial
-      ref={materiauGaine(depart)}
-      args={[
-        {
-          uniforms: { uCouleur: { value: new THREE.Color() }, uForce: { value: 0.62 } },
-          vertexShader: HALO_SOMMET,
-          fragmentShader: HALO_FRAGMENT,
-        },
-      ]}
-      transparent
-      depthWrite={false}
-      side={THREE.FrontSide}
-      blending={THREE.AdditiveBlending}
-    />
-  );
+  if (!materiaux) return null;
 
   return (
     <group position={position} rotation={rotation}>
-      {lettres.map((l, i) => (
-        <group key={i} position={[l.decalage * HAUTEUR, 0, 0]} scale={HAUTEUR}>
-          {l.anneau ? (
-            <>
-              <mesh position={[0.26, 0.5, 0]} scale={[1, 1.88, 1]} geometry={l.anneauGeo}>
-                <meshBasicMaterial ref={materiauCoeur(l.depart)} toneMapped={false} />
-              </mesh>
-              <mesh position={[0.26, 0.5, 0]} scale={[1, 1.88, 1]} geometry={l.anneauHalo}>
-                {gaine(l.depart)}
-              </mesh>
-            </>
-          ) : null}
-
-          {l.segments.map((s, j) => (
-            <group key={j} position={s.position} rotation={s.rotation} scale={[1, s.longueur, 1]}>
-              <mesh geometry={l.tube}>
-                <meshBasicMaterial ref={materiauCoeur(l.depart)} toneMapped={false} />
-              </mesh>
-              <mesh geometry={l.tubeHalo}>{gaine(l.depart)}</mesh>
-            </group>
-          ))}
-
-          {l.noeuds.map((p, j) => (
-            <mesh key={`n${j}`} position={p} geometry={l.bille}>
-              <meshBasicMaterial ref={materiauCoeur(l.depart)} toneMapped={false} />
-            </mesh>
-          ))}
-        </group>
+      {materiaux.map((m, i) => (
+        <mesh key={i} position={[i * PAS * HAUTEUR, 0, 0]} material={m}>
+          {/* La toile est carree, le plan aussi : la lueur deborde de la lettre
+              et a besoin de cette marge pour ne pas etre coupee au bord. */}
+          <planeGeometry args={[HAUTEUR * 1.55, HAUTEUR * 1.55]} />
+        </mesh>
       ))}
     </group>
   );

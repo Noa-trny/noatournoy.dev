@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import type { Locale, Pair } from "@/content/routes";
 import { routes } from "@/content/routes";
 import { ui } from "@/content/ui";
@@ -71,7 +72,28 @@ export function Header({ pair, locale }: { pair: Pair; locale: Locale }) {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center gap-6 px-6 py-4 sm:px-8">
-        <Link href={routes.home[locale]} className="text-sm font-medium text-fg">
+        {/* LE RETOUR AU BUREAU, EN PREMIER ET AVEC UNE FLECHE.
+        
+            Depuis une fiche projet, le seul chemin vers l'accueil etait la
+            signature — un mot en gras qu'on ne lit pas comme un bouton. Or on
+            arrive sur ces pages EN CLIQUANT une ligne de l'ecran du bureau : on
+            y vient d'un endroit, et l'on veut y retourner. La fleche dit ce que
+            le mot seul ne disait pas.
+        
+            Il est le premier element de la barre, avant meme la signature :
+            c'est la place qu'occupe un retour dans toute interface, et celle ou
+            le pouce le cherche sur telephone. */}
+        <Link
+          href={routes.home[locale]}
+          className="lueur group inline-flex shrink-0 items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-sm text-mid hover:border-accent/60 hover:text-fg tactile:min-h-11 tactile:px-4"
+        >
+          <ArrowLeft className="size-3.5 transition-transform duration-200 group-hover:-translate-x-0.5" />
+          {ui.navHome[locale]}
+        </Link>
+        <Link
+          href={routes.home[locale]}
+          className="hidden text-sm font-medium text-fg sm:block"
+        >
           Noa&nbsp;Tournoy
         </Link>
         <nav className="flex flex-1 flex-wrap gap-4 text-sm">
