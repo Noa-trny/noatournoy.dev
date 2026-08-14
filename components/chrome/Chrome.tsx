@@ -36,7 +36,7 @@ export function Skip({ locale }: { locale: Locale }) {
   );
 }
 
-export function LangSwitch({ pair, locale }: { pair: Pair; locale: Locale }) {
+function LangSwitch({ pair, locale }: { pair: Pair; locale: Locale }) {
   return (
     <nav aria-label={ui.langGroup[locale]} className="flex items-center gap-1 text-xs">
       {(["fr", "en"] as const).map((l) => (

@@ -17,7 +17,7 @@ import { Forme } from "../croquis/Forme";
 // une ligne d'horizon.
 
 /** La geometrie du lieu, en un seul endroit : la camera s'y refere. */
-export const LIEU = {
+const LIEU = {
   /**
    * Demi-largeur du couloir.
    *

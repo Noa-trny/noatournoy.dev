@@ -15,7 +15,7 @@ import { materiauContour, materiauCroquis, type ReglagesCroquis } from "./materi
 // sinon le cout du survol et projette une ombre legerement trop grande, ce qui
 // se voit comme un halo au pied des objets.
 
-export type FormeProps = {
+type FormeProps = {
   children: React.ReactElement;
   reglages: ReglagesCroquis;
   /** Epaisseur du trait. Zero le supprime — utile pour le sol. */
@@ -88,10 +88,3 @@ export function Forme({
     </group>
   );
 }
-
-/** Geometries partagees : un couloir en compte des dizaines d'exemplaires. */
-export const G = {
-  boite: new THREE.BoxGeometry(1, 1, 1),
-  plan: new THREE.PlaneGeometry(1, 1),
-  cylindre: new THREE.CylinderGeometry(0.5, 0.5, 1, 16),
-};

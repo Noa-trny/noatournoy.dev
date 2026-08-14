@@ -11,12 +11,12 @@ import type { Locale, Slug } from "./routes";
 // Ce fichier a ete genere depuis l'ancien HTML puis relu, pour qu'aucune chaine
 // ne derive a la recopie.
 
-export type ProjectLink = {
+type ProjectLink = {
   readonly href: string;
   readonly label: Readonly<Record<Locale, string>>;
 };
 
-export type ProjectCopy = {
+type ProjectCopy = {
   /** Deuxieme jeton de l'etiquette : annee et cadre. */
   readonly context: string;
   /** Troisieme jeton : la pile technique. */
@@ -40,11 +40,11 @@ export type ProjectCopy = {
  * revient ici parce que la liste des travaux s'en sert de nouveau. Il est cette
  * fois LU, ce qui est toute la difference.
  */
-export type Vignette =
+type Vignette =
   | { readonly kind: "image"; readonly src: string; readonly alt: Readonly<Record<Locale, string>> }
   | { readonly kind: "mot"; readonly mot: Readonly<Record<Locale, string>> };
 
-export type Project = {
+type Project = {
   readonly slug: Slug;
   /** _01 a _06, la numerotation visible de l'accueil. */
   readonly no: string;

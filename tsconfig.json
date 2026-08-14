@@ -9,6 +9,14 @@
     "allowJs": false,
     "skipLibCheck": true,
     "strict": true,
+    // LE CODE MORT DEVIENT UNE ERREUR DE COMPILATION. Sans ces deux drapeaux,
+    // une variable, un import ou un parametre laisses derriere une refonte ne
+    // signalent rien : le projet compile, le site marche, et la trace
+    // s'accumule. Une relecture en a trouve une demi-douzaine — un import de
+    // PALETTE inutilise, deux exports sans appelant — qu'aucun outil n'avait
+    // pu voir parce qu'aucun outil ne regardait.
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "noUncheckedIndexedAccess": true,
     "noEmit": true,
     "esModuleInterop": true,

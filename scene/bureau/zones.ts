@@ -13,7 +13,7 @@ import type { Locale } from "@/content/routes";
 
 export type IdZone = "projets" | "apropos" | "parcours" | "stack" | "contact";
 
-export type Zone = {
+type Zone = {
   readonly id: IdZone;
   /** L'objet qui la porte, pour les commentaires et le libelle de survol. */
   readonly objet: Readonly<Record<Locale, string>>;

@@ -18,7 +18,7 @@ import { oublieLaMain, veutLaMain } from "./curseur";
 // ne fait. Le carnet, lui, est du papier — il prend un materiau standard, passe
 // en `eclaire`.
 
-export type Ligne = {
+type Ligne = {
   /** Bord superieur de la ligne, dans le repere du peintre. */
   readonly y0: number;
   readonly y1: number;

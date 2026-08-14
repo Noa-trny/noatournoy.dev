@@ -101,7 +101,7 @@ type NavigatorPlus = Navigator & {
 };
 
 /** La raison du refus, pour pouvoir la journaliser en développement. */
-export type Refus =
+type Refus =
   | "serveur"
   | "mouvement-reduit"
   | "economie-de-donnees"

@@ -40,7 +40,7 @@ const Bureau = lazy(() => import("@/scene/bureau/Bureau"));
 //   — sans JavaScript, les memes sections s'empilent dans l'ordre et forment le
 //     portfolio complet.
 
-export type Section = {
+type Section = {
   /** La clef de station, telle que declaree dans `defilement.ts`. */
   readonly cle: string;
   readonly noeud: ReactNode;

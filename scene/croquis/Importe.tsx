@@ -40,7 +40,7 @@ import { rafraichirOmbres } from "../bureau/Ombres";
  * chose stable qu'un modele conserve a travers la chaine de preparation, l'ordre
  * des primitives, lui, ne l'etant pas.
  */
-export type ReglagesParMateriau = { readonly [nom: string]: ReglagesCroquis };
+type ReglagesParMateriau = { readonly [nom: string]: ReglagesCroquis };
 
 const estUnSeul = (r: ReglagesCroquis | ReglagesParMateriau): r is ReglagesCroquis =>
   "couleur" in r;

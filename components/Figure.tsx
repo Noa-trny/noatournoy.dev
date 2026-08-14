@@ -10,7 +10,7 @@ import type { ReactNode } from "react";
 // que WebP est universel (Safari 14, 2020) : ils n'etaient que le repli d'un
 // <source> que tous les navigateurs savent lire.
 
-export type FigureProps = {
+type FigureProps = {
   /** Les variantes WebP, de la plus etroite a la plus large. */
   readonly srcSet: string;
   readonly sizes: string;

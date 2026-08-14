@@ -19,7 +19,7 @@ import { Importe } from "../croquis/Importe";
 // l'intimite recherchee — un bureau uniformement eclairé est un bureau de
 // bureau, pas un poste de travail a soi.
 
-export const PALETTE = {
+const PALETTE = {
   plateau: { couleur: "#8a6a45", paliers: 4, grain: 0.1, plancher: 0.34 },
   pied: { couleur: "#2f3138", paliers: 3, grain: 0.08, plancher: 0.3 },
   boitier: { couleur: "#23262d", paliers: 3, grain: 0.08, plancher: 0.32 },

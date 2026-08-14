@@ -5,7 +5,7 @@ import type { Locale } from "./routes";
 // identique dans les deux langues ; seul le texte change. Les titres de section
 // gardent leur <em>, qui porte le vert acide — ils sont donc rendus tels quels.
 
-export type BrefRow = {
+type BrefRow = {
   readonly i: string;
   readonly k: string;
   readonly v: string;
@@ -13,7 +13,7 @@ export type BrefRow = {
   readonly href: string | null;
 };
 
-export type Milestone = {
+type Milestone = {
   readonly when: string;
   readonly what: string;
   readonly where: string;
@@ -23,29 +23,29 @@ export type Milestone = {
 };
 
 /** Un segment d'accroche : `b` marque ce qui etait dans un <b>. */
-export type Seg = { readonly t: string; readonly b: boolean };
+type Seg = { readonly t: string; readonly b: boolean };
 
-export type StackItem = { readonly icon: string | null; readonly name: string };
-export type StackGroup = {
+type StackItem = { readonly icon: string | null; readonly name: string };
+type StackGroup = {
   readonly word: string;
   readonly plain: boolean;
   readonly items: readonly StackItem[];
 };
 
-export type EmTitle = {
+type EmTitle = {
   readonly before: string;
   readonly em: string;
   readonly after: string;
 };
 
-export type Cert = {
+type Cert = {
   readonly org: string;
   readonly name: string;
   readonly note: string;
   readonly when: string;
 };
 
-export type HomeCopy = {
+type HomeCopy = {
   /**
    * Le titre principal, en trois morceaux : le nom, le metier, puis la fin
    * mise en avant. Il est ICI et non dans le composant parce qu'il etait

@@ -23,7 +23,7 @@ import { ZONES } from "./zones";
 // jamais par le rendu React. C'est le meme contrat que sur le projet precedent,
 // et c'est ce qui lui a permis de tenir 60 images par seconde.
 
-export type Station = {
+type Station = {
   /** Identite stable : elle sert de clef de rendu et de nom de point de vue. */
   readonly cle: string;
   /** La zone visee, ou `null` quand la station ne vise aucun objet. */
