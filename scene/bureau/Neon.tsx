@@ -15,9 +15,7 @@ import * as THREE from "three";
 // POURQUOI PAS DE POST-TRAITEMENT. Le halo d'un neon, c'est ce qu'un
 // `UnrealBloomPass` ferait — et un `EffectComposer` tirerait quarante
 // kilooctets tout en invalidant le prechauffage des shaders, le piege que ce
-// projet evite depuis le debut. Le halo est donc GEOMETRIQUE : chaque trait est
-// dessine deux fois, un coeur mince et vif, une gaine plus large en fondu
-// additif. C'est la meme ruse que le contour en coque inversee, retournee.
+// projet evite depuis le debut.
 //
 // POURQUOI AUCUNE LUMIERE. Une source de plus, c'est une passe d'eclairage de
 // plus sur TOUS les materiaux de la scene, couloir compris — on vient
@@ -34,21 +32,79 @@ type Trait = readonly [number, number, number, number];
  * `O` n'est pas un trait mais un anneau : le tracer en segments donnerait un
  * polygone, et un neon en polygone se lit comme un panneau de signalisation.
  */
+// LES LETTRES SONT ETROITES, et c'est la moitie de ce qui separe une enseigne
+// d'un jeu de cubes. A 0,6 de large pour 1 de haut, un N est presque carre : le
+// dessin se lit comme des lettres de bloc. Une enseigne au neon est etiree en
+// hauteur, parce qu'un tube plie garde son rayon et qu'un dessin large parait
+// gras a diametre egal.
 const LETTRES: readonly { readonly traits: readonly Trait[]; readonly anneau?: true }[] = [
   // N : deux montants et la diagonale qui les joint.
-  { traits: [[0, 0, 0, 1], [0, 1, 0.6, 0], [0.6, 0, 0.6, 1]] },
+  { traits: [[0, 0, 0, 1], [0, 1, 0.52, 0], [0.52, 0, 0.52, 1]] },
   // O
   { traits: [], anneau: true },
   // A : deux obliques et la barre.
-  { traits: [[0, 0, 0.3, 1], [0.3, 1, 0.6, 0], [0.12, 0.38, 0.48, 0.38]] },
+  { traits: [[0, 0, 0.26, 1], [0.26, 1, 0.52, 0], [0.1, 0.36, 0.42, 0.36]] },
 ];
 
-const HAUTEUR = 0.26;
-const PAS = 0.72;
-const RAYON = 0.05;
+const HAUTEUR = 0.42;
+/** L'ecart entre deux lettres, en hauteurs de lettre. Une lettre fait 0,52. */
+const PAS = 0.88;
+// UN TUBE PLUS FIN. A 0,042 pour une lettre de 1, le trait faisait un
+// douzieme de la hauteur — l'epaisseur d'un feutre d'ecolier. Un tube de neon
+// reel avoisine le vingtieme.
+const RAYON = 0.03;
+/** Le halo, en multiples du rayon du tube. */
+const AMPLEUR = 3.4;
 
-/** Les trois teintes de depart, reparties sur le cercle chromatique. */
-const DEPARTS = [0, 0.34, 0.68];
+/**
+ * LES TROIS TEINTES SONT VOISINES, ET NON OPPOSEES.
+ *
+ * Elles etaient a un tiers de cercle l'une de l'autre — l'ecart MAXIMAL, donc
+ * jaune, cyan et rose ensemble : la palette d'une fete d'anniversaire. Un
+ * dixieme suffit a ce que les trois se distinguent tout en restant de la meme
+ * famille, et le cycle continue de traverser tout le spectre — on garde le RVB
+ * sans le chapiteau.
+ */
+const DEPARTS = [0, 0.1, 0.2];
+
+/**
+ * LE HALO A UN DEGRADE, ET C'EST TOUT CE QUI LE SEPARE D'UN TUBE EN PLASTIQUE.
+ *
+ * Sa premiere version etait un cylindre plus large en fondu additif, d'opacite
+ * CONSTANTE. De loin ça passait ; de pres on voyait exactement ce que c'etait —
+ * un gros tube translucide a bord net. Et comme le fondu additif s'ajoute a
+ * lui-meme, les croisements de traits et les deux parois d'un meme cylindre
+ * s'empilaient jusqu'au blanc.
+ *
+ * Ici l'opacite suit l'angle entre la normale et le regard : pleine la ou le
+ * tube fait face a la camera, nulle a sa silhouette. La gaine n'a donc plus de
+ * bord — elle s'eteint d'elle-meme — et une seule face est rendue, ce qui
+ * supprime l'empilement.
+ */
+const HALO_SOMMET = /* glsl */ `
+  varying vec3 vNormale;
+  varying vec3 vVersOeil;
+  void main() {
+    vec4 vue = modelViewMatrix * vec4(position, 1.0);
+    vNormale = normalize(normalMatrix * normal);
+    vVersOeil = normalize(-vue.xyz);
+    gl_Position = projectionMatrix * vue;
+  }
+`;
+
+const HALO_FRAGMENT = /* glsl */ `
+  uniform vec3 uCouleur;
+  uniform float uForce;
+  varying vec3 vNormale;
+  varying vec3 vVersOeil;
+  void main() {
+    float face = max(dot(normalize(vNormale), normalize(vVersOeil)), 0.0);
+    // Puissance 2,5 : en lineaire la gaine reste visible presque jusqu'au bord
+    // et redessine la silhouette du tube. Il faut que l'extinction soit
+    // franche pour qu'on lise une lueur et non un volume.
+    gl_FragColor = vec4(uCouleur, pow(face, 2.5) * uForce);
+  }
+`;
 
 export function Neon({
   position,
@@ -57,126 +113,127 @@ export function Neon({
   position: [number, number, number];
   rotation?: [number, number, number];
 }) {
-  const materiaux = useRef<THREE.MeshBasicMaterial[]>([]);
+  const coeurs = useRef<{ mat: THREE.MeshBasicMaterial; depart: number }[]>([]);
+  const gaines = useRef<{ mat: THREE.ShaderMaterial; depart: number }[]>([]);
 
-  // Les geometries sont construites une fois : elles ne dependent de rien.
   const lettres = useMemo(() => {
-    // Un cylindre unite, oriente sur Y, mis a l'echelle et tourne par trait :
-    // trois geometries partagees pour tout le neon plutot qu'une par segment.
-    // DEUX JEUX DE GEOMETRIES, un fin et un epais — et non un seul mis a
-    // l'echelle. Mettre le GROUPE a l'echelle 2,1 agrandissait les positions
-    // autant que les tubes : le halo se retrouvait deux fois plus grand ET
-    // decale, un second « NOA » fantome en haut a droite du vrai. Seul le
-    // RAYON doit grossir.
-    const tube = new THREE.CylinderGeometry(RAYON, RAYON, 1, 10, 1, true);
-    const tubeHalo = new THREE.CylinderGeometry(RAYON * 3, RAYON * 3, 1, 10, 1, true);
-    const bille = new THREE.SphereGeometry(RAYON, 10, 8);
+    // Deux jeux de geometries, un fin et un epais — et non un seul mis a
+    // l'echelle. Mettre le GROUPE a l'echelle agrandissait les positions autant
+    // que les tubes : le halo se retrouvait plus grand ET decale, un second
+    // « NOA » fantome. Seul le RAYON doit grossir.
+    const tube = new THREE.CylinderGeometry(RAYON, RAYON, 1, 12, 1, true);
+    const tubeHalo = new THREE.CylinderGeometry(RAYON * AMPLEUR, RAYON * AMPLEUR, 1, 14, 1, true);
+    const bille = new THREE.SphereGeometry(RAYON, 12, 8);
     // L'ANNEAU EST OVALE, pas rond. Un tore de rayon 0,3 dans une lettre haute
     // de 1 donne un O qui n'occupe que six dixiemes de la hauteur : a cote d'un
-    // N et d'un A pleine hauteur, il se lit comme un point. On l'etire donc sur
-    // Y a la hauteur des autres — ce qui est aussi ce que fait un O dessine.
-    const anneau = new THREE.TorusGeometry(0.3, RAYON, 8, 30);
-    const anneauHalo = new THREE.TorusGeometry(0.3, RAYON * 3, 8, 30);
+    // N et d'un A pleine hauteur, il se lit comme un point.
+    const anneau = new THREE.TorusGeometry(0.26, RAYON, 8, 34);
+    const anneauHalo = new THREE.TorusGeometry(0.26, RAYON * AMPLEUR, 10, 34);
 
     return LETTRES.map((l, i) => {
       const segments = l.traits.map(([x1, y1, x2, y2]) => {
         const dx = x2 - x1;
         const dy = y2 - y1;
-        const long = Math.hypot(dx, dy);
         return {
           position: [(x1 + x2) / 2, (y1 + y2) / 2, 0] as [number, number, number],
-          // Un cylindre pointe vers +Y : l'angle est donc mesure depuis la
-          // verticale, d'ou le quart de tour retire.
+          // Un cylindre pointe vers +Y : l'angle se mesure depuis la verticale,
+          // d'ou le quart de tour retire.
           rotation: [0, 0, Math.atan2(dy, dx) - Math.PI / 2] as [number, number, number],
-          longueur: long,
+          longueur: Math.hypot(dx, dy),
         };
       });
       // LES JONCTIONS SONT DES BILLES. Deux cylindres qui se rencontrent a
-      // angle laissent un coin vide, et un neon n'a pas de coin vide — le verre
-      // y est continu. Une sphere au bout de chaque trait ferme l'angle pour
-      // dix triangles.
+      // angle laissent un coin vide, et un neon n'en a pas — le verre y est
+      // continu. Une sphere par extremite ferme l'angle pour dix triangles.
       const noeuds = l.traits.flatMap(([x1, y1, x2, y2]) => [
         [x1, y1, 0] as [number, number, number],
         [x2, y2, 0] as [number, number, number],
       ]);
-      return { segments, noeuds, anneau: l.anneau, decalage: i * PAS, depart: DEPARTS[i] ?? 0 };
-    }).map((l) => ({ ...l, tube, tubeHalo, bille, anneauGeo: anneau, anneauHalo }));
+      return {
+        segments,
+        noeuds,
+        anneau: l.anneau,
+        decalage: i * PAS,
+        depart: DEPARTS[i] ?? 0,
+        tube,
+        tubeHalo,
+        bille,
+        anneauGeo: anneau,
+        anneauHalo,
+      };
+    });
   }, []);
 
-  // LA COULEUR TOURNE, ET C'EST LA SEULE ANIMATION DE LA SCENE. Un neon RVB de
-  // bureau ne clignote pas : il derive lentement. Un cycle complet en quarante
-  // secondes se remarque sans jamais distraire — et l'ecart d'un tiers de
-  // cercle entre les lettres fait qu'a tout instant les trois sont differentes.
+  // LA COULEUR TOURNE, ET C'EST LA SEULE ANIMATION DE LA SCENE. Un neon de
+  // bureau ne clignote pas : il derive. Un cycle complet en quarante secondes se
+  // remarque sans distraire, et l'ecart d'un tiers de cercle entre les lettres
+  // fait qu'a tout instant les trois different.
   useFrame((etat) => {
-    const t = etat.clock.elapsedTime * 0.025;
-    for (const m of materiaux.current) {
-      if (!m) continue;
-      const depart = m.userData.depart as number;
-      m.color.setHSL((t + depart) % 1, 0.9, m.userData.halo ? 0.55 : 0.66);
+    const t = etat.clock.elapsedTime * 0.014;
+    // LE COEUR EST PRESQUE BLANC, LE HALO PORTE LA COULEUR. C'est ce qui
+    // distingue un neon d'un tube de plastique colore, et c'etait le defaut
+    // principal : un tube saturé plein se lit comme un jouet. Dans un vrai
+    // neon, le gaz chauffe au blanc et seule la lueur alentour est teintee —
+    // c'est ainsi qu'une enseigne photographie.
+    for (const c of coeurs.current) c.mat.color.setHSL((t + c.depart) % 1, 0.22, 0.93);
+    for (const g of gaines.current) {
+      (g.mat.uniforms.uCouleur!.value as THREE.Color).setHSL((t + g.depart) % 1, 1, 0.52);
     }
   });
 
-  const inscrire = (m: THREE.MeshBasicMaterial | null, depart: number, halo: boolean) => {
-    if (!m) return;
-    m.userData.depart = depart;
-    m.userData.halo = halo;
-    if (!materiaux.current.includes(m)) materiaux.current.push(m);
+  const materiauGaine = (depart: number) => (m: THREE.ShaderMaterial | null) => {
+    if (m && !gaines.current.some((g) => g.mat === m)) gaines.current.push({ mat: m, depart });
   };
+  const materiauCoeur = (depart: number) => (m: THREE.MeshBasicMaterial | null) => {
+    if (m && !coeurs.current.some((c) => c.mat === m)) coeurs.current.push({ mat: m, depart });
+  };
+
+  /** La gaine : un seul cote rendu, aucune ecriture de profondeur. */
+  const gaine = (depart: number) => (
+    <shaderMaterial
+      ref={materiauGaine(depart)}
+      args={[
+        {
+          uniforms: { uCouleur: { value: new THREE.Color() }, uForce: { value: 0.62 } },
+          vertexShader: HALO_SOMMET,
+          fragmentShader: HALO_FRAGMENT,
+        },
+      ]}
+      transparent
+      depthWrite={false}
+      side={THREE.FrontSide}
+      blending={THREE.AdditiveBlending}
+    />
+  );
 
   return (
     <group position={position} rotation={rotation}>
       {lettres.map((l, i) => (
         <group key={i} position={[l.decalage * HAUTEUR, 0, 0]} scale={HAUTEUR}>
-          {/* Deux passes : le coeur, puis la gaine. La gaine est plus large,
-              en fondu additif et sans ecriture de profondeur — elle ne doit
-              masquer ni le coeur ni ce qui se trouve derriere. */}
-          {[false, true].map((halo) => (
-            <group key={String(halo)}>
-              {l.anneau ? (
-                <mesh
-                  position={[0.3, 0.5, 0]}
-                  scale={[1, 1.62, 1]}
-                  geometry={halo ? l.anneauHalo : l.anneauGeo}
-                >
-                  <meshBasicMaterial
-                    ref={(m) => inscrire(m, l.depart, halo)}
-                    toneMapped={false}
-                    transparent={halo}
-                    opacity={halo ? 0.13 : 1}
-                    blending={halo ? THREE.AdditiveBlending : THREE.NormalBlending}
-                    depthWrite={!halo}
-                  />
-                </mesh>
-              ) : null}
-              {l.segments.map((s, j) => (
-                <mesh
-                  key={j}
-                  position={s.position}
-                  rotation={s.rotation}
-                  scale={[1, s.longueur, 1]}
-                  geometry={halo ? l.tubeHalo : l.tube}
-                >
-                  <meshBasicMaterial
-                    ref={(m) => inscrire(m, l.depart, halo)}
-                    toneMapped={false}
-                    transparent={halo}
-                    opacity={halo ? 0.13 : 1}
-                    blending={halo ? THREE.AdditiveBlending : THREE.NormalBlending}
-                    depthWrite={!halo}
-                  />
-                </mesh>
-              ))}
-              {!halo
-                ? l.noeuds.map((p, j) => (
-                    <mesh key={`n${j}`} position={p} geometry={l.bille}>
-                      <meshBasicMaterial
-                        ref={(m) => inscrire(m, l.depart, false)}
-                        toneMapped={false}
-                      />
-                    </mesh>
-                  ))
-                : null}
+          {l.anneau ? (
+            <>
+              <mesh position={[0.26, 0.5, 0]} scale={[1, 1.88, 1]} geometry={l.anneauGeo}>
+                <meshBasicMaterial ref={materiauCoeur(l.depart)} toneMapped={false} />
+              </mesh>
+              <mesh position={[0.26, 0.5, 0]} scale={[1, 1.88, 1]} geometry={l.anneauHalo}>
+                {gaine(l.depart)}
+              </mesh>
+            </>
+          ) : null}
+
+          {l.segments.map((s, j) => (
+            <group key={j} position={s.position} rotation={s.rotation} scale={[1, s.longueur, 1]}>
+              <mesh geometry={l.tube}>
+                <meshBasicMaterial ref={materiauCoeur(l.depart)} toneMapped={false} />
+              </mesh>
+              <mesh geometry={l.tubeHalo}>{gaine(l.depart)}</mesh>
             </group>
+          ))}
+
+          {l.noeuds.map((p, j) => (
+            <mesh key={`n${j}`} position={p} geometry={l.bille}>
+              <meshBasicMaterial ref={materiauCoeur(l.depart)} toneMapped={false} />
+            </mesh>
           ))}
         </group>
       ))}
