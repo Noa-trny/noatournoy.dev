@@ -317,11 +317,28 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             Trois sources pour trois bandeaux auraient coute trois passes
             d'eclairage par image sur TOUS les materiaux, y compris ceux du
             bureau, pour un couloir qu'on traverse en deux secondes. */}
+        {/* ELLE DESCEND, ET SA DECROISSANCE S'APLATIT.
+
+            A deux quinze, elle etait a VINGT-CINQ CENTIMETRES du plafond. En
+            carre, ça fait un eclairement de quarante juste au-dessus d'elle :
+            la tole saturait en blanc et le debut du plafond, celui qu'on a
+            au-dessus de la tete au premier ecran du site, n'etait plus qu'une
+            tache informe. Le meme defaut que le cercle du plateau, a un autre
+            endroit — et la meme cause, une ponctuelle trop pres d'une surface.
+
+            Elle descend a un metre quatre-vingt-cinq, ce qui double sa distance
+            au plafond, et passe en decroissance LINEAIRE parce que ce qu'elle
+            simule n'est pas une ampoule mais trois BANDEAUX, c'est-a-dire des
+            surfaces. L'eclairement au plafond tombe d'un facteur neuf sans que
+            les murs y perdent : ils etaient a un metre vingt, ils y sont
+            toujours. La portee se resserre d'autant, une decroissance plate
+            portant plus loin — elle meurt maintenant a cinq metres cinquante,
+            bien avant l'ilot de la lampe. */}
         <pointLight
-          position={[0, 2.15, 9.1]}
-          intensity={2.6}
-          distance={8}
-          decay={2}
+          position={[0, 1.85, 9.1]}
+          intensity={2.4}
+          distance={5.5}
+          decay={1}
           color="#7c88a4"
         />
 

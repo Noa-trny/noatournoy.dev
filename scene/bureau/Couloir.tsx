@@ -204,6 +204,37 @@ export function Couloir() {
           <meshBasicMaterial color={i === 2 ? "#495164" : "#6d7690"} />
         </mesh>
       ))}
+
+      {/* LES DEUX LIGNES BASSES, ET CE QU'ELLES FONT AU COULOIR.
+
+          Un couloir se dessine avec DEUX FUYANTES — c'est ecrit plus haut, et
+          c'est ce qui a decide de sa largeur. Mais il n'en avait qu'une paire,
+          en haut, portee par les bandeaux du plafond : en bas, l'arete entre le
+          mur et le sol tombait dans le noir, et le passage se lisait comme une
+          boite ouverte par le haut plutot que comme un volume ferme.
+
+          Deux lignes continues au ras du mur rendent la paire manquante. Elles
+          ne se contentent pas d'eclairer : elles CONVERGENT, donc elles disent
+          la profondeur avant qu'on ait avance d'un metre, et elles la disent
+          d'autant mieux qu'elles sont CONTINUES la ou les bandeaux sont
+          discrets — trois taches ne font pas une fuyante, une ligne oui.
+
+          PLUS SOMBRES QUE LE PLAFOND, et c'est ce qui les garde a leur place.
+          A egalite, l'oeil hesitait entre deux paires de lignes et le regard
+          cessait de filer vers le fond ; a cette valeur, elles se lisent comme
+          un rappel, pas comme une seconde source.
+
+          Materiau non eclairé, comme les bandeaux : deux vraies sources de plus
+          couteraient deux passes d'eclairage par image sur TOUS les materiaux
+          de la scene, bureau compris, pour un couloir qu'on traverse en deux
+          secondes. Elles ne portent pas d'ombre non plus, et ne participent a
+          aucun lancer de rayon. */}
+      {[-couloir, couloir].map((x) => (
+        <mesh key={`ligne${x}`} position={[x - Math.sign(x) * 0.046, 0.26, zCouloir]} raycast={() => {}}>
+          <boxGeometry args={[0.014, 0.035, longCouloir]} />
+          <meshBasicMaterial color="#56607a" />
+        </mesh>
+      ))}
     </group>
   );
 }
