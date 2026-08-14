@@ -53,7 +53,21 @@ const LIEU = {
   fond: 13.5,
   hauteurCouloir: 2.4,
   hauteurPiece: 3.2,
+  /** L'epaisseur des cloisons de la piece. */
+  epaisseurMur: 0.08,
 } as const;
+
+/**
+ * LA FACE INTERIEURE DU MUR DE GAUCHE, et pourquoi elle est exportee.
+ *
+ * Tout ce qu'on accroche a ce mur doit s'y rapporter, et non a un x ecrit de
+ * memoire. La fenetre a ete peinte DANS la cloison DEUX FOIS — une fois au
+ * fond, une fois ici — toujours pour la meme raison : son retrait de dix-huit
+ * millimetres est pris vers l'EXTERIEUR, donc un groupe pose sur la face du mur
+ * met la vitre derriere elle, et l'on obtient un cadre vide. La cote est
+ * desormais calculee, pas recopiee : deplacer le mur deplace ce qui est dessus.
+ */
+export const MUR_GAUCHE = -LIEU.pieceGauche + LIEU.epaisseurMur / 2;
 
 const MUR = { couleur: "#111419", paliers: 3, grain: 0.09, plancher: 0.13 } as const;
 // LES MURS DU COULOIR SONT PLUS CLAIRS QUE CEUX DE LA PIECE, ce qui parait a
@@ -83,7 +97,7 @@ const NERVURES = [8.0, 8.9, 9.8];
 const SANS_OMBRE = { castShadow: false, receiveShadow: false } as const;
 
 export function Couloir() {
-  const { couloir, piece, pieceGauche, seuil, fond, hauteurCouloir, hauteurPiece } = LIEU;
+  const { couloir, piece, pieceGauche, seuil, fond, hauteurCouloir, hauteurPiece, epaisseurMur } = LIEU;
   const longCouloir = fond - seuil;
   const zCouloir = (fond + seuil) / 2;
 
@@ -95,7 +109,7 @@ export function Couloir() {
           derriere un mur ne cadre rien du tout. */}
       {[-pieceGauche, piece].map((x) => (
         <Forme key={x} reglages={MUR} position={[x, hauteurPiece / 2, (seuil - 1.05) / 2]} trait={0} {...SANS_OMBRE}>
-          <boxGeometry args={[0.08, hauteurPiece, seuil + 1.05]} />
+          <boxGeometry args={[epaisseurMur, hauteurPiece, seuil + 1.05]} />
         </Forme>
       ))}
 

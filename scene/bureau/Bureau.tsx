@@ -21,10 +21,10 @@ import {
 import { Sensible } from "./Sensible";
 import * as THREE from "three";
 import { Forme } from "../croquis/Forme";
-import { Couloir } from "./Couloir";
+import { Couloir, MUR_GAUCHE } from "./Couloir";
 import { OmbresFigees } from "./Ombres";
 import { Neon } from "./Neon";
-import { Fenetre } from "./Fenetre";
+import { Fenetre, FlaqueFenetre, POSE } from "./Fenetre";
 import { Optionnel } from "../croquis/Optionnel";
 import {
   Carnet,
@@ -276,8 +276,15 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             Elle etait au fond, a cote du neon, ou deux points lumineux se
             disputaient le meme regard. De cote, elle eclaire la piece par la
             tranche — ce qui est aussi la seule position ou une fenetre motive
-            une lumiere RASANTE plutot que frontale. */}
-        <Fenetre position={[-2.55, 1.62, 0.35]} rotation={[0, Math.PI / 2, 0]} />
+            une lumiere RASANTE plutot que frontale.
+
+            SA COTE EN X EST CALCULEE, ET C'EST LE FOND DE L'AFFAIRE. Ecrite a
+            la main, elle mettait la vitre huit millimetres DANS la cloison, et
+            l'on ne voyait plus qu'un dormant devant un trou noir. */}
+        <Fenetre position={[MUR_GAUCHE + POSE, 1.62, 0.35]} rotation={[0, Math.PI / 2, 0]} />
+        {/* Et ce qu'elle pose par terre. Les deux prennent la meme face de mur
+            et la meme cote : une fenetre qui bouge emmene sa lueur. */}
+        <FlaqueFenetre mur={MUR_GAUCHE} z={0.35} />
 
         <Couloir />
 
