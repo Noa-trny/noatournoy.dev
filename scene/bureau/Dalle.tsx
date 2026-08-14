@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import * as THREE from "three";
 import { policePrete } from "./peinture";
+import { oublieLaMain, veutLaMain } from "./curseur";
 
 // UNE SURFACE QUI PORTE DU CONTENU.
 //
@@ -47,6 +48,9 @@ export function Dalle({
   reference?: readonly [number, number];
 }) {
   const [ligneSurvolee, setLigneSurvolee] = useState<number | null>(null);
+  // Une clef propre a cette dalle : deux dalles cliquables ne doivent pas se
+  // liberer la main l'une l'autre.
+  const clefCurseur = useId();
   const [version, setVersion] = useState(0);
 
   const tex = useMemo(() => {
@@ -69,6 +73,9 @@ export function Dalle({
   // La texture precedente est liberee a chaque remplacement : sans ça, chaque
   // redessin laisse une image de plus en memoire graphique.
   useEffect(() => () => tex?.dispose(), [tex]);
+
+  // Une dalle demontee ne doit pas laisser la main derriere elle.
+  useEffect(() => () => oublieLaMain(clefCurseur), [clefCurseur]);
 
   if (!tex) return null;
 
@@ -100,7 +107,7 @@ export function Dalle({
           ? (e) => {
               const i = ligneSous(e.uv);
               setLigneSurvolee(i);
-              document.body.style.cursor = i === null ? "" : "pointer";
+              veutLaMain(clefCurseur, i !== null);
             }
           : undefined
       }
@@ -108,7 +115,7 @@ export function Dalle({
         interactif
           ? () => {
               setLigneSurvolee(null);
-              document.body.style.cursor = "";
+              oublieLaMain(clefCurseur);
             }
           : undefined
       }

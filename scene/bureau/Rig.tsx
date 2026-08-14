@@ -68,6 +68,7 @@ export function Rig() {
   const branche = useRef(false);
   const horloge = useRef({ derniere: 0, pire: 0, images: 0, cumul: 0 });
   const recense = useRef<{ maillages: number; geometriesDistinctes: number } | null>(null);
+  const derniere = useRef<string | null>(null);
 
   // LE RAPPORT DE L'ECRAN CHOISIT LE PLAN, et il est lu ici plutot que par une
   // media query : c'est la camera qui cadre, pas la feuille de style.
@@ -238,12 +239,23 @@ export function Rig() {
     // entre deux stations.
     const proche = Math.round(s);
     const pose = Math.abs(s - proche) < 0.22;
-    bureau.set({
-      ouverte: (pose ? STATIONS[proche]?.zone : null) ?? null,
-      // En mouvement, le survol est perime : R3F ne relance un lancer de rayon
-      // que sur evenement de pointeur, jamais parce que la camera a bouge.
-      ...(Math.abs(piste.brut - piste.lisse) > 0.0015 ? { survol: null } : {}),
-    });
+    const station = (pose ? STATIONS[proche]?.zone : null) ?? null;
+
+    // ON NE PUBLIE QUE SUR CHANGEMENT, et la comparaison se fait AVANT l'appel.
+    // `bureau.set` recevait un litteral neuf a chaque image — plus une diffusion
+    // conditionnelle — et le magasin parcourait ensuite `Object.entries` pour
+    // conclure que rien n'avait bouge. Trois allocations par image, pendant
+    // toute la session, dans la seule boucle dont l'en-tete de ce fichier dit
+    // qu'elle ne doit pas toucher React.
+    if (station !== derniere.current) {
+      derniere.current = station;
+      bureau.set({ ouverte: station });
+    }
+    // En mouvement, le survol est perime : R3F ne relance un lancer de rayon que
+    // sur evenement de pointeur, jamais parce que la camera a bouge.
+    if (Math.abs(piste.brut - piste.lisse) > 0.0015 && bureau.get().survol !== null) {
+      bureau.set({ survol: null });
+    }
   });
 
   return null;

@@ -169,6 +169,39 @@ export function peindreProjets(locale: Locale): THREE.CanvasTexture {
   return texture(c);
 }
 
+/**
+ * LES LOGOS SONT CHARGES UNE FOIS POUR TOUTE LA SESSION.
+ *
+ * Chaque dalle repeint quand la police arrive — c'est ce qui evite d'afficher
+ * un rectangle noir en attendant Inter. Mais `peindreStack` recreait alors neuf
+ * `Image()` et relançait neuf requetes : le navigateur servait la seconde salve
+ * depuis son cache, sans que ça se voie, mais les neuf SVG etaient redecodes
+ * pour rien a chaque passage.
+ *
+ * Le cache est indexe par NOM et garde la promesse, pas l'image : deux dalles
+ * peintes en meme temps se partagent alors le meme chargement en cours plutot
+ * que d'en lancer deux.
+ */
+const logos = new Map<string, Promise<[string, HTMLImageElement]>>();
+
+function charger(nom: string): Promise<[string, HTMLImageElement]> {
+  const deja = logos.get(nom);
+  if (deja) return deja;
+  const p = new Promise<[string, HTMLImageElement]>((resoudre, rejeter) => {
+    const img = new Image();
+    img.onload = () => resoudre([nom, img]);
+    // Une icone manquante ne doit pas rester en cache : sans cet oubli, un
+    // echec reseau ponctuel condamnerait le logo pour toute la session.
+    img.onerror = (e) => {
+      logos.delete(nom);
+      rejeter(e);
+    };
+    img.src = `/assets/icons/${nom}.svg`;
+  });
+  logos.set(nom, p);
+  return p;
+}
+
 /** Le second ecran : la presentation, comme un document ouvert. */
 export function peindreApropos(locale: Locale): THREE.CanvasTexture {
   const cph = home[locale];
@@ -316,17 +349,7 @@ export function peindreStack(locale: Locale): THREE.CanvasTexture {
   const cote = 96;
   const marge = 36;
   const pas = (512 - marge * 2 - cote) / 2;
-  Promise.allSettled(
-    LOGOS.map(
-      (nom) =>
-        new Promise<[string, HTMLImageElement]>((resoudre, rejeter) => {
-          const img = new Image();
-          img.onload = () => resoudre([nom, img]);
-          img.onerror = rejeter;
-          img.src = `/assets/icons/${nom}.svg`;
-        })
-    )
-  ).then((sorties) => {
+  Promise.allSettled(LOGOS.map(charger)).then((sorties) => {
     fond();
     let i = 0;
     for (const sortie of sorties) {

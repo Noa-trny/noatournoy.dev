@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { bureau, useBureau } from "./etat";
+import { oublieLaMain, veutLaMain } from "./curseur";
 import type { IdZone } from "./zones";
 
 // LA SURFACE SENSIBLE d'une zone.
@@ -36,15 +37,17 @@ export function Sensible({
   const ouverte = useBureau((e) => e.ouverte);
   const survol = useBureau((e) => e.survol);
 
-  // Le curseur se pose sur le DOCUMENT et non sur la boite : `onPointerOut` ne
-  // part pas toujours quand l'objet disparait ou que la camera l'emporte, et le
-  // curseur resterait alors en « main » sur toute la page.
+  // Le curseur se declare sous une clef plutot que de s'ecrire directement :
+  // la dalle des projets le veut aussi, et deux ecrivains sur une meme propriete
+  // globale se raturent l'un l'autre. Voir curseur.ts.
+  //
+  // On passe par le survol GLOBAL et non par `onPointerOut` de la boite, parce
+  // que celui-ci ne part pas toujours quand la camera emporte l'objet — la main
+  // resterait alors sur toute la page.
   useEffect(() => {
-    document.body.style.cursor = survol ? "pointer" : "";
-    return () => {
-      document.body.style.cursor = "";
-    };
-  }, [survol]);
+    veutLaMain(`sensible-${id}`, survol === id);
+    return () => oublieLaMain(`sensible-${id}`);
+  }, [survol, id]);
 
   // LA BOITE S'EFFACE DEVANT SON PROPRE CONTENU, et c'est la seule condition.
   //
