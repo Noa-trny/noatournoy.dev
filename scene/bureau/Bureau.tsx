@@ -23,6 +23,7 @@ import * as THREE from "three";
 import { Forme } from "../croquis/Forme";
 import { Couloir } from "./Couloir";
 import { OmbresFigees } from "./Ombres";
+import { Neon } from "./Neon";
 import { Optionnel } from "../croquis/Optionnel";
 import {
   Carnet,
@@ -296,6 +297,14 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
           decay={2}
           color="#b039ff"
         />
+
+        {/* LE NEON, sur le mur derriere les ecrans. C'est la seule surface
+            vide du plan large : le regard y monte apres avoir lu les dalles et
+            n'y trouvait rien. Il est pose assez haut pour ne croiser aucune des
+            cinq vues de lecture, et assez bas pour rester dans le cadre depuis
+            le couloir — c'est de la-bas qu'il se voit le mieux, comme une
+            enseigne au fond d'un passage. */}
+        <Neon position={[-0.62, 1.4, -0.99]} />
 
         <Plateau />
 
