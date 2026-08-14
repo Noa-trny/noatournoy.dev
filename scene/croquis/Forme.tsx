@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
 import { materiauContour, materiauCroquis, type ReglagesCroquis } from "./materiau";
 
@@ -63,6 +63,28 @@ export function Forme({
   // qu'au rechargement a chaud pendant le developpement, ou un remontage suffit
   // a corriger.
   const [geometrie, setGeometrie] = useState<THREE.BufferGeometry | null>(null);
+
+  // LA NORMALE MOYENNEE EST RESERVEE AUX BOITES, ET STRICTEMENT.
+  //
+  // C'est la seule geometrie de la scene qui ait besoin du traitement ET qui le
+  // permette. Besoin : ses normales sont DURES — ses huit sommets existent en
+  // trois exemplaires — donc une coque gonflee le long des normales de face se
+  // DECHIRE le long de chaque arete (voir `materiauContour`). Permission : elle
+  // est alignee sur ses axes et centree sur sa boite englobante, ce qui rend sa
+  // normale moyennee calculable par une fonction signe, sans fusionner un seul
+  // sommet.
+  //
+  // Tout le reste garde la normale de face, et n'y perd rien : un cylindre, une
+  // sphere, un tube de cable, un modele importe ont des normales LISSES, donc
+  // leur coque ne se dechire pas. C'est exactement le comportement d'avant.
+  useEffect(() => {
+    if (!geometrie || !matTrait) return;
+    if (geometrie.type !== "BoxGeometry") return;
+    geometrie.computeBoundingBox();
+    if (!geometrie.boundingBox) return;
+    geometrie.boundingBox.getCenter(matTrait.uniforms.uCentre!.value as THREE.Vector3);
+    matTrait.uniforms.uBoite!.value = 1;
+  }, [geometrie, matTrait]);
 
   return (
     <group position={position} rotation={rotation}>

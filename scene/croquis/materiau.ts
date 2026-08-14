@@ -154,7 +154,66 @@ export function materiauCroquis(r: ReglagesCroquis): THREE.MeshStandardMaterial 
  *
  * `depthWrite: false` : la coque ne doit pas masquer ce qu'elle entoure quand
  * deux objets se chevauchent.
+ *
+ * LA COQUE NE SE GONFLE PAS LE LONG DE LA NORMALE, ET C'EST TOUT L'ENJEU.
+ *
+ * Elle l'a fait, et ça se voyait sur les ecrans : bord droit epaissi en coin,
+ * bande noire sous la dalle, encoches aux quatre angles. La cause est dans la
+ * geometrie d'une boite. Ses normales sont DURES — les huit sommets existent en
+ * trois exemplaires, un par face, portant trois normales differentes. Gonfler
+ * chacun le long de la sienne fait partir les trois copies dans trois
+ * directions : la coque se DECHIRE le long de chaque arete, et les fentes
+ * ouvertes se lisent comme un trait sale, d'autant plus large que l'objet est
+ * plat. Sur un cadre d'ecran de vingt-huit millimetres, la dechirure faisait la
+ * largeur du bord lui-meme.
+ *
+ * On gonfle donc le long de la NORMALE MOYENNEE — celle qu'on obtiendrait en
+ * fusionnant les sommets, sans dupliquer une seule geometrie, ce que le detour
+ * par une reference partagee dans `Forme` cherche justement a eviter. Elle ne
+ * depend que de la POSITION du sommet : trois copies au meme endroit partent au
+ * meme endroit, la coque reste close, et le trait garde une epaisseur egale.
+ *
+ * SUR UNE BOITE ALIGNEE, ELLE SE CALCULE EXACTEMENT, et c'est ce qui rend
+ * l'affaire gratuite : `normalize(sign(position - centre))`. Un coin appartient
+ * a trois faces de normales ±x, ±y, ±z, dont la moyenne vaut (±1, ±1, ±1)/√3 ;
+ * un sommet de milieu d'arete a deux faces, un sommet de milieu de face une
+ * seule — et la fonction signe donne les trois cas sans les distinguer.
+ *
+ * CE N'EST SURTOUT PAS LE RAYON DEPUIS LE CENTRE, qui a ete essaye et qui est
+ * FAUX des que la boite n'est pas un cube. Ce rayon est proportionnel aux
+ * DIMENSIONS : au coin d'un clavier de trente sur un virgule six, il est
+ * presque horizontal. La coque ne montait alors plus du tout, elle s'etalait en
+ * JUPE autour de l'objet, a sa propre hauteur — et cette jupe se projetait en
+ * un gros bandeau noir sous chaque objet plat, carnet, clavier, machine et
+ * socles d'ecran. La normale moyennee, elle, vaut autant dans les trois axes
+ * quelle que soit la forme de la boite.
+ *
+ * LA NORMALE RESTE LA DIRECTION DE TOUT LE RESTE, et ce n'est pas un repli par
+ * defaut : un plan est coplanaire, donc le rayon depuis son centre ne gonfle
+ * rien ; un cylindre, une sphere, un modele importe ont des normales lisses,
+ * donc leur coque ne se dechire pas ; et une courbe — un tube de cable — a beau
+ * avoir du volume, son centre de boite englobante n'est pas « dedans », si bien
+ * que le rayon y donnerait un trait d'epaisseur inegale. C'est `Forme` qui
+ * tranche, et il ne dit oui qu'aux boites.
  */
+/**
+ * L'ABATTEMENT GLOBAL SUR LE TRAIT, et pourquoi il vaut mieux qu'un passage en
+ * revue des trente-six appels.
+ *
+ * Chaque objet declare son epaisseur, et ces valeurs ne sont pas arbitraires :
+ * elles disent le RAPPORT entre les traits — un cable est plus fin qu'un cadre
+ * d'ecran, qui est plus fin qu'un plateau. Ce rapport est juste. C'est
+ * l'echelle d'ensemble qui ne l'etait pas : a un, le trait faisait cinq pixels
+ * sur une fenetre de huit cent soixante, ce qui est une grosse mine sur un
+ * dessin de cette finesse. Un coefficient unique les baisse tous d'un cran sans
+ * toucher a leurs proportions — et c'est le seul nombre a bouger le jour ou il
+ * faudra en rediscuter.
+ *
+ * Il ne s'applique PAS a la decision « trait ou pas » : `trait={0}` reste zero,
+ * `Forme` ne construisant meme pas de coque dans ce cas.
+ */
+const FINESSE = 0.6;
+
 export function materiauContour(
   epaisseur = 0.0035,
   couleur: THREE.ColorRepresentation = "#0b0d12"
@@ -163,17 +222,30 @@ export function materiauContour(
     side: THREE.BackSide,
     depthWrite: false,
     uniforms: {
-      uEpaisseur: { value: epaisseur },
+      uEpaisseur: { value: epaisseur * FINESSE },
       uCouleur: { value: new THREE.Color(couleur) },
+      /** Le centre de la boite englobante, en espace objet. */
+      uCentre: { value: new THREE.Vector3() },
+      /** 1 si la geometrie est une boite, 0 pour le repli sur la normale. */
+      uBoite: { value: 0 },
     },
     vertexShader: /* glsl */ `
       uniform float uEpaisseur;
+      uniform vec3 uCentre;
+      uniform float uBoite;
       void main() {
-        // Le gonflement se fait le long de la NORMALE, en espace vue, et
-        // proportionnellement a la profondeur : sans cette correction, le trait
-        // s'epaissit quand on s'approche et disparait de loin.
         vec4 vue = modelViewMatrix * vec4(position, 1.0);
-        vec3 n = normalize(normalMatrix * normal);
+
+        // La direction du gonflement : la normale moyennee si la forme est une
+        // boite, sinon la normale de face. Le test protege le sommet qui
+        // tomberait pile sur le centre, ou la fonction signe rend un vecteur
+        // nul — une subdivision impaire en produit un.
+        vec3 quadrant = sign(position - uCentre);
+        vec3 sortant = (uBoite > 0.5 && dot(quadrant, quadrant) > 0.5)
+          ? normalize(quadrant)
+          : normal;
+
+        vec3 n = normalize(normalMatrix * sortant);
         // L'epaisseur suit la profondeur pour rester constante a l'ecran.
         // Le coefficient est petit : a 0,012 le trait des objets lointains
         // devenait une masse noire qui mangeait la silhouette.
