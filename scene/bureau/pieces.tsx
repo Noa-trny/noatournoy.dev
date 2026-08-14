@@ -81,8 +81,32 @@ export function Ecran({
       <Forme reglages={PALETTE.pied} position={[0, 0.055, 0]} trait={0.0028}>
         <boxGeometry args={[0.045, 0.09, 0.045]} />
       </Forme>
-      {/* Le cadre */}
-      <Forme reglages={PALETTE.cadre} position={[0, pied, 0]} trait={0.0032}>
+      {/* LE CADRE NE PORTE PAS D'OMBRE, et c'est le meme raisonnement que pour
+          l'abat-jour de la lampe.
+
+          C'est le plus grand occulteur de la piece — un panneau de soixante par
+          trente-huit — et il se dresse a soixante centimetres de la seule source
+          a ombre portee. Sa silhouette tombait donc en travers du plateau, du
+          cote oppose a la lampe : une GRANDE DALLE SOMBRE a bord franc qui se
+          lit comme une tache sur le bois, et non comme de l'ombre.
+
+          Physiquement, elle devrait pourtant y etre. Mais un ecran n'est pas un
+          panneau opaque, c'est une SOURCE : il emet vers l'avant, exactement la
+          ou tombe son ombre, et la remplit. Le rendu ne modelise pas cette
+          emission — la lueur froide est une ponctuelle posee entre les deux
+          dalles, elle ne sait pas d'ou elle vient. Retirer le cadre de la passe
+          d'ombres approche donc mieux la realite que l'y laisser, et c'est
+          gratuit : deux occulteurs de moins dans la carte cubique.
+
+          Le socle et la colonne, eux, la portent toujours. Ce sont de petits
+          objets poses sur le plateau, leur ombre est courte et c'est elle qui
+          dit qu'ils y sont poses. */}
+      <Forme
+        reglages={PALETTE.cadre}
+        position={[0, pied, 0]}
+        trait={0.0032}
+        castShadow={false}
+      >
         <boxGeometry args={[largeur, hauteur, 0.028]} />
       </Forme>
       {/* La dalle, portee par le parent pour que l'appelant y mette ce qu'il
@@ -113,7 +137,13 @@ export function Portable({
           L'objet se lisait comme une feuille posee sur la table. Un portable
           ouvert tient entre cent et cent vingt degres d'ouverture totale. */}
       <group position={[0, 0.016, -0.115]} rotation={[-0.32, 0, 0]}>
-        <Forme reglages={PALETTE.boitier} position={[0, 0.11, 0]} trait={0.0026}>
+        {/* Le capot non plus, pour la meme raison que le cadre d'un ecran. */}
+        <Forme
+          reglages={PALETTE.boitier}
+          position={[0, 0.11, 0]}
+          trait={0.0026}
+          castShadow={false}
+        >
           <boxGeometry args={[0.34, 0.22, 0.011]} />
         </Forme>
         {/* La dalle, non eclairee : un ecran allume ne recoit pas d'ombre. */}
@@ -453,61 +483,6 @@ export function Plante({
   );
 }
 
-/** Une pile de livres : elle occupe le vide et donne de la verticale. */
-export function Livres({
-  position,
-  rotation = [0, 0, 0],
-}: {
-  position: [number, number, number];
-  rotation?: [number, number, number];
-}) {
-  const pile = [
-    { h: 0.032, l: 0.22, p: 0.16, c: PALETTE.cadre, d: 0 },
-    { h: 0.026, l: 0.21, p: 0.155, c: PALETTE.laiton, d: 0.06 },
-    { h: 0.03, l: 0.2, p: 0.15, c: PALETTE.feuillage, d: -0.05 },
-  ];
-  let y = 0;
-  return (
-    <group position={position} rotation={rotation}>
-      {pile.map((b, i) => {
-        const yy = y + b.h / 2;
-        y += b.h;
-        return (
-          <Forme
-            key={i}
-            reglages={b.c}
-            position={[0, yy, 0]}
-            rotation={[0, b.d, 0]}
-            trait={0.0024}
-          >
-            <boxGeometry args={[b.l, b.h, b.p]} />
-          </Forme>
-        );
-      })}
-    </group>
-  );
-}
-
-/**
- * LE CASQUE : le premier objet importe de la scene, et la demonstration du
- * moment ou le procedural cesse d'etre le bon outil.
- *
- * L'ancienne version etait un demi-tore et deux cylindres. Elle disait
- * « casque » comme un pictogramme dit « telephone » — on comprenait, on ne
- * reconnaissait pas. Un arceau reel n'est pas un tore : il s'aplatit sur le
- * dessus, s'affine aux tempes, et les coques pivotent. Aucune primitive
- * n'approche ça, et les empiler pour y arriver aurait coute plus de lignes que
- * le fichier ne pese d'octets.
- *
- * VINGT-SIX KILOOCTETS, une seule primitive, aucune texture. Ce qu'on est venu
- * chercher est la GEOMETRIE, rien d'autre : les materiaux du modele sont
- * retires a la preparation et remplaces au chargement par le materiau croquis,
- * sans quoi on poserait un objet photographie au milieu d'une scene dessinee —
- * plus detaille que tout le reste, et faux pour cette raison meme.
- *
- * Le support, lui, reste en primitives. Un pied et un montant SONT un cylindre
- * et un cylindre.
- */
 export function Casque({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
@@ -572,10 +547,10 @@ export function Fauteuil({
  * d'une image de synthese. L'oeil ne le remarque pas, il remarque que quelque
  * chose cloche.
  *
- * UNE COURBE ET NON DEUX SEGMENTS. Un cable pend en chainette : c'est son
- * FLECHISSEMENT qui le rend credible, pas son trajet. Le point de controle du
- * milieu est donc pose plus bas que l'interpolation droite ne le mettrait —
- * sans quoi on obtient une tige coudee, ce qu'aucun cable ne fait.
+ * UNE COURBE ET NON DEUX SEGMENTS. Un cable ne va jamais droit au but : c'est
+ * son MOU qui le rend credible, pas son trajet. Les points de controle sont
+ * donc poses de travers, l'un d'eux revenant meme en arriere — sans quoi on
+ * obtient une tige coudee, ce qu'aucun cable ne fait.
  */
 const CABLE = { couleur: "#16181d", paliers: 3, grain: 0.05, plancher: 0.26 } as const;
 
@@ -584,16 +559,31 @@ export function Cables({ position }: { position: [number, number, number] }) {
     () =>
       (
         [
-          // Depart au dos d'un ecran, arrivee au sol derriere le plateau.
-          // ILS TOMBENT DEVANT LE TABLIER, ET NON DERRIERE. Un vrai cable passe
-          // derriere le meuble ; a cet endroit precis, le plateau et le tablier
-          // le masquent depuis TOUTES les cameras — on avait donc trois cables
-          // parfaitement realistes que personne ne pouvait voir. Ils descendent
-          // maintenant dans le vide sous le plateau, visible de face au plan du
-          // seuil, ce qui arrive aussi sur un vrai bureau.
-          [[-0.32, 0.26, -0.04], [-0.44, -0.12, 0.06], [-0.54, -0.752, 0.02]],
-          [[0.5, 0.24, 0.0], [0.66, -0.16, 0.1], [0.78, -0.752, 0.05]],
-          [[-1.24, 0.1, -0.02], [-1.3, -0.2, 0.04], [-1.36, -0.752, -0.02]],
+          // ILS COURENT SUR LE PLATEAU, ET SORTENT PAR L'ARRIERE.
+          //
+          // Les deux essais precedents ont echoue par le meme bout. Derriere le
+          // meuble, ils etaient parfaits et INVISIBLES. Devant le tablier, dans
+          // le vide sous le plateau, ils sont devenus trois MOIGNONS NOIRS :
+          // le plateau, vu de haut, masque le sol au-dela de z = -0,78, si bien
+          // que le cable disparaissait a mi-hauteur et s'arretait en l'air.
+          //
+          // Ce qui manquait aux deux n'est pas une trajectoire mais un CONTACT.
+          // Un cable ne se lit pas parce qu'il pend, il se lit parce qu'il
+          // TOUCHE : il sort d'un appareil, il rampe sur une surface eclairee,
+          // il passe un bord. Le voici donc a plat sur le plateau, derriere les
+          // ecrans — la seule bande a la fois visible du plan large et prise
+          // dans la lumiere de la lampe — puis basculant par-dessus l'arete
+          // arriere. Sa chute tombe dans les vingt-sept centimetres entre le
+          // plateau et le mur, que AUCUNE camera n'atteint : l'oeil lit « ça
+          // descend derriere le bureau », qui est la verite, au lieu de
+          // constater que ça s'arrete.
+          //
+          // Onze millimetres, c'etait un tuyau d'arrosage. Sept, c'est un cable.
+          [[-0.30, 0.007, -0.44], [-0.41, 0.007, -0.53], [-0.49, 0.007, -0.66], [-0.53, -0.09, -0.80]],
+          [[0.52, 0.007, -0.40], [0.45, 0.007, -0.54], [0.40, 0.007, -0.68], [0.38, -0.09, -0.80]],
+          // Celui de la machine flane un peu : le mou est ce qui distingue un
+          // cable d'une droite tiree au cordeau.
+          [[-1.19, 0.007, -0.46], [-1.09, 0.007, -0.57], [-1.14, 0.007, -0.69], [-1.06, -0.09, -0.81]],
         ] as const
       ).map((points) => {
         const courbe = new THREE.CatmullRomCurve3(
@@ -602,7 +592,7 @@ export function Cables({ position }: { position: [number, number, number] }) {
           "catmullrom",
           0.6
         );
-        return new THREE.TubeGeometry(courbe, 20, 0.011, 6, false);
+        return new THREE.TubeGeometry(courbe, 24, 0.007, 6, false);
       }),
     []
   );
@@ -610,7 +600,10 @@ export function Cables({ position }: { position: [number, number, number] }) {
   return (
     <group position={position}>
       {tubes.map((g, i) => (
-        <Forme key={i} reglages={CABLE} trait={0.0016} receiveShadow={false}>
+        // Le trait descend avec le diametre : a 0,0016 il ajoutait six
+        // millimetres de noir de chaque cote d'un cable qui en fait sept, donc
+        // il DOUBLAIT le cable. C'est ce qui les faisait lire comme des rayures.
+        <Forme key={i} reglages={CABLE} trait={0.0009} receiveShadow={false}>
           <primitive object={g} attach="geometry" />
         </Forme>
       ))}

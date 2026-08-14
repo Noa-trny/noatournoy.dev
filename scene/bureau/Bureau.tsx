@@ -38,7 +38,6 @@ import {
   Plateau,
   Portable,
   Saisie,
-  Livres,
   Cables,
   Casque,
   Fauteuil,
@@ -388,17 +387,31 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         {/* Comme le casque : cent-dix kilooctets ne doivent retenir ni
             l'affichage du couloir, ni le sort du site. */}
         <Optionnel nom="le fauteuil">
-          {/* Decale a gauche ET devant le plateau. A z = 0,95 il est hors du
-              meuble — qui fait un metre cinquante de profondeur — et a x = -0,5
-              il laisse libre la ligne de visee du plan large vers l'ecran
-              principal, qui passe par x = 0,76 a cette profondeur. Un siege
-              pousse sous le bureau aurait traverse le plateau ; un siege
-              centre aurait masque la liste des travaux. */}
-          <Fauteuil position={[-0.5, 0, 0.95]} rotation={[0, Math.PI, 0]} />
+          {/* Decale a gauche ET devant le plateau. Il est hors du meuble — qui
+              fait un metre cinquante de profondeur — et a x = -0,46 il laisse
+              libre la ligne de visee du plan large vers l'ecran principal, qui
+              passe par x = 0,87 a cette profondeur. Un siege pousse sous le
+              bureau aurait traverse le plateau ; un siege centre aurait masque
+              la liste des travaux.
+
+              IL EST REPOUSSE ET DE TRAVERS, et c'est la modification la moins
+              chere de toute la piece : deux nombres, aucune geometrie. Un siege
+              parfaitement d'equerre face au bureau n'existe pas — on ne se leve
+              pas d'une chaise sans la reculer, et le pivot suit le corps qui
+              sort. Droit, il disait « personne n'a jamais travaille ici » ; de
+              biais, il dit « quelqu'un vient de partir », ce qui est exactement
+              ce que le reste de la scene raconte.
+
+              TOURNE VERS LA DROITE, du cote ou l'on sort : c'est aussi le seul
+              sens qui montre l'ASSISE. Pivote vers la gauche, on ne verrait que
+              le dossier, c'est-a-dire la meme silhouette qu'avant. */}
+          <Fauteuil position={[-0.48, 0, 1.06]} rotation={[0, Math.PI - 0.36, 0]} />
         </Optionnel>
 
         {/* Les cables partent du dos des ecrans, sous le plateau. */}
-        <Cables position={[0, 0.7675, -0.34]} />
+        {/* Le repere des cables est le DESSUS du plateau : ils y rampent, leur
+            hauteur locale est donc leur rayon, et leur z est celui de la piece. */}
+        <Cables position={[0, 0.7675, 0]} />
 
         <Lampe position={[-1.32, 0.7675, -0.6]} />
         <Mug position={[0.28, 0.7675, 0.36]} />
@@ -415,7 +428,6 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         {/* Le cote droit etait vide : trois objets suffisent a l'habiter, et
             chacun apporte une hauteur differente — c'est la variation de
             hauteur qui fait un plateau vecu plutot qu'un plan de travail. */}
-        <Livres position={[1.36, 0.7675, 0.18]} rotation={[0, -0.42, 0]} />
         {/* SA PROPRE FRONTIERE, et non celle de la scene : partager celle du
             monde ferait attendre le bureau entier — couloir compris — sur
             vingt-six kilooctets. Et une frontiere qui SURVIT a l'echec : voir
