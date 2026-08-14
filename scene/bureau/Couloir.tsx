@@ -29,8 +29,24 @@ const LIEU = {
    * remplaçant une corde oblique par deux segments droits.
    */
   couloir: 1.1,
-  /** Demi-largeur de la piece du bureau. */
+  /**
+   * Demi-largeur de la piece, A DROITE.
+   *
+   * Elle est dictee par la camera : le plan large est pris de biais, et son
+   * recul maximal porte l'oeil jusqu'a x = 3,19. Un mur plus proche le mettrait
+   * dehors.
+   */
   piece: 4.2,
+  /**
+   * A GAUCHE, la piece est bien plus etroite, et c'est assume.
+   *
+   * Aucune camera ne va de ce cote — la station la plus a gauche, le carnet,
+   * s'arrete a x = -0,86 — donc rien n'oblige a garder quatre metres de vide.
+   * Symetrique, la piece faisait huit metres quarante pour un bureau de trois
+   * vingt : un hangar, dont le mur gauche n'entrait dans AUCUN plan. Une
+   * fenetre posee dessus aurait ete une fenetre cachee.
+   */
+  pieceGauche: 2.6,
   /** Le seuil : ou le couloir debouche. */
   seuil: 7.5,
   /** Le fond du couloir, derriere la camera de depart. */
@@ -67,7 +83,7 @@ const NERVURES = [8.0, 8.9, 9.8];
 const SANS_OMBRE = { castShadow: false, receiveShadow: false } as const;
 
 export function Couloir() {
-  const { couloir, piece, seuil, fond, hauteurCouloir, hauteurPiece } = LIEU;
+  const { couloir, piece, pieceGauche, seuil, fond, hauteurCouloir, hauteurPiece } = LIEU;
   const longCouloir = fond - seuil;
   const zCouloir = (fond + seuil) / 2;
 
@@ -77,7 +93,7 @@ export function Couloir() {
       {/* Les deux murs lateraux. Ils sont assez ecartes pour que le plan large,
           pris de biais a 2,35 m sur X, reste a l'interieur : une camera placee
           derriere un mur ne cadre rien du tout. */}
-      {[-piece, piece].map((x) => (
+      {[-pieceGauche, piece].map((x) => (
         <Forme key={x} reglages={MUR} position={[x, hauteurPiece / 2, (seuil - 1.05) / 2]} trait={0} {...SANS_OMBRE}>
           <boxGeometry args={[0.08, hauteurPiece, seuil + 1.05]} />
         </Forme>

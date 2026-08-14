@@ -103,7 +103,7 @@ export function ProjectPage({
           >
             {/* UN NUMERO DEVANT CHAQUE TITRE, et il dit quelque chose de vrai :
                 une fiche se lit dans l'ordre, du contexte au resultat. C'est la
-                condition que le reste du site s'impose deja — les travaux sont
+                condition que le reste du site s'impose deja, les travaux sont
                 numerotes parce qu'ils forment une suite, la frise parce qu'elle
                 est chronologique. Un numero pose sur des sections
                 interchangeables ne serait qu'un ornement.

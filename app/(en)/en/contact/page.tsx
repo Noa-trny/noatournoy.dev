@@ -3,13 +3,13 @@ import { alternates, pair } from "@/content/routes";
 import { Footer, Header, Skip } from "@/components/chrome/Chrome";
 
 export const metadata: Metadata = {
-  title: "Contact — Noa Tournoy",
+  title: "Contact · Noa Tournoy",
   description:
     "Write to Noa Tournoy: noa.tournoy@supinfo.com. LinkedIn and GitHub. Based in Lille, France; joining ADEO as a cybersecurity apprentice in October 2026.",
   alternates: alternates(pair.contact, "en"),
   openGraph: {
     type: "website",
-    title: "Contact — Noa Tournoy",
+    title: "Contact · Noa Tournoy",
     description:
       "Write to Noa Tournoy: noa.tournoy@supinfo.com. LinkedIn and GitHub. Based in Lille, France; joining ADEO as a cybersecurity apprentice in October 2026.",
     url: pair.contact.en,

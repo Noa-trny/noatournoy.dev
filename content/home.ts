@@ -113,7 +113,7 @@ export const home: Readonly<Record<Locale, HomeCopy>> = {
         "b": true
       },
       {
-        "t": " — du tableau de bord de sécurité à l'expérience web 3D. Alternance chez ",
+        "t": ", du tableau de bord de sécurité à l'expérience web 3D. Alternance chez ",
         "b": false
       },
       {
@@ -126,7 +126,7 @@ export const home: Readonly<Record<Locale, HomeCopy>> = {
       }
     ],
     "heroCta": "Voir mes travaux",
-    "heroCardLabel": "Éclosion — expérience web 3D, 100 % procédurale",
+    "heroCardLabel": "Éclosion · expérience web 3D, 100 % procédurale",
     "heroCardAlt": "L'aube d'Éclosion : le soleil affleure l'horizon au-dessus d'un relief procédural.",
     "mailLabel": "Écrire un courriel",
     "bref": [
@@ -449,7 +449,7 @@ export const home: Readonly<Record<Locale, HomeCopy>> = {
         "b": true
       },
       {
-        "t": " — from a security dashboard to a 3D web experience. Joining ",
+        "t": ", from a security dashboard to a 3D web experience. Joining ",
         "b": false
       },
       {
@@ -462,7 +462,7 @@ export const home: Readonly<Record<Locale, HomeCopy>> = {
       }
     ],
     "heroCta": "See my work",
-    "heroCardLabel": "Éclosion — a 3D web experience, one hundred per cent procedural",
+    "heroCardLabel": "Éclosion · a 3D web experience, one hundred per cent procedural",
     "heroCardAlt": "The dawn of Éclosion: the sun grazes the horizon above procedural terrain.",
     "mailLabel": "Write an email",
     "bref": [

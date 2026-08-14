@@ -9,13 +9,13 @@ import { Footer, Header, Skip } from "@/components/chrome/Chrome";
 // comparent section par section.
 
 export const metadata: Metadata = {
-  title: "Skills — Noa Tournoy",
+  title: "Skills · Noa Tournoy",
   description:
     "Languages, front end, data and BI, infrastructure, Google Looker and LookML certifications, spoken languages. Every line points to a piece of work where it was used.",
   alternates: alternates(pair.skills, "en"),
   openGraph: {
     type: "website",
-    title: "Skills — Noa Tournoy",
+    title: "Skills · Noa Tournoy",
     description:
       "Languages, front end, data and BI, infrastructure, Google Looker and LookML certifications, spoken languages. Every line points to a piece of work where it was used.",
     url: pair.skills.en,

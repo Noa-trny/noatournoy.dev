@@ -27,7 +27,7 @@ const IDENTIQUE_PAR_NATURE = new Set([
   "Contact",
   "Stack",
   "Certifications",
-  "Noa Tournoy — Lille, France",
+  "Noa Tournoy · Lille, France",
   "Lille, France",
   "Éclosion",
   "DataSentinel",
@@ -44,12 +44,12 @@ const IDENTIQUE_PAR_NATURE = new Set([
 
   // Les titres de document : nom propre du travail, tiret cadratin, nom de la
   // personne. Rien a traduire.
-  "Éclosion — Noa Tournoy",
-  "DataSentinel — Noa Tournoy",
-  "SupKonQuest — Noa Tournoy",
-  "Ludoria — Noa Tournoy",
-  "laying_grass — Noa Tournoy",
-  "Gamedex — Noa Tournoy",
+  "Éclosion · Noa Tournoy",
+  "DataSentinel · Noa Tournoy",
+  "SupKonQuest · Noa Tournoy",
+  "Ludoria · Noa Tournoy",
+  "laying_grass · Noa Tournoy",
+  "Gamedex · Noa Tournoy",
 
   // Verifie dans en/index.html : ces trois-la sont volontairement identiques
   // dans la source anglaise. « Oct. » s'abrege pareil, « Master of Engineering »

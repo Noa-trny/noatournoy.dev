@@ -585,9 +585,15 @@ export function Cables({ position }: { position: [number, number, number] }) {
       (
         [
           // Depart au dos d'un ecran, arrivee au sol derriere le plateau.
-          [[-0.32, 0.28, -0.05], [-0.42, 0.05, -0.3], [-0.5, -0.755, -0.42]],
-          [[0.5, 0.26, 0.0], [0.62, 0.02, -0.26], [0.72, -0.755, -0.38]],
-          [[-1.24, 0.12, -0.02], [-1.32, -0.1, -0.24], [-1.4, -0.755, -0.34]],
+          // ILS TOMBENT DEVANT LE TABLIER, ET NON DERRIERE. Un vrai cable passe
+          // derriere le meuble ; a cet endroit precis, le plateau et le tablier
+          // le masquent depuis TOUTES les cameras — on avait donc trois cables
+          // parfaitement realistes que personne ne pouvait voir. Ils descendent
+          // maintenant dans le vide sous le plateau, visible de face au plan du
+          // seuil, ce qui arrive aussi sur un vrai bureau.
+          [[-0.32, 0.26, -0.04], [-0.44, -0.12, 0.06], [-0.54, -0.752, 0.02]],
+          [[0.5, 0.24, 0.0], [0.66, -0.16, 0.1], [0.78, -0.752, 0.05]],
+          [[-1.24, 0.1, -0.02], [-1.3, -0.2, 0.04], [-1.36, -0.752, -0.02]],
         ] as const
       ).map((points) => {
         const courbe = new THREE.CatmullRomCurve3(
@@ -596,7 +602,7 @@ export function Cables({ position }: { position: [number, number, number] }) {
           "catmullrom",
           0.6
         );
-        return new THREE.TubeGeometry(courbe, 18, 0.008, 6, false);
+        return new THREE.TubeGeometry(courbe, 20, 0.011, 6, false);
       }),
     []
   );

@@ -15,13 +15,13 @@ import "@/styles/app.css";
 
 export const metadata: Metadata = {
   ...sharedMetadata,
-  title: "Noa Tournoy — software engineering, development and cybersecurity",
+  title: "Noa Tournoy, software engineering, development and cybersecurity",
   description:
     "Noa Tournoy, engineering student in Lille, France, focused on cybersecurity. Full-stack development in Python, TypeScript and Docker. Joining ADEO as an apprentice in October 2026.",
   alternates: alternates(pair.home, "en"),
   openGraph: {
     type: "website",
-    title: "Noa Tournoy — software engineering, development and cybersecurity",
+    title: "Noa Tournoy, software engineering, development and cybersecurity",
     description:
       "Noa Tournoy, engineering student in Lille, France, focused on cybersecurity. Full-stack development in Python, TypeScript and Docker. Joining ADEO as an apprentice in October 2026.",
     url: pair.home.en,

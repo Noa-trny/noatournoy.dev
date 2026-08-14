@@ -87,15 +87,15 @@ export function Repere({ locale }: { locale: Locale }) {
 
           Le survol et le clic dans la scene sont un agrement ; ceux-ci sont
           atteignables au clavier et lus par un lecteur d'ecran. Ils ne sont pas
-          caches par `display: none` — ce qui les sortirait de l'ordre de
-          tabulation — mais rendus transparents et reveles au focus.
+          caches par `display: none`, ce qui les sortirait de l'ordre de
+          tabulation, mais rendus transparents et reveles au focus.
 
           AU POINTEUR GROSSIER, ILS SONT LA NAVIGATION TOUT COURT. Deux raisons
           se rejoignent : sans survol, rien ne dit qu'un objet est vise ; et le
-          cadrage portrait ne peut pas contenir les cinq objets a la fois — leurs
+          cadrage portrait ne peut pas contenir les cinq objets a la fois, leurs
           2,20 m de plateau demanderaient sept metres de recul (voir zones.ts).
           Ils passent donc au centre, visibles, plutot que de rester un carre
-          transparent dans un coin — c'est-a-dire, sur telephone, une zone qui
+          transparent dans un coin, c'est-a-dire, sur telephone, une zone qui
           navigue sans rien montrer.
 
           `pointer-events-none` tant qu'ils sont invisibles : le focus clavier

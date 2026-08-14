@@ -99,7 +99,7 @@ export const sections: readonly Section[] = [
             </tr>
             <tr>
               <th scope="row">Lighthouse : accessibility, best practices, SEO</th>
-              <td>—</td>
+              <td></td>
               <td className="after">100 / 100 / 100</td>
             </tr>
           </tbody>

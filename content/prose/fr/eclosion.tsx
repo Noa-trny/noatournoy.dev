@@ -100,7 +100,7 @@ export const sections: readonly Section[] = [
             </tr>
             <tr>
               <th scope="row">Lighthouse : accessibilité, bonnes pratiques, SEO</th>
-              <td>—</td>
+              <td></td>
               <td className="after">100 / 100 / 100</td>
             </tr>
           </tbody>
@@ -214,7 +214,7 @@ export const sections: readonly Section[] = [
         <div className="prose">
           <ul>
             <li><strong>Intégration continue à chaque push</strong> : lint strict (le type <code>any</code> est interdit), TypeScript strict, 16 tests unitaires (pavage des actes, générateur pseudo-aléatoire seedé, sol analytique, parité des textes FR et EN), build.</li>
-            <li><strong>Un test de bout en bout</strong> joue le film entier — démarrage, entrée, chaque acte, l'émergence hors de l'eau, le repli, dans les deux langues — et exige zéro erreur de console. Il a attrapé une vraie course le jour de sa mise en service : une libération de ressources pendant un link de shader.</li>
+            <li><strong>Un test de bout en bout</strong> joue le film entier, démarrage, entrée, chaque acte, l'émergence hors de l'eau, le repli, dans les deux langues, et exige zéro erreur de console. Il a attrapé une vraie course le jour de sa mise en service : une libération de ressources pendant un link de shader.</li>
             <li><strong>Sans WebGL2</strong> : une page de repli sert le récit complet en HTML rendu côté serveur, sans JavaScript, dans les deux langues.</li>
             <li><strong>Mouvement réduit</strong> : défilement natif, particules à 4 %, aucune secousse, son coupé. Annonces <code>aria-live</code> à chaque acte, parcours clavier complet, focus visible partout.</li>
           </ul>

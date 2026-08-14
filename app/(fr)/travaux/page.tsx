@@ -8,13 +8,13 @@ import { WorkRows } from "@/components/WorkRows";
 // leurs bandes claires/sombres, que la page porte elle-meme.
 
 export const metadata: Metadata = {
-  title: "Travaux — Noa Tournoy",
+  title: "Travaux · Noa Tournoy",
   description:
     "Six travaux de Noa Tournoy : Éclosion, DataSentinel, SupKonQuest, Gamedex, laying_grass et Ludoria. Contexte, rôle, décisions techniques et résultats mesurés.",
   alternates: alternates(pair.work, "fr"),
   openGraph: {
     type: "website",
-    title: "Travaux — Noa Tournoy",
+    title: "Travaux · Noa Tournoy",
     description:
       "Six travaux : expérience web 3D, pilotage de sécurité, stratégie temps réel, applications et jeux.",
     url: pair.work.fr,

@@ -272,10 +272,12 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         {/* Le tapis avant tout le reste : il est au sol, donc dessous. */}
         <Tapis position={[-0.1, 0.007, 0.6]} rotation={[0, 0.04, 0]} />
 
-        {/* LA FENETRE, sur la partie vide du mur du fond — celle que le neon
-            n'occupe pas. C'est la seule zone sombre du plan large, et la seule
-            ou une ouverture ne se dispute pas le regard avec l'enseigne. */}
-        <Fenetre position={[2.15, 1.62, -0.98]} />
+        {/* LA FENETRE EST SUR LE MUR DE GAUCHE, tournee d'un quart de tour.
+            Elle etait au fond, a cote du neon, ou deux points lumineux se
+            disputaient le meme regard. De cote, elle eclaire la piece par la
+            tranche — ce qui est aussi la seule position ou une fenetre motive
+            une lumiere RASANTE plutot que frontale. */}
+        <Fenetre position={[-2.55, 1.62, 0.35]} rotation={[0, Math.PI / 2, 0]} />
 
         <Couloir />
 

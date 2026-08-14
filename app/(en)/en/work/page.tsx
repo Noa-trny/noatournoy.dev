@@ -8,13 +8,13 @@ import { WorkRows } from "@/components/WorkRows";
 // garde que ses trois sections et leurs bandes.
 
 export const metadata: Metadata = {
-  title: "Work — Noa Tournoy",
+  title: "Work · Noa Tournoy",
   description:
     "Six works by Noa Tournoy: Éclosion, DataSentinel, SupKonQuest, Gamedex, laying_grass and Ludoria. Context, role, technical decisions and measured results.",
   alternates: alternates(pair.work, "en"),
   openGraph: {
     type: "website",
-    title: "Work — Noa Tournoy",
+    title: "Work · Noa Tournoy",
     description:
       "Six works by Noa Tournoy: Éclosion, DataSentinel, SupKonQuest, Gamedex, laying_grass and Ludoria. Context, role, technical decisions and measured results.",
     url: pair.work.en,

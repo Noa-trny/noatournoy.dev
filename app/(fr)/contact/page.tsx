@@ -3,13 +3,13 @@ import { alternates, pair } from "@/content/routes";
 import { Footer, Header, Skip } from "@/components/chrome/Chrome";
 
 export const metadata: Metadata = {
-  title: "Contact — Noa Tournoy",
+  title: "Contact · Noa Tournoy",
   description:
     "Écrire à Noa Tournoy : noa.tournoy@supinfo.com. LinkedIn et GitHub. Basé à Lille, alternant en cybersécurité chez ADEO à partir d'octobre 2026.",
   alternates: alternates(pair.contact, "fr"),
   openGraph: {
     type: "website",
-    title: "Contact — Noa Tournoy",
+    title: "Contact · Noa Tournoy",
     description:
       "Écrire à Noa Tournoy. Basé à Lille, alternant en cybersécurité chez ADEO à partir d'octobre 2026.",
     url: pair.contact.fr,
@@ -63,7 +63,7 @@ export default function ContactFr() {
                 cybersécurité chez ADEO, en parallèle du cycle ingénieur à
                 SUPINFO. Écrivez pour une question technique, une proposition de
                 collaboration, ou simplement parce qu'un des travaux vous a
-                arrêté — je réponds.
+                arrêté, je réponds.
               </p>
               <p>L'e-mail est le canal le plus sûr. LinkedIn marche aussi.</p>
             </div>

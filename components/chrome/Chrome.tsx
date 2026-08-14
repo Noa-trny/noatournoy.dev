@@ -75,7 +75,7 @@ export function Header({ pair, locale }: { pair: Pair; locale: Locale }) {
         {/* LE RETOUR AU BUREAU, EN PREMIER ET AVEC UNE FLECHE.
         
             Depuis une fiche projet, le seul chemin vers l'accueil etait la
-            signature — un mot en gras qu'on ne lit pas comme un bouton. Or on
+            signature, un mot en gras qu'on ne lit pas comme un bouton. Or on
             arrive sur ces pages EN CLIQUANT une ligne de l'ecran du bureau : on
             y vient d'un endroit, et l'on veut y retourner. La fleche dit ce que
             le mot seul ne disait pas.

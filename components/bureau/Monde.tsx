@@ -91,7 +91,7 @@ export function Monde({
           SELECTEUR DE LANGUE. Les metadonnees continuaient d'annoncer la paire
           FR/EN a Google pendant qu'aucun lien de la page n'y menait.
 
-          Il est fixe quand la scene tourne — et non simplement transparent —
+          Il est fixe quand la scene tourne, et non simplement transparent 
           parce qu'un en-tete dans le flux ajouterait sa hauteur a la piste :
           les stations valent un ecran chacune, et cinquante-sept pixels de plus
           decaleraient la camera de toutes les stations d'un cheveu croissant.

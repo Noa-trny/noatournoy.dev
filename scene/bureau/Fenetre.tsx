@@ -43,11 +43,17 @@ function peindreNuit(): THREE.CanvasTexture {
   const g = c.getContext("2d")!;
 
   const ciel = g.createLinearGradient(0, 0, 0, c.height);
-  ciel.addColorStop(0, "#070b14");
-  ciel.addColorStop(0.62, "#0d1626");
+  // PLUS CLAIRE QU'UNE VRAIE NUIT, et c'est une correction de point de vue.
+  // Sur le mur de gauche, aucune camera ne la regarde de face : elle est vue a
+  // soixante-six degres de sa normale, donc ecrasee sur quelques dizaines de
+  // pixels. A la valeur d'une nuit reelle elle rendait noire, c'est-a-dire
+  // comme un cadre vide. Une fenetre qu'on voit de biais doit etre plus
+  // lumineuse pour se lire autant.
+  ciel.addColorStop(0, "#0d1526");
+  ciel.addColorStop(0.62, "#16233c");
   // L'horizon est le seul endroit clair : c'est la lueur de la ville sur les
   // nuages, et c'est elle qui donne sa direction au bleu de la piece.
-  ciel.addColorStop(1, "#1b2a44");
+  ciel.addColorStop(1, "#2e456b");
   g.fillStyle = ciel;
   g.fillRect(0, 0, c.width, c.height);
 
@@ -60,13 +66,13 @@ function peindreNuit(): THREE.CanvasTexture {
     return graine / 0x7fffffff;
   };
 
-  for (let i = 0; i < 90; i += 1) {
+  for (let i = 0; i < 150; i += 1) {
     const x = suivant() * c.width;
     // Concentrees vers le bas : `1 - r^2` pousse la densite vers l'horizon.
     const y = c.height * (0.62 + 0.38 * (1 - suivant() ** 2));
     const chaud = suivant() > 0.35;
     g.fillStyle = chaud
-      ? `rgba(255, ${190 + suivant() * 50}, ${120 + suivant() * 60}, ${0.35 + suivant() * 0.5})`
+      ? `rgba(255, ${190 + suivant() * 50}, ${120 + suivant() * 60}, ${0.5 + suivant() * 0.5})`
       : `rgba(150, 200, 255, ${0.2 + suivant() * 0.35})`;
     g.fillRect(x, y, 1 + suivant() * 2, 1 + suivant() * 2);
   }

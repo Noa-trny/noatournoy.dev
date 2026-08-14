@@ -13,7 +13,7 @@ import "@/styles/app.css";
 // lien vers la version anglaise est offert dans le corps.
 
 export const metadata: Metadata = {
-  title: "Page introuvable — Noa Tournoy",
+  title: "Page introuvable · Noa Tournoy",
   // Pas de `robots` ici : Next pose deja <meta name="robots" content="noindex">
   // sur la route not-found. En declarer un second n'ajoutait rien et servait la
   // balise en double.
@@ -47,8 +47,8 @@ export default async function GlobalNotFound() {
       <head>
         <FontPreload />
       </head>
-      {/* CETTE PAGE PORTAIT ENCORE LE BALISAGE DE L'ANCIEN SITE. Onze classes —
-          `wrap`, `tophead`, `fiche-title`, `foot-in`… — venaient de spec.css et
+      {/* CETTE PAGE PORTAIT ENCORE LE BALISAGE DE L'ANCIEN SITE. Onze classes 
+          `wrap`, `tophead`, `fiche-title`, `foot-in`…, venaient de spec.css et
           ne designaient plus rien depuis la refonte sombre. Elle s'affichait
           quand meme, parce que les styles de base portent une page de texte,
           mais elle n'avait aucune mise en page a elle : ni gouttiere, ni
@@ -113,7 +113,7 @@ export default async function GlobalNotFound() {
 
         <footer className="border-t border-line">
           <div className="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-10 text-sm text-dim sm:px-8">
-            <span>Noa Tournoy — Lille, France</span>
+            <span>Noa Tournoy · Lille, France</span>
             <span className="flex flex-wrap gap-5">
               <a href="https://eclosion.noatournoy.dev" className="hover:text-fg">
                 Éclosion

@@ -7,13 +7,13 @@ import { Footer, Header, Skip } from "@/components/chrome/Chrome";
 // elle-meme : contrairement aux fiches de travaux, rien ici n'est generique.
 
 export const metadata: Metadata = {
-  title: "Savoir-faire — Noa Tournoy",
+  title: "Savoir-faire · Noa Tournoy",
   description:
     "Langages, front, données et BI, infrastructure, certifications Google Looker et LookML, langues parlées. Chaque ligne renvoie à un travail où elle a servi.",
   alternates: alternates(pair.skills, "fr"),
   openGraph: {
     type: "website",
-    title: "Savoir-faire — Noa Tournoy",
+    title: "Savoir-faire · Noa Tournoy",
     description:
       "Langages, front, données et BI, infrastructure, certifications. Chaque ligne renvoie à un travail où elle a servi.",
     url: pair.skills.fr,

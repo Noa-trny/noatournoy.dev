@@ -9,13 +9,13 @@ import "@/styles/app.css";
 
 export const metadata: Metadata = {
   ...sharedMetadata,
-  title: "Noa Tournoy — ingénieur logiciel, développement et cybersécurité",
+  title: "Noa Tournoy, ingénieur logiciel, développement et cybersécurité",
   description:
     "Noa Tournoy, étudiant ingénieur à Lille, spécialisé en cybersécurité. Développement full-stack en Python, TypeScript et Docker. Alternance chez ADEO à partir d'octobre 2026.",
   alternates: alternates(pair.home, "fr"),
   openGraph: {
     type: "website",
-    title: "Noa Tournoy — ingénieur logiciel, développement et cybersécurité",
+    title: "Noa Tournoy, ingénieur logiciel, développement et cybersécurité",
     description:
       "Développement full-stack, données et cybersécurité. Six travaux, du tableau de bord Looker à l'expérience web 3D Éclosion.",
     url: pair.home.fr,

@@ -34,8 +34,8 @@ export const ui = {
   // chaine ecrite a la main y serait perdue au prochain passage du generateur.
 
   dispo: {
-    fr: "Disponible — alternance dès octobre 2026",
-    en: "Open to work — apprenticeship from October 2026",
+    fr: "Disponible, alternance dès octobre 2026",
+    en: "Open to work, apprenticeship from October 2026",
   } satisfies L<string>,
   voirProjets: { fr: "Voir les projets", en: "View projects" } satisfies L<string>,
   meContacter: { fr: "Me contacter", en: "Get in touch" } satisfies L<string>,
@@ -68,8 +68,8 @@ export const ui = {
   allWork: { fr: "Tous les travaux", en: "All work" } satisfies L<string>,
 
   footPlace: {
-    fr: "Noa Tournoy — Lille, France",
-    en: "Noa Tournoy — Lille, France",
+    fr: "Noa Tournoy · Lille, France",
+    en: "Noa Tournoy · Lille, France",
   } satisfies L<string>,
   /**
    * Meme correction qu'au-dessus : le pied de page anglais affichait
