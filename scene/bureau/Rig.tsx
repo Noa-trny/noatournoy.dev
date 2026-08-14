@@ -64,8 +64,10 @@ export function Rig() {
   // proprietes internes du canvas est revenue avec des zeros — ce qui se lit
   // comme « la scene ne dessine rien » alors qu'elle dessinait tres bien.
   const gl = useThree((s) => s.gl);
+  const scene = useThree((s) => s.scene);
   const branche = useRef(false);
   const horloge = useRef({ derniere: 0, pire: 0, images: 0, cumul: 0 });
+  const recense = useRef<{ maillages: number; geometriesDistinctes: number } | null>(null);
 
   // LE RAPPORT DE L'ECRAN CHOISIT LE PLAN, et il est lu ici plutot que par une
   // media query : c'est la camera qui cadre, pas la feuille de style.
@@ -189,7 +191,25 @@ export function Rig() {
       }
       h.derniere = maintenant;
 
+      // UN SEUL RECENSEMENT, au bout de deux secondes — le temps que les modeles
+      // arrivent. Le faire par image alourdirait la mesure de cadence qu'il
+      // sert justement a etablir : parcourir cent vingt objets soixante fois par
+      // seconde fausse le chiffre qu'on lit ensuite.
+      if (!recense.current && piste.lisse >= 0 && h.images > 120) {
+        let maillages = 0;
+        const geos = new Set<unknown>();
+        scene.traverse((o) => {
+          const m = o as THREE.Mesh;
+          if (m.isMesh) {
+            maillages += 1;
+            geos.add(m.geometry);
+          }
+        });
+        recense.current = { maillages, geometriesDistinctes: geos.size };
+      }
+
       (window as unknown as { __cout?: unknown }).__cout = {
+        ...(recense.current ?? {}),
         dessins: gl.info.render.calls,
         triangles: gl.info.render.triangles,
         programmes: gl.info.programs?.length ?? 0,

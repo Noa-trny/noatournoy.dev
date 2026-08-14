@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import * as THREE from "three";
 import { materiauContour, materiauCroquis, type ReglagesCroquis } from "./materiau";
 
@@ -45,15 +45,45 @@ export function Forme({
   );
   const matTrait = useMemo(() => (trait > 0 ? materiauContour(trait) : null), [trait]);
 
+  // LES DEUX MAILLAGES PARTAGENT UNE GEOMETRIE, et c'est tout l'objet de ce
+  // detour par une reference.
+  //
+  // Rendre `children` aux deux endroits paraissait naturel : c'est le meme
+  // element JSX. Mais React le reconcilie comme DEUX fibres distinctes, donc
+  // R3F construisait deux `BufferGeometry` et televersait deux fois les memes
+  // sommets. Mesure sur la scene : cent dix-neuf maillages pour cent dix-huit
+  // geometries distinctes — autant dire aucun partage.
+  //
+  // On capture donc la geometrie du volume au montage et la coque la reprend
+  // telle quelle. Le contour apparait un rendu plus tard, ce qui ne se voit pas.
+  //
+  // LIMITE ASSUMEE : si la geometrie de `children` change apres le montage — un
+  // `args` modifie a chaud —, R3F la remplace sur le maillage sans que la
+  // reference se redeclenche, et la coque garde l'ancienne. Cela ne se produit
+  // qu'au rechargement a chaud pendant le developpement, ou un remontage suffit
+  // a corriger.
+  const [geometrie, setGeometrie] = useState<THREE.BufferGeometry | null>(null);
+
   return (
     <group position={position} rotation={rotation}>
-      <mesh material={mat} castShadow={castShadow} receiveShadow={receiveShadow}>
+      <mesh
+        ref={(m) => {
+          if (m && m.geometry !== geometrie) setGeometrie(m.geometry);
+        }}
+        material={mat}
+        castShadow={castShadow}
+        receiveShadow={receiveShadow}
+      >
         {children}
       </mesh>
-      {matTrait ? (
-        <mesh material={matTrait} raycast={() => {}} castShadow={false} receiveShadow={false}>
-          {children}
-        </mesh>
+      {matTrait && geometrie ? (
+        <mesh
+          geometry={geometrie}
+          material={matTrait}
+          raycast={() => {}}
+          castShadow={false}
+          receiveShadow={false}
+        />
       ) : null}
     </group>
   );
