@@ -215,8 +215,12 @@ export const ZONES: readonly Zone[] = [
     // Plus de recul que les autres zones : une grille de neuf logos se lit
     // d'un coup d'oeil, elle n'a pas besoin qu'on colle le nez dessus — et de
     // pres, le boitier remplit le cadre sans qu'on sache ou l'on est.
-    oeil: [-0.42, 1.24, 0.46],
-    cible: [-1.2, 0.9, -0.3],
+    //
+    // Le couple suit la tour, qui a grandi et s'est ecartee de la lampe : la
+    // VISEE reste sur l'etiquette et non sur le centre du boitier, sans quoi le
+    // cadre monterait sur la tole ajouree du dessus.
+    oeil: [-0.5, 1.32, 0.46],
+    cible: [-1.28, 0.98, -0.3],
     /** Dalle de 0.28 m, plus la marge. */
     largeur: 0.40,
   },

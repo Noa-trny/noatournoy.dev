@@ -369,14 +369,23 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             eclaire
           />
         </Carnet>
-        <Machine position={[-1.24, 0.7675, -0.34]} rotation={[0, 0.18, 0]}>
+        {/* ELLE S'ECARTE DE LA LAMPE EN GRANDISSANT, et il le fallait.
+            L'ampoule est a vingt-huit centimetres de l'ancien sommet du
+            boitier ; en passant de vingt-trois a quarante centimetres de haut,
+            la tour montait presque au niveau de l'ampoule et prenait une
+            lumiere de moitie plus forte. Le dessus partait au blanc et le flanc
+            qui porte l'etiquette de la stack se delavait — c'est-a-dire que le
+            CONTENU devenait illisible pour un gain de decor. Douze centimetres
+            a gauche et six vers l'avant ramenent l'eclairement sous celui
+            d'avant, et degagent au passage le socle de la lampe. */}
+        <Machine position={[-1.36, 0.7675, -0.28]} rotation={[0, 0.18, 0]}>
           {/* Le flanc de la machine, tourne vers la camera : une etiquette
               d'inventaire plutot qu'un boitier muet. */}
           <Dalle
             peindre={peintres.stack}
             largeur={0.28}
             hauteur={0.21}
-            position={[0.082, 0.115, 0]}
+            position={[0.086, 0.216, 0]}
             // Un seul quart de tour, autour de Y. Le second, autour de Z, faisait
             // monter l'etiquette a la verticale : le mot « STACK » se lisait de
             // bas en haut le long de l'arete.
@@ -465,10 +474,14 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
           taille={[0.32, 0.18, 0.38]}
           rotation={[0, 0.34, 0]}
         />
+        {/* La boite suit la tour, qui a grandi — mais elle s'arrete AVANT
+            l'interrupteur de la lampe, dont la boite occupe x = -1,13 a -0,89.
+            Deux surfaces sensibles qui se chevauchent, c'est un clic qui part
+            au hasard selon laquelle est la plus proche. */}
         <Sensible
           id="stack"
-          position={[-1.24, 0.88, -0.34]}
-          taille={[0.28, 0.32, 0.4]}
+          position={[-1.36, 0.9755, -0.28]}
+          taille={[0.25, 0.46, 0.42]}
           rotation={[0, 0.18, 0]}
         />
         <Sensible

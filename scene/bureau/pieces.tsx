@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import { Forme } from "../croquis/Forme";
 import { Importe } from "../croquis/Importe";
+import { materiauCroquis } from "../croquis/materiau";
 
 // LES PIECES DU BUREAU.
 //
@@ -321,6 +322,136 @@ export function Carnet({
   );
 }
 
+// CE QUI FAIT QU'UNE BOITE EST UNE TOUR.
+//
+// Le boitier etait un parallelepipede pose a plat, avec des autocollants sur le
+// flanc. Rien n'y disait « ordinateur » : les proportions d'un petit boitier
+// sont celles d'un carton d'archives, et c'est exactement ce qu'on lisait.
+//
+// Trois signes suffisent, et ils sont tous sur la FACE AVANT — la seule qu'on
+// regarde, et la seule qu'aucun objet ne cachait : une GRILLE d'aeration, un
+// BOUTON, des PRISES. Aucun autre objet du bureau n'en porte, donc ils ne se
+// confondent avec rien.
+//
+// ELLE EST PEINTE, PAS MODELEE, comme l'enseigne et la vitre. Modelee, la seule
+// grille demanderait quatorze fentes, soit vingt-huit appels de rendu avec
+// leurs contours — sur une scene qui en compte cent vingt et un, pour un detail
+// qui occupera QUATRE-VINGT-DIX PIXELS au plan large. Une toile de 96 sur 144
+// dit la meme chose en un appel.
+//
+// LA DIODE D'ALIMENTATION, ELLE, RESTE UN OBJET. Peinte sur la facade, elle
+// serait eclairee par la lampe comme le reste du panneau, donc eteinte : une
+// LED qui recoit de l'ombre cesse d'etre une LED. C'est le meme raisonnement
+// que pour les trois diodes du flanc.
+
+// LA SILHOUETTE AVANT LES DETAILS.
+//
+// La premiere reprise a ajoute une facade, des pieds, un bouton — et l'objet ne
+// ressemblait toujours pas a une machine. Le defaut etait ailleurs : le boitier
+// mesurait seize sur vingt-trois sur trente, c'est-a-dire les proportions d'un
+// CUBE. Aucun detail de façade ne rattrape une silhouette fausse, parce qu'une
+// silhouette se lit en un dixieme de seconde et un detail en une seconde.
+//
+// Une tour est HAUTE, ETROITE et PROFONDE. Dix-sept sur quarante sur
+// trente-sept la met dans les proportions d'un vrai boitier moyen, et la
+// compare a ce qui l'entoure : elle monte a quarante-deux centimetres au-dessus
+// du plateau quand le sommet de l'ecran principal est a quarante-sept. C'est
+// exactement le rapport qu'on a sous les yeux quand une tour est posee sur un
+// bureau, et c'est ce rapport qui la nomme.
+const BOITIER = { largeur: 0.17, hauteur: 0.4, profondeur: 0.37, pieds: 0.016 } as const;
+
+/** Le milieu du boitier au-dessus du plateau : tout s'y rapporte. */
+const MILIEU = BOITIER.pieds + BOITIER.hauteur / 2;
+
+const FACADE = { largeur: 0.15, hauteur: 0.36 } as const;
+
+function peindreFacade(): THREE.CanvasTexture {
+  const c = document.createElement("canvas");
+  c.width = 96;
+  c.height = 230;
+  const g = c.getContext("2d")!;
+
+  // LA FACADE EST PLUS CLAIRE QUE LES FLANCS, ET C'EST UNE NECESSITE AVANT
+  // D'ETRE UN CHOIX. La lampe est en haut a DROITE et en arriere de la tour :
+  // la face avant, tournee vers le siege, ne recoit donc rien. Peinte a la
+  // valeur d'un flanc, elle rendait uniformement noire et la grille comme le
+  // bouton disparaissaient — on retrouvait la boite. Un panneau avant reel est
+  // de toute façon plus clair que sa tole : c'est une piece rapportee, souvent
+  // en aluminium brosse ou en maille.
+  g.fillStyle = "#3d434e";
+  g.fillRect(0, 0, c.width, c.height);
+
+  // Le JOINT du panneau, en haut : une facade d'un seul tenant se lit comme
+  // une plaque, alors qu'un boitier est toujours fait de morceaux rapportes.
+  g.fillStyle = "#20242c";
+  g.fillRect(0, 16, c.width, 1.5);
+
+  // LE BOUTON EST SEUL SUR SA LIGNE, ET CENTRE. C'est le point de
+  // reconnaissance le plus rapide d'une machine, et le mettre en rang avec les
+  // prises le noyait parmi elles : quatre pastilles alignees ne se distinguent
+  // plus les unes des autres a distance.
+  g.fillStyle = "#525a67";
+  g.beginPath();
+  g.arc(48, 42, 9, 0, Math.PI * 2);
+  g.fill();
+  g.strokeStyle = "#7d8694";
+  g.lineWidth = 1.6;
+  g.stroke();
+
+  // LES PRISES, sur la ligne suivante. Deux rectangles et un cercle : USB, USB,
+  // jack. Leur INTERIEUR est presque noir, et c'est ce creux qui les fait lire
+  // comme des prises et non comme des pastilles collees.
+  g.fillStyle = "#12151b";
+  g.fillRect(19, 66, 17, 7);
+  g.fillRect(40, 66, 17, 7);
+  g.beginPath();
+  g.arc(69, 69.5, 4.5, 0, Math.PI * 2);
+  g.fill();
+
+  // LA GRILLE occupe les deux tiers du bas. Des fentes et non des trous : a
+  // cette taille, une trame de trous se filtre en aplat gris et l'on perd tout.
+  g.fillStyle = "#171b22";
+  for (let y = 92; y < 216; y += 6) {
+    g.fillRect(12, y, c.width - 24, 3.5);
+  }
+
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 4;
+  return t;
+}
+
+/**
+ * La grille du DESSUS, et c'est la face la plus rentable de l'objet.
+ *
+ * La camera du plan large est en plongee : on voit le dessus du boitier en
+ * entier, alors que la facade est vue de biais et a demi dans l'ombre. Une tour
+ * evacue par le haut, tout le monde l'a vu sans le savoir, et c'est le seul
+ * signe de cette machine qui soit pleinement eclaire.
+ */
+function peindreDessus(): THREE.CanvasTexture {
+  const c = document.createElement("canvas");
+  c.width = 96;
+  c.height = 208;
+  const g = c.getContext("2d")!;
+
+  g.fillStyle = "#2b3038";
+  g.fillRect(0, 0, c.width, c.height);
+
+  // La grille ne va pas jusqu'au bord : une tole est toujours pliee sur son
+  // pourtour, et c'est cette marge qui empeche le dessus de se lire comme un
+  // trou ouvert.
+  g.fillStyle = "#14171d";
+  for (let y = 26; y < 184; y += 6) {
+    g.fillRect(14, y, c.width - 28, 3.5);
+  }
+
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 4;
+  return t;
+}
+
 /** La machine : support de la stack. Un boitier a LED, pose de chant. */
 export function Machine({
   position,
@@ -331,19 +462,94 @@ export function Machine({
   rotation?: [number, number, number];
   children?: React.ReactNode;
 }) {
+  // Les deux toles ajourees. La couleur du materiau est blanche : ce sont les
+  // pixels de la toile qui portent la teinte, et le materiau ne fait que les
+  // eclairer avec les memes paliers et le meme grain que le reste de la scene.
+  const [facade, dessus] = useMemo(
+    () =>
+      typeof document === "undefined"
+        ? [null, null]
+        : ([peindreFacade(), peindreDessus()] as const),
+    []
+  );
+  const matFacade = useMemo(() => {
+    if (!facade) return null;
+    // LE PLANCHER MONTE BIEN AU-DESSUS DU RESTE DE LA SCENE, pour la meme
+    // raison que la facade est peinte claire : sans lumiere directe, c'est lui
+    // seul qui decide si l'on voit encore quelque chose. C'est le reglage
+    // prevu pour ça — la luminosite minimale des zones a l'ombre.
+    const m = materiauCroquis({ couleur: "#ffffff", paliers: 4, grain: 0.08, plancher: 0.46 });
+    m.map = facade;
+    return m;
+  }, [facade]);
+  const matDessus = useMemo(() => {
+    if (!dessus) return null;
+    // Le dessus, lui, RECOIT la lampe : son plancher reste celui de la scene,
+    // et c'est ce qui lui donne le meme modele que les autres surfaces.
+    const m = materiauCroquis({ couleur: "#ffffff", paliers: 3, grain: 0.08, plancher: 0.3 });
+    m.map = dessus;
+    return m;
+  }, [dessus]);
+  useEffect(
+    () => () => {
+      facade?.dispose();
+      dessus?.dispose();
+      matFacade?.dispose();
+      matDessus?.dispose();
+    },
+    [facade, dessus, matFacade, matDessus]
+  );
+
   return (
     <group position={position} rotation={rotation}>
-      <Forme reglages={PALETTE.boitier} position={[0, 0.115, 0]} trait={0.003}>
-        <boxGeometry args={[0.16, 0.23, 0.3]} />
+      {/* LES PIEDS. Une tour ne touche jamais le meuble : elle est posee sur
+          quatre patins, et le jour qu'ils menagent est visible de tres loin
+          parce qu'il est SOMBRE sur un plateau clair. Sans lui, le boitier a
+          l'air enfonce dans le bois. Un socle unique et non quatre patins : a
+          cette distance on ne voit que la ligne d'ombre, pas ce qui la tient. */}
+      <Forme reglages={PALETTE.cadre} position={[0, BOITIER.pieds / 2, 0]} trait={0.0022}>
+        <boxGeometry args={[0.14, BOITIER.pieds, BOITIER.profondeur - 0.05]} />
       </Forme>
-      {/* Les diodes. Non eclairees et legerement en avant : une LED qui recoit
-          l'ombre de la lampe cesse d'etre une LED. */}
-      {[0.04, 0.0, -0.04].map((y, i) => (
-        <mesh key={y} position={[0.081, 0.17 + y, 0.06]}>
-          <boxGeometry args={[0.004, 0.012, 0.012]} />
-          <meshBasicMaterial color={i === 0 ? "#7ee787" : i === 1 ? "#58a6ff" : "#f0b429"} />
+
+      <Forme reglages={PALETTE.boitier} position={[0, MILIEU, 0]} trait={0.003}>
+        <boxGeometry args={[BOITIER.largeur, BOITIER.hauteur, BOITIER.profondeur]} />
+      </Forme>
+
+      {/* Les deux toles, un millimetre en avant de leur face pour ne pas s'y
+          battre en profondeur. */}
+      {matFacade ? (
+        <mesh
+          position={[0, MILIEU, BOITIER.profondeur / 2 + 0.001]}
+          material={matFacade}
+          raycast={() => {}}
+        >
+          <planeGeometry args={[FACADE.largeur, FACADE.hauteur]} />
         </mesh>
-      ))}
+      ) : null}
+      {matDessus ? (
+        <mesh
+          position={[0, BOITIER.pieds + BOITIER.hauteur + 0.001, 0]}
+          rotation={[-Math.PI / 2, 0, 0]}
+          material={matDessus}
+          raycast={() => {}}
+        >
+          <planeGeometry args={[FACADE.largeur, BOITIER.profondeur - 0.04]} />
+        </mesh>
+      ) : null}
+
+      {/* La diode d'alimentation, DANS le bouton — sa cote se deduit de la
+          toile : le bouton est peint en (48 ; 42) sur 96 par 230, donc centre
+          en largeur et 117 mm au-dessus du milieu du panneau. */}
+      <mesh position={[0, MILIEU + 0.117, BOITIER.profondeur / 2 + 0.0025]}>
+        <circleGeometry args={[0.005, 10]} />
+        <meshBasicMaterial color="#7ee787" toneMapped={false} />
+      </mesh>
+
+      {/* LE FLANC N'A PLUS DE DIODES, et il ne doit pas en ravoir : c'est la
+          face qui porte l'etiquette de la stack, et trois pastilles vives
+          posees devant elle mangeaient les logos. Le seul temoin lumineux de la
+          machine est desormais celui de l'alimentation, sur la facade, ou il ne
+          dispute rien a personne. */}
       {children}
     </group>
   );
