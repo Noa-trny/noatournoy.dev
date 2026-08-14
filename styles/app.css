@@ -138,47 +138,48 @@
    fond sombre et aucun debordement. Il a fallu la REGARDER.
 --------------------------------------------------------------------------- */
 
-/* Une liste de definitions en deux colonnes : l'etiquette a gauche, la valeur a
-   droite, un filet entre chaque paire. En dessous de 40rem elle s'empile — deux
-   colonnes sur 390 px donneraient six caracteres par ligne. */
+/* UNE GRILLE DE CARTES, ET NON PLUS UNE LISTE RAYEE.
+
+   Deux colonnes separees par des filets, c'est la mise en page d'un tableau de
+   caracteristiques : juste, lisible, et parfaitement inerte. Le reste du site
+   parle en cartes — la stack de l'accueil, les travaux, les voisins d'une fiche
+   — et ces listes-la etaient les seules a ne pas le faire.
+
+   CHAQUE PAIRE A BESOIN D'UN PARENT. Une bordure ne peut pas englober deux
+   freres : `dt` et `dd` sont donc reunis dans un `div`, ce que la specification
+   autorise expressement dans un `dl`. C'est la seule modification de balisage,
+   et elle vaut mieux qu'une bordure haute sur l'un et basse sur l'autre, qui se
+   disjoint des que le texte passe a la ligne.
+--------------------------------------------------------------------------- */
 @utility kv {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
 
-  & > dt {
-    margin-top: 1.75rem;
+  & > div {
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--color-line);
+    border-radius: var(--radius-card);
+    background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+  }
+
+  & dt {
     font-size: 0.75rem;
+    font-weight: 500;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--color-dim);
   }
-  & > dd {
-    margin: 0.4rem 0 0;
+  & dd {
+    margin: 0.65rem 0 0;
     color: var(--color-mid);
   }
 
-  @media (width >= 40rem) {
-    grid-template-columns: 13rem minmax(0, 1fr);
-
-    /* Le filet est porte par les DEUX cellules d'une meme ligne, sinon il
-       s'arrete au milieu : dans une grille, une bordure appartient a la cellule
-       et non a la rangee.
-
-       ET LA GOUTTIERE EST DANS L'ETIQUETTE, pas dans la grille. Un
-       `column-gap` coupait le filet en deux troncons separes par un blanc de
-       deux centimetres — la bordure s'arrete au bord de la cellule, pas au
-       bord de la rangee. Le meme espacement, pose en remplissage a droite du
-       `dt`, laisse le trait continu d'un bout a l'autre. */
-    & > dt,
-    & > dd {
-      margin-top: 0;
-      padding-top: 1.25rem;
-      padding-bottom: 1.25rem;
-      border-top: 1px solid var(--color-line);
-    }
-    & > dt {
-      padding-right: 2rem;
-    }
+  /* Deux colonnes seulement a partir de 48rem : plus tot, une valeur comme
+     « Docker, Kubernetes, Terraform, GitHub Actions, Vercel » tomberait sur
+     cinq lignes dans une demi-largeur. */
+  @media (width >= 48rem) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 

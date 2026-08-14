@@ -51,23 +51,35 @@ export default function SkillsEn() {
               Technical
             </h2>
             <dl className="kv">
-              <dt>Languages</dt>
-              <dd>Python, TypeScript, JavaScript, SQL, C, C++, Java, PHP, LookML</dd>
+              <div>
+                <dt>Languages</dt>
+                <dd>Python, TypeScript, JavaScript, SQL, C, C++, Java, PHP, LookML</dd>
+              </div>
 
-              <dt>Web</dt>
-              <dd>React, Next.js, HTML, CSS, Three.js and GLSL, React Native / Expo, Node.js, Electron</dd>
+              <div>
+                <dt>Web</dt>
+                <dd>React, Next.js, HTML, CSS, Three.js and GLSL, React Native / Expo, Node.js, Electron</dd>
+              </div>
 
-              <dt>Data and BI</dt>
-              <dd>Looker, LookML, BigQuery, Google Cloud Platform, PostgreSQL, complex SQL queries</dd>
+              <div>
+                <dt>Data and BI</dt>
+                <dd>Looker, LookML, BigQuery, Google Cloud Platform, PostgreSQL, complex SQL queries</dd>
+              </div>
 
-              <dt>Infrastructure</dt>
-              <dd>Docker, Kubernetes, Terraform, GitHub Actions, Vercel, continuous integration and delivery</dd>
+              <div>
+                <dt>Infrastructure</dt>
+                <dd>Docker, Kubernetes, Terraform, GitHub Actions, Vercel, continuous integration and delivery</dd>
+              </div>
 
-              <dt>Tools</dt>
-              <dd>Git and GitHub, PostgreSQL, Auth0, Godot, Visual Studio Code, Cisco Packet Tracer, Notion, Trello</dd>
+              <div>
+                <dt>Tools</dt>
+                <dd>Git and GitHub, PostgreSQL, Auth0, Godot, Visual Studio Code, Cisco Packet Tracer, Notion, Trello</dd>
+              </div>
 
-              <dt>Certifications</dt>
-              <dd>Google Looker · LookML, during the 2025 ADEO internship · AWS Academy Cloud Foundations · CCNA Introduction to Networks</dd>
+              <div>
+                <dt>Certifications</dt>
+                <dd>Google Looker · LookML, during the 2025 ADEO internship · AWS Academy Cloud Foundations · CCNA Introduction to Networks</dd>
+              </div>
             </dl>
           </div>
         </section>
@@ -96,14 +108,20 @@ export default function SkillsEn() {
               Languages and method
             </h2>
             <dl className="kv">
-              <dt>Spoken languages</dt>
-              <dd>French, native · English, professional</dd>
+              <div>
+                <dt>Spoken languages</dt>
+                <dd>French, native · English, professional</dd>
+              </div>
 
-              <dt>Method</dt>
-              <dd>Measure before fixing. Verify every visual change with a capture. Isolate before accusing. Encode each lesson paid for as a test or an invariant, so it only costs once.</dd>
+              <div>
+                <dt>Method</dt>
+                <dd>Measure before fixing. Verify every visual change with a capture. Isolate before accusing. Encode each lesson paid for as a test or an invariant, so it only costs once.</dd>
+              </div>
 
-              <dt>Away from the code</dt>
-              <dd>Weight training, video games, fashion</dd>
+              <div>
+                <dt>Away from the code</dt>
+                <dd>Weight training, video games, fashion</dd>
+              </div>
             </dl>
           </div>
         </section>

@@ -95,12 +95,26 @@ export function ProjectPage({
           ) : null}
         </section>
 
-        {sections.map((s) => (
+        {sections.map((s, i) => (
           <section
             key={s.id}
             className="mx-auto max-w-3xl border-t border-line px-6 py-14 sm:px-8"
             aria-labelledby={s.id}
           >
+            {/* UN NUMERO DEVANT CHAQUE TITRE, et il dit quelque chose de vrai :
+                une fiche se lit dans l'ordre, du contexte au resultat. C'est la
+                condition que le reste du site s'impose deja — les travaux sont
+                numerotes parce qu'ils forment une suite, la frise parce qu'elle
+                est chronologique. Un numero pose sur des sections
+                interchangeables ne serait qu'un ornement.
+
+                Il est masque aux lecteurs d'ecran : il ordonne l'oeil, il
+                n'ajoute rien a l'ecoute. */}
+            {s.srOnly ? null : (
+              <p aria-hidden="true" className="mb-3 text-xs text-dim tabular-nums">
+                {`_0${i + 1}.`}
+              </p>
+            )}
             <h2
               id={s.id}
               className={
