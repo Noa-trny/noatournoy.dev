@@ -31,13 +31,18 @@ import { policePrete } from "./peinture";
 const LETTRES = ["N", "O", "A"] as const;
 
 /** Hauteur d'une lettre, en metres. */
-const HAUTEUR = 0.34;
+const HAUTEUR = 0.46;
 /** Ecart entre deux centres de lettre, en hauteurs. */
 const PAS = 0.86;
 /** Teintes de depart, voisines : trois couleurs opposees font un chapiteau. */
 const DEPARTS = [0, 0.09, 0.18];
 
-const TOILE = 320;
+// LA TOILE SUIT LA TAILLE REELLE. Une enseigne plus grande occupe plus de
+// pixels a l'ecran : a 320 pour 71 cm de plan, on tombait sous cinq cents
+// points par metre, et la station des projets amene la camera a un metre du mur
+// — ou l'ecran en affiche trois fois plus. Le halo, lui, ne souffre pas d'etre
+// doux ; ce sont les bords du COEUR qui trahissent une texture trop petite.
+const TOILE = 512;
 
 /**
  * Peint une lettre en blanc, sur fond transparent, avec sa lueur.

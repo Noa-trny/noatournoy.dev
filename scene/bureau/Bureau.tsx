@@ -304,7 +304,7 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
             cinq vues de lecture, et assez bas pour rester dans le cadre depuis
             le couloir — c'est de la-bas qu'il se voit le mieux, comme une
             enseigne au fond d'un passage. */}
-        <Neon position={[-0.66, 1.32, -0.99]} />
+        <Neon position={[-0.78, 1.42, -0.99]} />
 
         <Plateau />
 
