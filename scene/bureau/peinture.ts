@@ -173,16 +173,16 @@ export function peindreProjets(locale: Locale): THREE.CanvasTexture {
     g.fill();
 
     g.fillStyle = JETONS.encre;
-    g.font = '600 25px "Inter", sans-serif';
-    g.fillText(p.title, 44, y + 32);
-
-    g.fillStyle = JETONS.dim;
-    g.font = '400 19px "Inter", sans-serif';
-    const an = g.measureText(p.year).width;
-    g.fillText(p.year, 980 - an, y + 32);
+    g.font = '600 29px "Inter", sans-serif';
+    g.fillText(p.title, 44, y + 33);
 
     g.fillStyle = JETONS.mid;
-    g.font = '400 18px "Inter", sans-serif';
+    g.font = '500 20px "Inter", sans-serif';
+    const an = g.measureText(p.year).width;
+    g.fillText(p.year, 980 - an, y + 33);
+
+    g.fillStyle = JETONS.mid;
+    g.font = '400 20px "Inter", sans-serif';
     const [l1] = plier(g, p.blurb[locale], 700, 1);
     g.fillText(l1 ?? "", 44, y + 60);
 
@@ -440,11 +440,11 @@ export function peindreContact(locale: Locale): THREE.CanvasTexture {
   g.fillRect(0, 0, 760, 460);
 
   g.fillStyle = JETONS.accent;
-  g.font = '600 19px "Inter", sans-serif';
+  g.font = '600 22px "Inter", sans-serif';
   g.fillText(cph.contactLabel.toUpperCase(), 44, 70);
 
   g.fillStyle = JETONS.encre;
-  g.font = '600 34px "Inter", sans-serif';
+  g.font = '600 38px "Inter", sans-serif';
   let y = 128;
   for (const ligne of cph.contactTitle.slice(0, 2)) {
     g.fillText(ligne, 44, y);
@@ -457,9 +457,9 @@ export function peindreContact(locale: Locale): THREE.CanvasTexture {
     g.beginPath();
     g.roundRect(44, y - 26, 672, 48, 8);
     g.fill();
-    g.fillStyle = JETONS.mid;
-    g.font = '400 20px "Inter", sans-serif';
-    g.fillText(l, 64, y + 4);
+    g.fillStyle = JETONS.encre;
+    g.font = '400 26px "Inter", sans-serif';
+    g.fillText(l, 64, y + 6);
     y += LIGNES_CONTACT.pas;
   }
   return texture(c);
