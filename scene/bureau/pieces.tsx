@@ -29,7 +29,7 @@ const PALETTE = {
   papier: { couleur: "#efe7d6", paliers: 4, grain: 0.14, plancher: 0.4 },
   laiton: { couleur: "#c08a3e", paliers: 4, grain: 0.08, plancher: 0.36 },
   ceramique: { couleur: "#d8d2c6", paliers: 4, grain: 0.1, plancher: 0.38 },
-  feuillage: { couleur: "#4f7a52", paliers: 3, grain: 0.16, plancher: 0.35 },
+  feuillage: { couleur: "#42634a", paliers: 3, grain: 0.16, plancher: 0.35 },
 } as const;
 
 /** Le plateau et son piétement. L'assise de toute la composition. */
