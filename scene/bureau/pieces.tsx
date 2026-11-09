@@ -711,7 +711,7 @@ export function Mug({ position }: { position: [number, number, number] }) {
       <Forme reglages={PALETTE.ceramique} position={[0, 0.045, 0]} trait={0.0024}>
         <cylinderGeometry args={[0.042, 0.036, 0.09, 18]} />
       </Forme>
-      <Forme reglages={PALETTE.ceramique} position={[0.055, 0.05, 0]} rotation={[Math.PI / 2, 0, 0]} trait={0.0022}>
+      <Forme reglages={PALETTE.ceramique} position={[0.055, 0.05, 0]} trait={0.0022}>
         <torusGeometry args={[0.026, 0.007, 8, 16]} />
       </Forme>
     </group>
