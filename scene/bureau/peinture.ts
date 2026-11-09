@@ -347,22 +347,56 @@ const LOGOS = [
   "kubernetes", "nextdotjs", "git", "cplusplus",
 ];
 
+/**
+ * LA GRILLE DE LA STACK, ET POURQUOI ELLE EST ECRITE ICI EN ENTIER.
+ *
+ * Elle ne l'etait pas : le pas des rangees valait 94 pour des plaques de 124.
+ * Elles se CHEVAUCHAIENT donc de trente pixels et se soudaient en trois barres
+ * verticales continues — neuf tuiles devenaient trois colonnes, et les logos se
+ * touchaient presque. De loin, ça se lit comme des icones coupees.
+ *
+ * Le defaut venait de ce que les cotes se calculaient a trois endroits
+ * differents, dont un derive de la largeur et un pose a la main. Ils viennent
+ * maintenant tous du meme jeu de constantes, et le pas est PAR CONSTRUCTION
+ * plus grand que la plaque.
+ */
+const COTE = 96;
+/** Le blanc entre le logo et le bord de sa plaque. */
+const BORD = 14;
+const PLAQUE = COTE + BORD * 2;
+/** D'une plaque a la suivante. Seize pixels de jour, dans les deux sens. */
+const PAS = PLAQUE + 16;
+/** La marge, choisie pour que la grille tombe centree dans le repere. */
+const MARGE = (512 - (PLAQUE * 3 + 16 * 2)) / 2;
+/** Le haut de la premiere rangee, sous le trait du titre. */
+const HAUT = 92;
+
 export function peindreStack(locale: Locale): THREE.CanvasTexture {
   const cph = home[locale];
-  REFERENCE = [512, 400];
-  const [c, g] = toile(384, 300);
+  // L'ETIQUETTE EST PLUS HAUTE QUE LARGE DE PEU, ET C'EST LA GRILLE QUI LE DIT.
+  //
+  // A 512 sur 400, la troisieme rangee de plaques descendait a 406 : elle se
+  // coupait sur le bord bas. Ce n'etait pas un reglage a retoucher de deux
+  // pixels mais un compte qui ne tombait pas — trois plaques de 124 en font
+  // 372, quand il n'y avait que 330 sous le trait du titre. Plutot que de
+  // rapetisser neuf logos qui font justement l'interet de l'objet, le repere
+  // s'allonge jusqu'a rendre a la derniere rangee la meme marge basse que la
+  // marge laterale. La dalle qui le porte suit, sans quoi la toile se serait
+  // ecrasee.
+  REFERENCE = [512, 550];
+  const [c, g] = toile(384, 412);
 
   const fond = () => {
     g.fillStyle = "#12161c";
-    g.fillRect(0, 0, 512, 400);
+    g.fillRect(0, 0, 512, 550);
     g.fillStyle = JETONS.accent;
     g.font = '600 22px "Inter", sans-serif';
-    g.fillText(cph.labels.stack.toUpperCase(), 36, 52);
+    g.fillText(cph.labels.stack.toUpperCase(), MARGE, 52);
     g.strokeStyle = JETONS.ligne;
     g.lineWidth = 1.5;
     g.beginPath();
-    g.moveTo(36, 70);
-    g.lineTo(476, 70);
+    g.moveTo(MARGE, 70);
+    g.lineTo(512 - MARGE, 70);
     g.stroke();
   };
   fond();
@@ -371,9 +405,6 @@ export function peindreStack(locale: Locale): THREE.CanvasTexture {
 
   // Le chargement, puis un unique repassage. `Promise.allSettled` et non `all` :
   // une icone manquante ne doit pas emporter les huit autres.
-  const cote = 96;
-  const marge = 36;
-  const pas = (512 - marge * 2 - cote) / 2;
   Promise.allSettled(LOGOS.map(charger)).then((sorties) => {
     fond();
     let i = 0;
@@ -383,15 +414,15 @@ export function peindreStack(locale: Locale): THREE.CanvasTexture {
         continue;
       }
       const [, img] = sortie.value;
-      const x = marge + (i % 3) * pas;
-      const y = 108 + Math.floor(i / 3) * 94;
+      const x = MARGE + (i % 3) * PAS;
+      const y = HAUT + Math.floor(i / 3) * PAS;
       // Une plaque sous chaque logo : sans elle, un logo sombre — Next, GitHub —
       // disparait dans le fond du boitier.
       g.fillStyle = "#1c222b";
       g.beginPath();
-      g.roundRect(x - 14, y - 14, cote + 28, cote + 28, 12);
+      g.roundRect(x, y, PLAQUE, PLAQUE, 14);
       g.fill();
-      g.drawImage(img, x, y, cote, cote);
+      g.drawImage(img, x + BORD, y + BORD, COTE, COTE);
       i += 1;
     }
     tex.needsUpdate = true;

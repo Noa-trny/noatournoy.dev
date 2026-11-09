@@ -66,7 +66,7 @@ import {
 /** Le halo de la lampe : une sphere non eclairee, tres transparente. */
 function Halo() {
   return (
-    <mesh position={[-1.0, 1.2, -0.45]} raycast={() => {}}>
+    <mesh position={[-0.86, 1.25, -0.38]} raycast={() => {}}>
       <sphereGeometry args={[0.52, 16, 12]} />
       <meshBasicMaterial color="#ffe0b0" transparent opacity={0.04} depthWrite={false} />
     </mesh>
@@ -206,7 +206,7 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
           // ne tombait pas sous la lampe. Personne ne l'avait vu parce qu'une
           // flaque ronde a l'air juste ou qu'elle soit — jusqu'a ce qu'on
           // regarde la lampe et la flaque ensemble.
-          position={[-1.0, 1.2, -0.45]}
+          position={[-0.86, 1.25, -0.38]}
           intensity={lampeAllumee ? 2.5 : 0}
           distance={11}
           decay={2}
@@ -490,7 +490,7 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
           <Dalle
             peindre={peintres.stack}
             largeur={0.28}
-            hauteur={0.21}
+            hauteur={0.301}
             position={[0.086, 0.216, 0]}
             // Un seul quart de tour, autour de Y. Le second, autour de Z, faisait
             // monter l'etiquette a la verticale : le mot « STACK » se lisait de

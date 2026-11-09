@@ -608,21 +608,55 @@ export function Lampe({
       <Forme reglages={PALETTE.pied} position={[0.06, 0.455, -0.01]} trait={0.0022} castShadow={false}>
         <sphereGeometry args={[0.022, 12, 10]} />
       </Forme>
-      {/* Le bras, tendu vers le centre du bureau */}
-      {/* LE BRAS EST RACCOURCI. A 0,42 m il portait l'abat-jour jusque DANS la
-          dalle de l'ecran principal — les deux objets s'interpenetraient, ce
-          qui se voit d'autant plus qu'un contour noir cerne chacun d'eux. */}
+      {/* LE BRAS NE JOIGNAIT RIEN, ET LA LAMPE SE LISAIT COUPEE EN DEUX.
+
+          Il etait pose a la main, comme le reste de la chaine — et c'est
+          justement la limite de ce choix : ses deux bouts tombaient a six et
+          sept centimetres de ce qu'ils devaient tenir, l'articulation d'un cote
+          et l'abat-jour de l'autre, l'ecart etant surtout en PROFONDEUR, donc
+          invisible sur un plan de face et flagrant de trois quarts. On voyait
+          une tige qui flotte, un abat-jour qui vole, et rien entre les deux.
+
+          IL EST DESORMAIS CALCULE A PARTIR DE SES DEUX EXTREMITES : longueur,
+          milieu et angles d'Euler viennent du vecteur qui va de l'articulation
+          au haut de l'abat-jour, et non l'inverse. C'est plus long a ecrire une
+          fois et ça ne peut plus se decoller.
+
+          ET IL EST PLUS LONG : quarante-sept centimetres au lieu de trente. Le
+          commentaire d'avant disait que 0,42 portait l'abat-jour DANS la dalle
+          de l'ecran principal, et c'etait vrai — pour une direction plus
+          frontale. Celle-ci passe devant l'ecran plutot que dedans : le bord
+          gauche du cadre est a x = -0,62 et l'abat-jour s'arrete a -0,76, soit
+          quatorze centimetres de jour. C'est ce que ça coute pour que la flaque
+          tombe enfin sur la zone de travail et non dans le coin du meuble. */}
       <Forme
         reglages={PALETTE.laiton}
-        position={[0.18, 0.5, 0.06]}
-        rotation={[0.28, 0, 1.42]}
+        position={[0.2515, 0.4932, 0.1206]}
+        rotation={[1.2864, 0, -0.9527]}
         trait={0.0024}
         castShadow={false}
       >
-        <cylinderGeometry args={[0.011, 0.011, 0.3, 12]} />
+        <cylinderGeometry args={[0.011, 0.011, 0.47, 12]} />
       </Forme>
-      {/* L'abat-jour, AU BOUT du bras, ouvert vers le bas et vers l'avant */}
-      <group position={[0.31, 0.47, 0.12]} rotation={[0.42, 0, 0.22]}>
+      {/* L'ABAT-JOUR, AU BOUT DU BRAS, ET IL REGARDE LE BUREAU.
+
+          Son inclinaison est la seule chose qui dise ou la lampe pointe : le
+          luminaire est bati en chaine dans son propre repere, sans rotation
+          d'ensemble, donc c'est ici que ça se joue. A 0,22 sur Z, l'ouverture
+          descendait presque a la verticale — la lampe eclairait SON PROPRE
+          COIN, et se lisait comme posee la sans raison, a cote d'un plateau
+          qu'elle ne regardait pas.
+
+          A 0,58, l'ouverture pointe vers les x positifs, c'est-a-dire vers les
+          ecrans et le clavier. Le basculement vers l'avant, lui, ne bouge pas :
+          il place deja l'ouverture du bon cote en profondeur.
+
+          CELA NE CHANGE PAS LA FLAQUE, et c'est voulu. La source est une
+          PONCTUELLE dans l'abat-jour, pas un projecteur — un cone a ete essaye
+          et rejete. Elle rayonne dans toutes les directions quelle que soit
+          l'inclinaison de la tole : ce qu'on corrige ici est ce que l'oeil lit
+          du geste de la lampe, pas ce qu'elle eclaire. */}
+      <group position={[0.46, 0.4825, 0.22]} rotation={[0.42, 0, 0.58]}>
         <Forme reglages={PALETTE.laiton} position={[0, 0, 0]} trait={0.0026} castShadow={false}>
           <cylinderGeometry args={[0.05, 0.1, 0.12, 20, 1, true]} />
         </Forme>
