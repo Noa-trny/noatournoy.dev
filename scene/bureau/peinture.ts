@@ -238,7 +238,7 @@ export function peindreApropos(locale: Locale): THREE.CanvasTexture {
   g.fillRect(0, 0, 900, 40);
 
   g.fillStyle = JETONS.accent;
-  g.font = '600 18px "Inter", sans-serif';
+  g.font = '600 22px "Inter", sans-serif';
   g.fillText((cph.labels.bref ?? "").toUpperCase(), 40, 92);
 
   g.fillStyle = JETONS.encre;
@@ -263,7 +263,7 @@ export function peindreApropos(locale: Locale): THREE.CanvasTexture {
 
   for (const b of cph.bref.slice(0, 3)) {
     g.fillStyle = JETONS.dim;
-    g.font = '500 16px "Inter", sans-serif';
+    g.font = '600 19px "Inter", sans-serif';
     g.fillText(b.k.toUpperCase(), 40, y);
     g.fillStyle = JETONS.encre;
     g.font = '500 21px "Inter", sans-serif';
