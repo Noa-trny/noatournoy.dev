@@ -25,7 +25,7 @@ const PALETTE = {
   plateau: { couleur: "#6e5438", paliers: 4, grain: 0.1, plancher: 0.34 },
   pied: { couleur: "#3d434e", paliers: 3, grain: 0.08, plancher: 0.3 },
   boitier: { couleur: "#23262d", paliers: 3, grain: 0.08, plancher: 0.32 },
-  cadre: { couleur: "#15171c", paliers: 3, grain: 0.06, plancher: 0.3 },
+  cadre: { couleur: "#1e222a", paliers: 3, grain: 0.06, plancher: 0.3 },
   papier: { couleur: "#efe7d6", paliers: 4, grain: 0.14, plancher: 0.4 },
   laiton: { couleur: "#c08a3e", paliers: 4, grain: 0.08, plancher: 0.36 },
   ceramique: { couleur: "#d8d2c6", paliers: 4, grain: 0.1, plancher: 0.38 },
