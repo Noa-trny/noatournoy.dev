@@ -81,7 +81,7 @@ try {
   process.exit(2);
 }
 
-const echapper = (s) => s.replace(/[.*+?^${}()|[\]/]/g, "\\$&");
+const echapper = (s) => s.replace(/[\\^$.*+?()[\]{}|/]/g, "\\$&");
 const mortes = [...jetons.keys()].filter(
   (c) => !new RegExp("\\." + echapper(c) + "(?![\\w-])").test(css),
 );
