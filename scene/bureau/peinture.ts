@@ -39,10 +39,13 @@ export async function policePrete(): Promise<void> {
 
 type Contexte = CanvasRenderingContext2D;
 
+// Memes valeurs que les jetons `--color-*` de styles/app.css : le site et le
+// bureau doivent rester sur la meme palette.
 const JETONS = {
-  fond: "#0d1015",
-  fondCarte: "#161a21",
-  ligne: "#242a34",
+  fond: "#0a0b0d",
+  fondCarte: "#101216",
+  fondHaut: "#15181e",
+  ligne: "#1e222a",
   encre: "#e9ecf1",
   mid: "#a2abb8",
   dim: "#7d8694",
@@ -153,7 +156,7 @@ export function peindreProjets(locale: Locale): THREE.CanvasTexture {
   g.fillRect(0, 0, 1024, 600);
 
   // La barre de fenetre : trois pastilles suffisent a dire « application ».
-  g.fillStyle = "#11151b";
+  g.fillStyle = JETONS.fondCarte;
   g.fillRect(0, 0, 1024, 44);
   ["#f0704a", "#f0b429", "#4ec07a"].forEach((col, i) => {
     g.fillStyle = col;
@@ -232,9 +235,9 @@ export function peindreApropos(locale: Locale): THREE.CanvasTexture {
   const cph = home[locale];
   REFERENCE = [900, 560];
   const [c, g] = toile(640, 400);
-  g.fillStyle = "#0f1319";
+  g.fillStyle = JETONS.fondCarte;
   g.fillRect(0, 0, 900, 560);
-  g.fillStyle = "#11151b";
+  g.fillStyle = JETONS.fondHaut;
   g.fillRect(0, 0, 900, 40);
 
   g.fillStyle = JETONS.accent;
@@ -387,7 +390,7 @@ export function peindreStack(locale: Locale): THREE.CanvasTexture {
   const [c, g] = toile(384, 412);
 
   const fond = () => {
-    g.fillStyle = "#12161c";
+    g.fillStyle = JETONS.fondCarte;
     g.fillRect(0, 0, 512, 550);
     g.fillStyle = JETONS.accent;
     g.font = '600 22px "Inter", sans-serif';
@@ -418,7 +421,7 @@ export function peindreStack(locale: Locale): THREE.CanvasTexture {
       const y = HAUT + Math.floor(i / 3) * PAS;
       // Une plaque sous chaque logo : sans elle, un logo sombre — Next, GitHub —
       // disparait dans le fond du boitier.
-      g.fillStyle = "#1c222b";
+      g.fillStyle = JETONS.fondHaut;
       g.beginPath();
       g.roundRect(x, y, PLAQUE, PLAQUE, 14);
       g.fill();
@@ -436,7 +439,7 @@ export function peindreContact(locale: Locale): THREE.CanvasTexture {
   const cph = home[locale];
   REFERENCE = [760, 460];
   const [c, g] = toile(560, 340);
-  g.fillStyle = "#0d141c";
+  g.fillStyle = JETONS.fondCarte;
   g.fillRect(0, 0, 760, 460);
 
   g.fillStyle = JETONS.accent;
