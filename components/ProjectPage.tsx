@@ -50,13 +50,20 @@ export function ProjectPage({
           className="mx-auto max-w-3xl px-6 pt-20 pb-14 sm:px-8"
           aria-labelledby="titre"
         >
-          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs tracking-[0.14em] text-dim uppercase">
-            <span>{c.context}</span>
-            <span aria-hidden="true" className="text-line">
-              ·
+          {/* La barre de fenetre reprend celle de l'ecran Projets du bureau :
+              meme trois pastilles, meme contexte, pour que la fiche se lise
+              comme le prolongement de la ligne cliquee. */}
+          <div className="surface flex items-start gap-3 px-4 py-3 text-xs tracking-[0.14em] text-dim uppercase">
+            <span aria-hidden="true" className="mt-1.5 flex shrink-0 gap-1.5">
+              <span className="size-2.5 rounded-full bg-[#f0704a]" />
+              <span className="size-2.5 rounded-full bg-[#f0b429]" />
+              <span className="size-2.5 rounded-full bg-[#4ec07a]" />
             </span>
-            <span>{c.stack}</span>
-          </p>
+            <p className="min-w-0 space-y-1">
+              <span className="block">{c.context}</span>
+              <span className="block">{c.stack}</span>
+            </p>
+          </div>
 
           <h1
             id="titre"
@@ -111,7 +118,7 @@ export function ProjectPage({
                 Il est masque aux lecteurs d'ecran : il ordonne l'oeil, il
                 n'ajoute rien a l'ecoute. */}
             {s.srOnly ? null : (
-              <p aria-hidden="true" className="mb-3 text-xs text-dim tabular-nums">
+              <p aria-hidden="true" className="mb-3 text-xs text-accent-soft tabular-nums">
                 {`_0${i + 1}.`}
               </p>
             )}
