@@ -76,7 +76,7 @@ export function Repere({ locale }: { locale: Locale }) {
       <button
         type="button"
         onClick={() => bureau.fermer()}
-        className={`fixed top-6 left-6 z-30 rounded-full border border-line bg-surface/80 px-4 py-2 text-sm text-mid backdrop-blur transition-opacity duration-300 hover:border-accent hover:text-fg ${
+        className={`fixed bottom-10 left-1/2 z-30 -translate-x-1/2 rounded-full border border-line bg-surface/80 px-4 py-2 text-sm text-mid backdrop-blur transition-opacity duration-300 hover:border-accent hover:text-fg tactile:bottom-30 ${
           ouverte ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >

@@ -45,7 +45,7 @@ const JETONS = {
   ligne: "#242a34",
   encre: "#e9ecf1",
   mid: "#a2abb8",
-  dim: "#6b7480",
+  dim: "#7d8694",
   accent: "#3b82f6",
 } as const;
 
