@@ -92,7 +92,15 @@ export function Projects({ locale }: { locale: Locale }) {
               {p.links.length > 0 ? (
                 <div className="relative z-10 mt-6 flex flex-wrap gap-4 border-t border-line pt-5">
                   {p.links.map((l) => {
-                    const depot = l.href.includes("github.com");
+                    let depot = false;
+                    try {
+                      const hostname = new URL(l.href).hostname.toLowerCase();
+                      depot =
+                        hostname === "github.com" ||
+                        hostname.endsWith(".github.com");
+                    } catch {
+                      depot = false;
+                    }
                     return (
                       <a
                         key={l.href}
