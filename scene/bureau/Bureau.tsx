@@ -418,7 +418,7 @@ export default function Bureau({ locale = "fr" }: { locale?: Locale }) {
         ))}
         <pointLight
           position={[-0.7, 0.86, -0.78]}
-          intensity={2.2}
+          intensity={1.3}
           distance={2.4}
           decay={2}
           color="#b039ff"
